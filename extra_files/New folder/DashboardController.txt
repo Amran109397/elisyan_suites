@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Role;
+
+class DashboardController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        $user = auth()->user();
+        
+        // Check if user has a role
+        if (!$user->role) {
+            // Assign default role if no role exists
+            $user->role_id = 1; // super_admin role ID
+            $user->save();
+            
+            // Reload the user with role
+            $user->load('role');
+        }
+        
+        $role = $user->role->name;
+
+        // Get role-specific data
+        $stats = $this->getRoleStats($role);
+        $activities = $this->getRoleActivities($role);
+
+        return view('backend.dashboard.index', compact('stats', 'activities'));
+    }
+
+    private function getRoleStats($role)
+    {
+        switch ($role) {
+            case 'super_admin':
+                return [
+                    ['icon' => 'fas fa-building', 'value' => '3', 'label' => 'Properties', 'color' => 'primary'],
+                    ['icon' => 'fas fa-users', 'value' => '15', 'label' => 'Total Staff', 'color' => 'success'],
+                    ['icon' => 'fas fa-bed', 'value' => '45', 'label' => 'Total Rooms', 'color' => 'info'],
+                    ['icon' => 'fas fa-calendar', 'value' => '12', 'label' => 'Today Bookings', 'color' => 'warning']
+                ];
+
+            case 'property_manager':
+                return [
+                    ['icon' => 'fas fa-building', 'value' => '2', 'label' => 'My Properties', 'color' => 'primary'],
+                    ['icon' => 'fas fa-bed', 'value' => '30', 'label' => 'Managed Rooms', 'color' => 'success'],
+                    ['icon' => 'fas fa-calendar', 'value' => '8', 'label' => 'Today Check-ins', 'color' => 'info'],
+                    ['icon' => 'fas fa-chart-line', 'value' => '75%', 'label' => 'Occupancy Rate', 'color' => 'warning']
+                ];
+
+            case 'receptionist':
+                return [
+                    ['icon' => 'fas fa-calendar', 'value' => '5', 'label' => 'Today Check-ins', 'color' => 'primary'],
+                    ['icon' => 'fas fa-calendar-check', 'value' => '3', 'label' => 'Today Check-outs', 'color' => 'success'],
+                    ['icon' => 'fas fa-users', 'value' => '12', 'label' => 'Current Guests', 'color' => 'info'],
+                    ['icon' => 'fas fa-bed', 'value' => '8', 'label' => 'Available Rooms', 'color' => 'warning']
+                ];
+
+            default:
+                return [
+                    ['icon' => 'fas fa-user', 'value' => '1', 'label' => 'Profile', 'color' => 'primary'],
+                    ['icon' => 'fas fa-tasks', 'value' => '5', 'label' => 'Tasks', 'color' => 'success'],
+                    ['icon' => 'fas fa-bell', 'value' => '3', 'label' => 'Notifications', 'color' => 'info'],
+                    ['icon' => 'fas fa-clock', 'value' => '0', 'label' => 'Pending', 'color' => 'warning']
+                ];
+        }
+    }
+
+    private function getRoleActivities($role)
+    {
+        switch ($role) {
+            case 'super_admin':
+                return [
+                    ['icon' => 'fas fa-user-plus', 'title' => 'New user registered', 'time' => '2 min ago', 'color' => 'primary'],
+                    ['icon' => 'fas fa-database', 'title' => 'System backup completed', 'time' => '5 min ago', 'color' => 'success'],
+                    ['icon' => 'fas fa-building', 'title' => 'New property added', 'time' => '10 min ago', 'color' => 'info'],
+                    ['icon' => 'fas fa-cog', 'title' => 'System settings updated', 'time' => '15 min ago', 'color' => 'warning']
+                ];
+
+            case 'property_manager':
+                return [
+                    ['icon' => 'fas fa-broom', 'title' => 'Room cleaning scheduled', 'time' => '5 min ago', 'color' => 'primary'],
+                    ['icon' => 'fas fa-chart-bar', 'title' => 'Monthly report generated', 'time' => '15 min ago', 'color' => 'success'],
+                    ['icon' => 'fas fa-users', 'title' => 'Staff meeting completed', 'time' => '30 min ago', 'color' => 'info'],
+                    ['icon' => 'fas fa-tools', 'title' => 'Maintenance request approved', 'time' => '45 min ago', 'color' => 'warning']
+                ];
+
+            case 'receptionist':
+                return [
+                    ['icon' => 'fas fa-calendar-plus', 'title' => 'New booking received', 'time' => '5 min ago', 'color' => 'primary'],
+                    ['icon' => 'fas fa-key', 'title' => 'Guest checked in', 'time' => '15 min ago', 'color' => 'success'],
+                    ['icon' => 'fas fa-credit-card', 'title' => 'Payment processed', 'time' => '25 min ago', 'color' => 'info'],
+                    ['icon' => 'fas fa-concierge-bell', 'title' => 'Room service requested', 'time' => '35 min ago', 'color' => 'warning']
+                ];
+
+            default:
+                return [
+                    ['icon' => 'fas fa-user-edit', 'title' => 'Profile updated', 'time' => '5 min ago', 'color' => 'primary'],
+                    ['icon' => 'fas fa-check-circle', 'title' => 'Task completed', 'time' => '15 min ago', 'color' => 'success'],
+                    ['icon' => 'fas fa-sign-in-alt', 'title' => 'Login successful', 'time' => '25 min ago', 'color' => 'info'],
+                    ['icon' => 'fas fa-bell', 'title' => 'New notification', 'time' => '35 min ago', 'color' => 'warning']
+                ];
+        }
+    }
+}
