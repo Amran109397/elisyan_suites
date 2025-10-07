@@ -5,7 +5,44 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\RoomTypeController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
 
+// Property routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('properties', PropertyController::class);
+});
+
+// Room Type routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('room-types', RoomTypeController::class);
+});
+
+// Room routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('rooms', RoomController::class);
+});
+
+// Guest routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('guests', GuestController::class);
+});
+
+// Booking routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('bookings', BookingController::class);
+    Route::get('bookings/check-availability', [BookingController::class, 'checkAvailability'])->name('bookings.check-availability');
+});
+
+// Payment routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('payments', PaymentController::class);
+    Route::post('payments/process', [PaymentController::class, 'processPayment'])->name('payments.process');
+});
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
