@@ -17,13 +17,13 @@ class RoomTypeController extends Controller
     public function index()
     {
         $roomTypes = RoomType::with('property')->get();
-        return view('room-types.index', compact('roomTypes'));
+        return view('backend.room-types.index', compact('roomTypes'));
     }
 
     public function create()
     {
         $properties = Property::where('is_active', true)->get();
-        return view('room-types.create', compact('properties'));
+        return view('backend.room-types.create', compact('properties'));
     }
 
     public function store(Request $request)
@@ -48,13 +48,13 @@ class RoomTypeController extends Controller
     public function show(RoomType $roomType)
     {
         $roomType->load('property', 'rooms', 'amenities', 'images');
-        return view('room-types.show', compact('roomType'));
+        return view('backend.room-types.show', compact('roomType'));
     }
 
     public function edit(RoomType $roomType)
     {
         $properties = Property::where('is_active', true)->get();
-        return view('room-types.edit', compact('roomType', 'properties'));
+        return view('backend.room-types.edit', compact('roomType', 'properties'));
     }
 
     public function update(Request $request, RoomType $roomType)

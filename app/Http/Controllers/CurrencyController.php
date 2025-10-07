@@ -21,7 +21,7 @@ class CurrencyController extends Controller
     public function index()
     {
         $currencies = Currency::all();
-        return view('currencies.index', compact('currencies'));
+        return view('backend.currencies.index', compact('currencies'));
     }
 
     /**
@@ -31,7 +31,7 @@ class CurrencyController extends Controller
      */
     public function create()
     {
-        return view('currencies.create');
+        return view('backend.currencies.create');
     }
 
     /**
@@ -69,7 +69,7 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
-        return view('currencies.show', compact('currency'));
+        return view('backend.currencies.show', compact('currency'));
     }
 
     /**
@@ -80,7 +80,7 @@ class CurrencyController extends Controller
      */
     public function edit(Currency $currency)
     {
-        return view('currencies.edit', compact('currency'));
+        return view('backend.currencies.edit', compact('currency'));
     }
 
     /**

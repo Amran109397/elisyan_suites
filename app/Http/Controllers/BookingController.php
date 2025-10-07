@@ -8,6 +8,7 @@ use App\Models\Guest;
 use App\Models\Room;
 use App\Models\RoomType;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class BookingController extends Controller
 {
@@ -20,7 +21,7 @@ class BookingController extends Controller
     public function index()
     {
         $bookings = Booking::with('property', 'guest', 'room', 'roomType')->get();
-        return view('bookings.index', compact('bookings'));
+        return view('backend.bookings.index', compact('bookings'));
     }
 
     public function create()
@@ -28,7 +29,7 @@ class BookingController extends Controller
         $properties = Property::where('is_active', true)->get();
         $guests = Guest::all();
         $roomTypes = RoomType::where('is_active', true)->get();
-        return view('bookings.create', compact('properties', 'guests', 'roomTypes'));
+        return view('backend.bookings.create', compact('properties', 'guests', 'roomTypes'));
     }
 
     public function store(Request $request)
@@ -58,7 +59,7 @@ class BookingController extends Controller
     public function show(Booking $booking)
     {
         $booking->load('property', 'guest', 'room', 'roomType', 'payments', 'addons', 'services');
-        return view('bookings.show', compact('booking'));
+        return view('backend.bookings.show', compact('booking'));
     }
 
     public function edit(Booking $booking)
@@ -66,7 +67,7 @@ class BookingController extends Controller
         $properties = Property::where('is_active', true)->get();
         $guests = Guest::all();
         $roomTypes = RoomType::where('is_active', true)->get();
-        return view('bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes'));
+        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes'));
     }
 
     public function update(Request $request, Booking $booking)
@@ -140,7 +141,7 @@ class BookingController extends Controller
 
     public function calendar()
     {
-        return view('bookings.calendar');
+        return view('backend.bookings.calendar');
     }
 
     public function calendarData(Request $request)

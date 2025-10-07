@@ -19,49 +19,47 @@ class RoomController extends Controller
     public function index()
     {
         $rooms = Room::with('property', 'roomType', 'floor')->get();
-        return view('rooms.index', compact('rooms'));
+        return view('backend.rooms.index', compact('rooms'));
     }
 
     public function create()
-{
-    $properties = Property::all();
-    $roomTypes = RoomType::all();
-    $floors = Floor::all();
-    
-    return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
-}
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'property_id' => 'required|exists:properties,id',
-        'room_type_id' => 'required|exists:room_types,id',
-        'floor_id' => 'required|exists:floors,id',
-        'room_number' => 'required|string|unique:rooms,room_number',
-        'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
-        'is_smoking' => 'boolean',
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'floor_id' => 'required|exists:floors,id',
+            'room_number' => 'required|string|max:20',
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'is_smoking' => 'boolean',
+        ]);
 
-    Room::create($request->all());
+        Room::create($validated);
 
-    return redirect()->route('rooms.index')
-        ->with('success', 'Room created successfully.');
-}
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room created successfully.');
+    }
 
     public function show(Room $room)
     {
         $room->load('property', 'roomType', 'floor', 'currentBooking');
-        return view('rooms.show', compact('room'));
+        return view('backend.rooms.show', compact('room'));
     }
 
     public function edit(Room $room)
-{
-    $properties = Property::all();
-    $roomTypes = RoomType::all();
-    $floors = Floor::all();
-    
-    return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
-}
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
+    }
 
     public function update(Request $request, Room $room)
     {

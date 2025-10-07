@@ -19,7 +19,7 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::with('booking', 'guest', 'paymentGateway')->get();
-        return view('payments.index', compact('payments'));
+        return view('backend.payments.index', compact('payments'));
     }
 
     public function create()
@@ -27,7 +27,7 @@ class PaymentController extends Controller
         $bookings = Booking::where('status', '!=', 'cancelled')->get();
         $guests = Guest::all();
         $paymentGateways = PaymentGateway::where('is_active', true)->get();
-        return view('payments.create', compact('bookings', 'guests', 'paymentGateways'));
+        return view('backend.payments.create', compact('bookings', 'guests', 'paymentGateways'));
     }
 
     public function store(Request $request)
@@ -53,7 +53,7 @@ class PaymentController extends Controller
     public function show(Payment $payment)
     {
         $payment->load('booking', 'guest', 'paymentGateway');
-        return view('payments.show', compact('payment'));
+        return view('backend.payments.show', compact('payment'));
     }
 
     public function edit(Payment $payment)
@@ -61,7 +61,7 @@ class PaymentController extends Controller
         $bookings = Booking::where('status', '!=', 'cancelled')->get();
         $guests = Guest::all();
         $paymentGateways = PaymentGateway::where('is_active', true)->get();
-        return view('payments.edit', compact('payment', 'bookings', 'guests', 'paymentGateways'));
+        return view('backend.payments.edit', compact('payment', 'bookings', 'guests', 'paymentGateways'));
     }
 
     public function update(Request $request, Payment $payment)

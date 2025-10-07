@@ -16,12 +16,12 @@ class GuestController extends Controller
     public function index()
     {
         $guests = Guest::with('user')->get();
-        return view('guests.index', compact('guests'));
+        return view('backend.guests.index', compact('guests'));
     }
 
     public function create()
     {
-        return view('guests.create');
+        return view('backend.guests.create');
     }
 
     public function store(Request $request)
@@ -54,12 +54,12 @@ class GuestController extends Controller
     public function show(Guest $guest)
     {
         $guest->load('user', 'bookings', 'preferences', 'loyaltyMember');
-        return view('guests.show', compact('guest'));
+        return view('backend.guests.show', compact('guest'));
     }
 
     public function edit(Guest $guest)
     {
-        return view('guests.edit', compact('guest'));
+        return view('backend.guests.edit', compact('guest'));
     }
 
     public function update(Request $request, Guest $guest)

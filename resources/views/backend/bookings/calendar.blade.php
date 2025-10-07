@@ -1,3 +1,4 @@
+
 @extends('backend.layouts.app')
 
 @section('content')
@@ -14,7 +15,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="calendar"></div>
+                    <div id="calendar" style="height: 600px;"></div>
                 </div>
             </div>
         </div>
