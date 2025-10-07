@@ -1,4 +1,3 @@
-// app/Http/Controllers/RoomController.php
 <?php
 
 namespace App\Http\Controllers;

@@ -1,4 +1,3 @@
-// app/Models/PaymentGateway.php
 <?php
 
 namespace App\Models;

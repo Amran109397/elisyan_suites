@@ -1,4 +1,3 @@
-// app/Models/Room.php
 <?php
 
 namespace App\Models;

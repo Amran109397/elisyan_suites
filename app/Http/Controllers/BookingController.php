@@ -1,4 +1,3 @@
-// app/Http/Controllers/BookingController.php
 <?php
 
 namespace App\Http\Controllers;

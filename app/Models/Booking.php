@@ -1,4 +1,3 @@
-// app/Models/Booking.php
 <?php
 
 namespace App\Models;

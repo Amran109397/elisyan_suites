@@ -1,4 +1,3 @@
-// app/Models/Guest.php
 <?php
 
 namespace App\Models;

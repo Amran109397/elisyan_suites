@@ -1,4 +1,3 @@
-// app/Models/UserProperty.php
 <?php
 
 namespace App\Models;
