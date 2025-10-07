@@ -11,7 +11,12 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CurrencyController;
 
+// Currency Routes - Only for Super Admin
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::resource('currencies', CurrencyController::class);
+});
 // Property routes
 Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('properties', PropertyController::class);
@@ -83,4 +88,9 @@ Route::middleware(['auth'])->group(function () {
 // Redirect root to dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard');
+});
+
+// Test route
+Route::get('/test', function () {
+    return "Application is working!";
 });

@@ -19,10 +19,6 @@ return new class extends Migration
             $table->boolean('is_smoking')->default(false);
             $table->timestamps();
             $table->softDeletes();
-            
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
-            $table->foreign('room_type_id')->references('id')->on('room_types')->onDelete('cascade');
-            $table->foreign('floor_id')->references('id')->on('floors')->onDelete('cascade');
         });
     }
 

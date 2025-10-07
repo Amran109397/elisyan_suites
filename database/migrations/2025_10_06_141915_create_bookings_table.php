@@ -28,11 +28,6 @@ return new class extends Migration
             $table->decimal('total_price', 12, 2);
             $table->timestamps();
             $table->softDeletes();
-            
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
-            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
-            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
-            $table->foreign('room_type_id')->references('id')->on('room_types')->onDelete('cascade');
         });
     }
 

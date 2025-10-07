@@ -16,8 +16,7 @@ return new class extends Migration
             $table->timestamps();
             
             $table->primary(['user_id', 'property_id']);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+
         });
     }
 

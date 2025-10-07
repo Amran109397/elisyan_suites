@@ -24,9 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
-            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
-            $table->foreign('payment_gateway_id')->references('id')->on('payment_gateways')->onDelete('set null');
+        
         });
     }
 

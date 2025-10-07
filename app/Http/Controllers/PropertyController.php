@@ -1,4 +1,3 @@
-// app/Http/Controllers/PropertyController.php
 <?php
 
 namespace App\Http\Controllers;
@@ -6,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\Currency;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -18,13 +18,13 @@ class PropertyController extends Controller
     public function index()
     {
         $properties = Property::with('currency')->get();
-        return view('properties.index', compact('properties'));
+        return view('backend.properties.index', compact('properties')); // ✅ views path corrected
     }
 
     public function create()
     {
         $currencies = Currency::where('is_active', true)->get();
-        return view('properties.create', compact('currencies'));
+        return view('backend.properties.create', compact('currencies')); // ✅ views path corrected
     }
 
     public function store(Request $request)
@@ -49,6 +49,9 @@ class PropertyController extends Controller
             $validated['logo'] = $request->file('logo')->store('property_logos', 'public');
         }
 
+        // ✅ Add created_by field
+        $validated['created_by'] = auth()->id();
+
         Property::create($validated);
 
         return redirect()->route('properties.index')
@@ -58,13 +61,13 @@ class PropertyController extends Controller
     public function show(Property $property)
     {
         $property->load('currency', 'roomTypes', 'floors', 'rooms');
-        return view('properties.show', compact('property'));
+        return view('backend.properties.show', compact('property')); // ✅ views path corrected
     }
 
     public function edit(Property $property)
     {
         $currencies = Currency::where('is_active', true)->get();
-        return view('properties.edit', compact('property', 'currencies'));
+        return view('backend.properties.edit', compact('property', 'currencies')); // ✅ views path corrected
     }
 
     public function update(Request $request, Property $property)
@@ -88,7 +91,7 @@ class PropertyController extends Controller
         if ($request->hasFile('logo')) {
             // Delete old logo if exists
             if ($property->logo) {
-                \Storage::disk('public')->delete($property->logo);
+                Storage::disk('public')->delete($property->logo);
             }
             $validated['logo'] = $request->file('logo')->store('property_logos', 'public');
         }
@@ -101,7 +104,13 @@ class PropertyController extends Controller
 
     public function destroy(Property $property)
     {
+        // ✅ Delete logo file if exists
+        if ($property->logo) {
+            Storage::disk('public')->delete($property->logo);
+        }
+        
         $property->delete();
+        
         return redirect()->route('properties.index')
             ->with('success', 'Property deleted successfully.');
     }
