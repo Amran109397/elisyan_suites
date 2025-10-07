@@ -1,4 +1,3 @@
-// app/Http/Controllers/GuestController.php
 <?php
 
 namespace App\Http\Controllers;
