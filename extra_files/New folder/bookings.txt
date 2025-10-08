@@ -1,0 +1,1070 @@
+egulo bookings index.blade.php er code
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Bookings</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('bookings.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Booking
+                        </a>
+                        <a href="{{ route('bookings.calendar') }}" class="btn btn-info">
+                            <i class="fas fa-calendar"></i> Calendar View
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Guest</th>
+                                <th>Property</th>
+                                <th>Room</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Status</th>
+                                <th>Total Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($bookings as $booking)
+                            <tr>
+                                <td>{{ $booking->booking_reference }}</td>
+                                <td>{{ $booking->guest->full_name }}</td>
+                                <td>{{ $booking->property->name }}</td>
+                                <td>{{ $booking->room ? $booking->room->room_number : 'Not assigned' }}</td>
+                                <td>{{ $booking->check_in_date }}</td>
+                                <td>{{ $booking->check_out_date }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $booking->status == 'confirmed' ? 'success' : ($booking->status == 'pending' ? 'warning' : ($booking->status == 'checked_in' ? 'info' : ($booking->status == 'cancelled' ? 'danger' : 'secondary'))) }}">
+                                        {{ ucfirst($booking->status) }}
+                                    </span>
+                                </td>
+                                <td>{{ number_format($booking->total_price, 2) }}</td>
+                                <td>
+                                    <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+egulo bookings create.blade.php er code
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Create Booking</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('bookings.store') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="property_id">Property <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('property_id') is-invalid @enderror" id="property_id" name="property_id" required>
+                                        <option value="">Select Property</option>
+                                        @foreach($properties as $property)
+                                            <option value="{{ $property->id }}" {{ old('property_id') == $property->id ? 'selected' : '' }}>{{ $property->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('property_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="guest_id">Guest <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('guest_id') is-invalid @enderror" id="guest_id" name="guest_id" required>
+                                        <option value="">Select Guest</option>
+                                        @foreach($guests as $guest)
+                                            <option value="{{ $guest->id }}" {{ old('guest_id') == $guest->id ? 'selected' : '' }}>{{ $guest->full_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('guest_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
+                                        <option value="">Select Room Type</option>
+                                        @foreach($roomTypes as $roomType)
+                                            <option value="{{ $roomType->id }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>{{ $roomType->name }} ({{ number_format($roomType->base_price, 2) }})</option>
+                                        @endforeach
+                                    </select>
+                                    @error('room_type_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_id">Room</label>
+                                    <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id">
+                                        <option value="">Select Room (Optional)</option>
+                                    </select>
+                                    @error('room_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="check_in_date">Check-in Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('check_in_date') is-invalid @enderror" id="check_in_date" name="check_in_date" value="{{ old('check_in_date') }}" required>
+                                    @error('check_in_date')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="check_out_date">Check-out Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('check_out_date') is-invalid @enderror" id="check_out_date" name="check_out_date" value="{{ old('check_out_date') }}" required>
+                                    @error('check_out_date')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="adults">Adults <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control @error('adults') is-invalid @enderror" id="adults" name="adults" value="{{ old('adults', 1) }}" min="1" required>
+                                    @error('adults')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="children">Children</label>
+                                    <input type="number" class="form-control @error('children') is-invalid @enderror" id="children" name="children" value="{{ old('children', 0) }}" min="0">
+                                    @error('children')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="infants">Infants</label>
+                                    <input type="number" class="form-control @error('infants') is-invalid @enderror" id="infants" name="infants" value="{{ old('infants', 0) }}" min="0">
+                                    @error('infants')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <option value="pending" {{ old('status', 'pending') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                        <option value="checked_in" {{ old('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
+                                        <option value="checked_out" {{ old('status') == 'checked_out' ? 'selected' : '' }}>Checked Out</option>
+                                        <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        <option value="no_show" {{ old('status') == 'no_show' ? 'selected' : '' }}>No Show</option>
+                                    </select>
+                                    @error('status')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="booking_source">Booking Source <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('booking_source') is-invalid @enderror" id="booking_source" name="booking_source" required>
+                                        <option value="website" {{ old('booking_source', 'website') == 'website' ? 'selected' : '' }}>Website</option>
+                                        <option value="walk_in" {{ old('booking_source') == 'walk_in' ? 'selected' : '' }}>Walk In</option>
+                                        <option value="phone" {{ old('booking_source') == 'phone' ? 'selected' : '' }}>Phone</option>
+                                        <option value="ota" {{ old('booking_source') == 'ota' ? 'selected' : '' }}>OTA</option>
+                                        <option value="travel_agent" {{ old('booking_source') == 'travel_agent' ? 'selected' : '' }}>Travel Agent</option>
+                                        <option value="corporate" {{ old('booking_source') == 'corporate' ? 'selected' : '' }}>Corporate</option>
+                                    </select>
+                                    @error('booking_source')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_price">Total Price <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price') }}" step="0.01" min="0" required>
+                            @error('total_price')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="special_requests">Special Requests</label>
+                            <textarea class="form-control @error('special_requests') is-invalid @enderror" id="special_requests" name="special_requests" rows="3">{{ old('special_requests') }}</textarea>
+                            @error('special_requests')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Create Booking</button>
+                            <a href="{{ route('bookings.index') }}" class="btn btn-default">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // Property change handler
+        $('#property_id').change(function() {
+            var propertyId = $(this).val();
+            
+            if (propertyId) {
+                // Update room types based on property
+                $.ajax({
+                    url: '/api/room-types/by-property/' + propertyId,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#room_type_id').empty();
+                        $('#room_type_id').append('<option value="">Select Room Type</option>');
+                        
+                        $.each(data, function(key, value) {
+                            $('#room_type_id').append('<option value="' + value.id + '">' + value.name + ' (' + value.base_price + ')</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#room_type_id').empty();
+                $('#room_type_id').append('<option value="">Select Room Type</option>');
+            }
+        });
+        
+        // Room type change handler
+        $('#room_type_id').change(function() {
+            var propertyId = $('#property_id').val();
+            var roomTypeId = $(this).val();
+            var checkInDate = $('#check_in_date').val();
+            var checkOutDate = $('#check_out_date').val();
+            
+            if (propertyId && roomTypeId && checkInDate && checkOutDate) {
+                // Check available rooms
+                $.ajax({
+                    url: '{{ route("bookings.check-availability") }}',
+                    type: 'GET',
+                    data: {
+                        property_id: propertyId,
+                        room_type_id: roomTypeId,
+                        check_in_date: checkInDate,
+                        check_out_date: checkOutDate
+                    },
+                    success: function(data) {
+                        $('#room_id').empty();
+                        $('#room_id').append('<option value="">Select Room (Optional)</option>');
+                        
+                        $.each(data.rooms, function(key, value) {
+                            $('#room_id').append('<option value="' + value.id + '">' + value.room_number + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#room_id').empty();
+                $('#room_id').append('<option value="">Select Room (Optional)</option>');
+            }
+        });
+        
+        // Date change handlers
+        $('#check_in_date, #check_out_date').change(function() {
+            $('#room_type_id').trigger('change');
+        });
+    });
+</script>
+@endsection
+
+egulo bookings edit.blade.php er code 
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Booking</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('bookings.update', $booking->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="property_id">Property <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('property_id') is-invalid @enderror" id="property_id" name="property_id" required>
+                                        <option value="">Select Property</option>
+                                        @foreach($properties as $property)
+                                            <option value="{{ $property->id }}" {{ old('property_id', $booking->property_id) == $property->id ? 'selected' : '' }}>{{ $property->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('property_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="guest_id">Guest <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('guest_id') is-invalid @enderror" id="guest_id" name="guest_id" required>
+                                        <option value="">Select Guest</option>
+                                        @foreach($guests as $guest)
+                                            <option value="{{ $guest->id }}" {{ old('guest_id', $booking->guest_id) == $guest->id ? 'selected' : '' }}>{{ $guest->full_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('guest_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
+                                        <option value="">Select Room Type</option>
+                                        @foreach($roomTypes as $roomType)
+                                            <option value="{{ $roomType->id }}" {{ old('room_type_id', $booking->room_type_id) == $roomType->id ? 'selected' : '' }}>{{ $roomType->name }} ({{ number_format($roomType->base_price, 2) }})</option>
+                                        @endforeach
+                                    </select>
+                                    @error('room_type_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_id">Room</label>
+                                    <select class="form-select @error('room_id') is-invalid @enderror" id="room_id" name="room_id">
+                                        <option value="">Select Room (Optional)</option>
+                                        @foreach($rooms as $room)
+                                            <option value="{{ $room->id }}" {{ old('room_id', $booking->room_id) == $room->id ? 'selected' : '' }}>{{ $room->room_number }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('room_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="check_in_date">Check-in Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('check_in_date') is-invalid @enderror" id="check_in_date" name="check_in_date" value="{{ old('check_in_date', $booking->check_in_date) }}" required>
+                                    @error('check_in_date')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="check_out_date">Check-out Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control @error('check_out_date') is-invalid @enderror" id="check_out_date" name="check_out_date" value="{{ old('check_out_date', $booking->check_out_date) }}" required>
+                                    @error('check_out_date')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="adults">Adults <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control @error('adults') is-invalid @enderror" id="adults" name="adults" value="{{ old('adults', $booking->adults) }}" min="1" required>
+                                    @error('adults')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="children">Children</label>
+                                    <input type="number" class="form-control @error('children') is-invalid @enderror" id="children" name="children" value="{{ old('children', $booking->children) }}" min="0">
+                                    @error('children')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="infants">Infants</label>
+                                    <input type="number" class="form-control @error('infants') is-invalid @enderror" id="infants" name="infants" value="{{ old('infants', $booking->infants) }}" min="0">
+                                    @error('infants')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <option value="pending" {{ old('status', $booking->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                        <option value="checked_in" {{ old('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
+                                        <option value="checked_out" {{ old('status') == 'checked_out' ? 'selected' : '' }}>Checked Out</option>
+                                        <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        <option value="no_show" {{ old('status') == 'no_show' ? 'selected' : '' }}>No Show</option>
+                                    </select>
+                                    @error('status')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="booking_source">Booking Source <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('booking_source') is-invalid @enderror" id="booking_source" name="booking_source" required>
+                                        <option value="website" {{ old('booking_source', $booking->booking_source) == 'website' ? 'selected' : '' }}>Website</option>
+                                        <option value="walk_in" {{ old('booking_source') == 'walk_in' ? 'selected' : '' }}>Walk In</option>
+                                        <option value="phone" {{ old('booking_source') == 'phone' ? 'selected' : '' }}>Phone</option>
+                                        <option value="ota" {{ old('booking_source') == 'ota' ? 'selected' : '' }}>OTA</option>
+                                        <option value="travel_agent" {{ old('booking_source') == 'travel_agent' ? 'selected' : '' }}>Travel Agent</option>
+                                        <option value="corporate" {{ old('booking_source') == 'corporate' ? 'selected' : '' }}>Corporate</option>
+                                    </select>
+                                    @error('booking_source')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_price">Total Price <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price', $booking->total_price) }}" step="0.01" min="0" required>
+                            @error('total_price')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="special_requests">Special Requests</label>
+                            <textarea class="form-control @error('special_requests') is-invalid @enderror" id="special_requests" name="special_requests" rows="3">{{ old('special_requests', $booking->special_requests) }}</textarea>
+                            @error('special_requests')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update Booking</button>
+                            <a href="{{ route('bookings.index') }}" class="btn btn-default">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+egulo bookings show.blade.php er code 
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Booking Details</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Booking Reference:</strong> {{ $booking->booking_reference }}</p>
+                            <p><strong>Guest:</strong> {{ $booking->guest->full_name }}</p>
+                            <p><strong>Property:</strong> {{ $booking->property->name }}</p>
+                            <p><strong>Room Type:</strong> {{ $booking->roomType->name }}</p>
+                            <p><strong>Room:</strong> {{ $booking->room ? $booking->room->room_number : 'Not assigned' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Check-in Date:</strong> {{ $booking->check_in_date }}</p>
+                            <p><strong>Check-out Date:</strong> {{ $booking->check_out_date }}</p>
+                            <p><strong>Total Nights:</strong> {{ $booking->total_nights }}</p>
+                            <p><strong>Adults:</strong> {{ $booking->adults }}</p>
+                            <p><strong>Children:</strong> {{ $booking->children }}</p>
+                            <p><strong>Infants:</strong> {{ $booking->infants }}</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{{ $booking->status == 'confirmed' ? 'success' : ($booking->status == 'pending' ? 'warning' : ($booking->status == 'checked_in' ? 'info' : ($booking->status == 'cancelled' ? 'danger' : 'secondary'))) }}">
+                                    {{ ucfirst($booking->status) }}
+                                </span>
+                            </p>
+                            <p><strong>Booking Source:</strong> {{ ucfirst(str_replace('_', ' ', $booking->booking_source)) }}</p>
+                            <p><strong>Total Price:</strong> {{ number_format($booking->total_price, 2) }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Total Paid:</strong> {{ number_format($booking->total_paid, 2) }}</p>
+                            <p><strong>Remaining:</strong> {{ number_format($booking->remaining_amount, 2) }}</p>
+                            <p><strong>Fully Paid:</strong> {{ $booking->is_fully_paid ? 'Yes' : 'No' }}</p>
+                        </div>
+                    </div>
+                    @if($booking->special_requests)
+                    <div class="mt-3">
+                        <h5>Special Requests</h5>
+                        <p>{{ $booking->special_requests }}</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Payments</h5>
+                    <div class="card-tools">
+                        <a href="{{ route('payments.create', ['booking_id' => $booking->id]) }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Add Payment
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if($booking->payments->count() > 0)
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($booking->payments as $payment)
+                                    <tr>
+                                        <td>{{ number_format($payment->amount, 2) }}</td>
+                                        <td>{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</td>
+                                        <td>{{ ucfirst(str_replace('_', ' ', $payment->payment_type)) }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ $payment->payment_status == 'completed' ? 'success' : ($payment->payment_status == 'pending' ? 'warning' : 'danger') }}">
+                                                {{ ucfirst($payment->payment_status) }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $payment->created_at->format('d M Y') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p>No payments found.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Booking Actions</h5>
+                </div>
+                <div class="card-body">
+                    @if($booking->status == 'pending')
+                        <a href="{{ route('bookings.confirm', $booking->id) }}" class="btn btn-success">
+                            <i class="fas fa-check"></i> Confirm Booking
+                        </a>
+                    @endif
+                    
+                    @if($booking->status == 'confirmed')
+                        <a href="{{ route('check-ins.create', ['booking_id' => $booking->id]) }}" class="btn btn-info">
+                            <i class="fas fa-sign-in-alt"></i> Check In
+                        </a>
+                    @endif
+                    
+                    @if($booking->status == 'checked_in')
+                        <a href="{{ route('check-outs.create', ['booking_id' => $booking->id]) }}" class="btn btn-warning">
+                            <i class="fas fa-sign-out-alt"></i> Check Out
+                        </a>
+                    @endif
+                    
+                    @if(!in_array($booking->status, ['cancelled', 'checked_out']))
+                        <a href="{{ route('bookings.cancel', $booking->id) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                            <i class="fas fa-times"></i> Cancel Booking
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+egulo bookings calender.blade.php er code 
+
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Booking Calendar</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="calendar" style="height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '{{ route("bookings.calendar-data") }}',
+            eventClick: function(info) {
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                }
+            }
+        });
+        calendar.render();
+    });
+</script>
+@endsection
+
+
+egulo bookings er model bookings.php er code 
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Booking extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'property_id',
+        'guest_id',
+        'room_id',
+        'room_type_id',
+        'check_in_date',
+        'check_out_date',
+        'total_nights',
+        'adults',
+        'children',
+        'infants',
+        'special_requests',
+        'status',
+        'booking_source',
+        'booking_reference',
+        'total_price',
+    ];
+
+    protected $casts = [
+        'check_in_date' => 'date',
+        'check_out_date' => 'date',
+        'total_price' => 'decimal:2',
+    ];
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
+
+    public function guest()
+    {
+        return $this->belongsTo(Guest::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function roomType()
+    {
+        return $this->belongsTo(RoomType::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function addons()
+    {
+        return $this->hasMany(BookingAddon::class);
+    }
+
+    public function services()
+    {
+        return $this->hasMany(BookingService::class);
+    }
+
+    public function checkIn()
+    {
+        return $this->hasOne(CheckIn::class);
+    }
+
+    public function checkOut()
+    {
+        return $this->hasOne(CheckOut::class);
+    }
+
+    public function modifications()
+    {
+        return $this->hasMany(BookingModification::class);
+    }
+
+    public function roomAssignments()
+    {
+        return $this->hasMany(RoomAssignment::class);
+    }
+
+    public function roomServiceOrders()
+    {
+        return $this->hasMany(RoomServiceOrder::class);
+    }
+
+    public function accountsReceivable()
+    {
+        return $this->hasOne(AccountsReceivable::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    // Calculate total paid amount
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()
+            ->where('payment_status', 'completed')
+            ->sum('amount');
+    }
+
+    // Calculate remaining amount
+    public function getRemainingAmountAttribute()
+    {
+        return $this->total_price - $this->total_paid;
+    }
+
+    // Check if booking is fully paid
+    public function getIsFullyPaidAttribute()
+    {
+        return $this->remaining_amount <= 0;
+    }
+
+    // Generate booking reference
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($booking) {
+            if (empty($booking->booking_reference)) {
+                $booking->booking_reference = 'BKG' . date('Ym') . strtoupper(substr(md5(uniqid(rand(), true)), 0, 4));
+            }
+            
+            if (empty($booking->total_nights)) {
+                $checkIn = new \DateTime($booking->check_in_date);
+                $checkOut = new \DateTime($booking->check_out_date);
+                $interval = $checkIn->diff($checkOut);
+                $booking->total_nights = $interval->days;
+            }
+        });
+    }
+
+    // app/Models/Booking.php
+public function calculateTotalPrice()
+{
+    $roomType = $this->roomType;
+    $nights = $this->total_nights;
+    
+    // মৌলিক মূল্য হিসাব
+    $basePrice = $roomType->base_price * $nights;
+    
+    // এখানে অতিরিক্ত চার্জ, ডিসকাউন্ট ইত্যাদি যোগ করা যেতে পারে
+    
+    return $basePrice;
+}
+}
+
+egulo bookings er controller BookingController.php er code
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Booking;
+use App\Models\Property;
+use App\Models\Guest;
+use App\Models\Room;
+use App\Models\RoomType;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+class BookingController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:super_admin,property_manager,receptionist');
+    }
+
+    public function index()
+    {
+        $bookings = Booking::with('property', 'guest', 'room', 'roomType')->get();
+        return view('backend.bookings.index', compact('bookings'));
+    }
+
+    public function create()
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        return view('backend.bookings.create', compact('properties', 'guests', 'roomTypes'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date|after_or_equal:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        Booking::create($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking created successfully.');
+    }
+
+    public function show(Booking $booking)
+    {
+        $booking->load('property', 'guest', 'room', 'roomType', 'payments', 'addons', 'services');
+        return view('backend.bookings.show', compact('booking'));
+    }
+
+    public function edit(Booking $booking)
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes'));
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        $booking->update($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking updated successfully.');
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking deleted successfully.');
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+        ]);
+
+        $propertyId = $request->property_id;
+        $roomTypeId = $request->room_type_id;
+        $checkInDate = $request->check_in_date;
+        $checkOutDate = $request->check_out_date;
+
+        $availableRooms = Room::where('property_id', $propertyId)
+            ->where('room_type_id', $roomTypeId)
+            ->where('status', 'available')
+            ->whereNotIn('id', function ($query) use ($checkInDate, $checkOutDate) {
+                $query->select('room_id')
+                    ->from('bookings')
+                    ->where('status', '!=', 'cancelled')
+                    ->where(function ($q) use ($checkInDate, $checkOutDate) {
+                        $q->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
+                            ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
+                            ->orWhere(function ($q) use ($checkInDate, $checkOutDate) {
+                                $q->where('check_in_date', '<=', $checkInDate)
+                                    ->where('check_out_date', '>=', $checkOutDate);
+                            });
+                    });
+            })
+            ->get();
+
+        return response()->json([
+            'available' => $availableRooms->count(),
+            'rooms' => $availableRooms
+        ]);
+    }
+
+    public function calendar()
+    {
+        return view('backend.bookings.calendar');
+    }
+
+    public function calendarData(Request $request)
+    {
+        $start = $request->start;
+        $end = $request->end;
+        
+        $bookings = Booking::whereBetween('check_in_date', [$start, $end])
+            ->orWhereBetween('check_out_date', [$start, $end])
+            ->with('guest', 'room')
+            ->get();
+
+        $events = [];
+        
+        foreach ($bookings as $booking) {
+            $events[] = [
+                'id' => $booking->id,
+                'title' => $booking->guest->full_name . ' - ' . ($booking->room ? $booking->room->room_number : 'No Room'),
+                'start' => $booking->check_in_date,
+                'end' => $booking->check_out_date,
+                'color' => $this->getBookingColor($booking->status),
+                'url' => route('bookings.show', $booking->id)
+            ];
+        }
+
+        return response()->json($events);
+    }
+
+    private function getBookingColor($status)
+    {
+        $colors = [
+            'pending' => '#ffc107',
+            'confirmed' => '#28a745',
+            'checked_in' => '#17a2b8',
+            'checked_out' => '#6c757d',
+            'cancelled' => '#dc3545',
+            'no_show' => '#343a40',
+            'modified' => '#6610f2'
+        ];
+
+        return $colors[$status] ?? '#007bff';
+    }
+}
