@@ -120,6 +120,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('waiting-list', function () {
             return 'Waiting List Page - Under Construction';
         })->name('waiting-list.index');
+        
+        // Booking sub-menu routes
+        Route::get('booking-addons', function () {
+            return 'Booking Add-ons Page - Under Construction';
+        })->name('booking-addons.index');
+        
+        Route::get('booking-modifications', function () {
+            return 'Booking Modifications Page - Under Construction';
+        })->name('booking-modifications.index');
+        
+        Route::get('booking-services', function () {
+            return 'Booking Services Page - Under Construction';
+        })->name('booking-services.index');
+        
+        // Guest sub-menu routes
+        Route::get('guest-preferences', function () {
+            return 'Guest Preferences Page - Under Construction';
+        })->name('guest-preferences.index');
     });
     
     // Room Management
@@ -131,6 +149,23 @@ Route::middleware(['auth'])->group(function () {
         Route::get('room-images', function () {
             return 'Room Images Page - Under Construction';
         })->name('room-images.index');
+        
+        // Pricing sub-menu routes
+        Route::get('prices', function () {
+            return 'Prices Page - Under Construction';
+        })->name('prices.index');
+        
+        Route::get('seasons', function () {
+            return 'Seasons Page - Under Construction';
+        })->name('seasons.index');
+        
+        Route::get('packages', function () {
+            return 'Packages Page - Under Construction';
+        })->name('packages.index');
+        
+        Route::get('promo-codes', function () {
+            return 'Promo Codes Page - Under Construction';
+        })->name('promo-codes.index');
     });
     
     // Housekeeping & Maintenance
@@ -235,10 +270,6 @@ Route::middleware(['auth'])->group(function () {
     
     // Guest Relations & Loyalty
     Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        Route::get('guest-preferences', function () {
-            return 'Guest Preferences Page - Under Construction';
-        })->name('guest-preferences.index');
-        
         Route::get('loyalty-programs', function () {
             return 'Loyalty Programs Page - Under Construction';
         })->name('loyalty-programs.index');
@@ -350,6 +381,12 @@ Route::middleware(['auth'])->group(function () {
             return 'Roles Page - Under Construction';
         })->name('roles.index');
         
+        // User Properties sub-menu route
+        Route::get('user-properties', function () {
+            return 'User Properties Page - Under Construction';
+        })->name('user-properties.index');
+        
+        // System Configuration sub-menu routes
         Route::get('languages', function () {
             return 'Languages Page - Under Construction';
         })->name('languages.index');
@@ -362,6 +399,7 @@ Route::middleware(['auth'])->group(function () {
             return 'Exchange Rates Page - Under Construction';
         })->name('exchange-rates.index');
         
+        // Communication sub-menu routes
         Route::get('email-templates', function () {
             return 'Email Templates Page - Under Construction';
         })->name('email-templates.index');
@@ -378,6 +416,7 @@ Route::middleware(['auth'])->group(function () {
             return 'Notification Logs Page - Under Construction';
         })->name('notification-logs.index');
         
+        // Security sub-menu routes
         Route::get('api-keys', function () {
             return 'API Keys Page - Under Construction';
         })->name('api-keys.index');
