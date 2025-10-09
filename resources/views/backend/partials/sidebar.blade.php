@@ -27,26 +27,14 @@
             <div class="collapse show" id="frontDeskCollapse">
                 <ul class="subsection-list">
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#bookingsSubmenu">
+                        <a href="{{ route('bookings.index') }}" class="subsection-link">
                             <i class="fas fa-calendar-alt"></i> Bookings
-                            <i class="fas fa-chevron-right float-end"></i>
                         </a>
-                        <ul class="collapse sub-submenu" id="bookingsSubmenu">
-                            <li><a href="{{ route('bookings.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-list"></i> All Bookings</a></li>
-                            <li><a href="{{ route('booking-addons.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-plus"></i> Booking Add-ons</a></li>
-                            <li><a href="{{ route('booking-modifications.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-edit"></i> Booking Modifications</a></li>
-                            <li><a href="{{ route('booking-services.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-concierge-bell"></i> Booking Services</a></li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#guestsSubmenu">
+                        <a href="{{ route('guests.index') }}" class="subsection-link">
                             <i class="fas fa-users"></i> Guests
-                            <i class="fas fa-chevron-right float-end"></i>
                         </a>
-                        <ul class="collapse sub-submenu" id="guestsSubmenu">
-                            <li><a href="{{ route('guests.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user-friends"></i> All Guests</a></li>
-                            <li><a href="{{ route('guest-preferences.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-heart"></i> Guest Preferences</a></li>
-                        </ul>
                     </li>
                     <li>
                         <a href="{{ route('check-ins.index') }}" class="subsection-link">
@@ -102,18 +90,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#pricingSubmenu">
-                            <i class="fas fa-dollar-sign"></i> Pricing
-                            <i class="fas fa-chevron-right float-end"></i>
-                        </a>
-                        <ul class="collapse sub-submenu" id="pricingSubmenu">
-                            <li><a href="{{ route('prices.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-tag"></i> Prices</a></li>
-                            <li><a href="{{ route('seasons.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-calendar"></i> Seasons</a></li>
-                            <li><a href="{{ route('packages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-gift"></i> Packages</a></li>
-                            <li><a href="{{ route('promo-codes.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-ticket-alt"></i> Promo Codes</a></li>
-                        </ul>
-                    </li>
-                    <li>
                         <a href="{{ route('amenities.index') }}" class="subsection-link">
                             <i class="fas fa-concierge-bell"></i> Room Amenities
                         </a>
@@ -121,6 +97,16 @@
                     <li>
                         <a href="{{ route('room-images.index') }}" class="subsection-link">
                             <i class="fas fa-images"></i> Room Images
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('room-amenities.index') }}" class="subsection-link">
+                            <i class="fas fa-concierge-bell"></i> Room Amenities
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('room-status-logs.index') }}" class="subsection-link">
+                            <i class="fas fa-clipboard-list"></i> Room Status Logs
                         </a>
                     </li>
                 </ul>
@@ -137,7 +123,7 @@
             <div class="collapse" id="housekeepingCollapse">
                 <ul class="subsection-list">
                     <li>
-                        <a href="{{ route('housekeeping-staff.index') }}" class="subsection-link">
+                        <a href="{{ route('housekeeping-staffs.index') }}" class="subsection-link">
                             <i class="fas fa-user-friends"></i> Housekeeping Staff
                         </a>
                     </li>
@@ -192,6 +178,11 @@
                     <li>
                         <a href="{{ route('taxes.index') }}" class="subsection-link">
                             <i class="fas fa-percentage"></i> Taxes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('currencies.index') }}" class="subsection-link">
+                            <i class="fas fa-money-bill"></i> Currencies
                         </a>
                     </li>
                 </ul>
@@ -332,6 +323,77 @@
             </div>
         </div>
 
+        <!-- Pricing & Packages -->
+        <div class="sidebar-section" id="pricing" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#pricingCollapse">
+                <i class="fas fa-tag section-icon"></i>
+                <span class="section-title">Pricing & Packages</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="pricingCollapse">
+                <ul class="subsection-list">
+                    <li>
+                        <a href="{{ route('prices.index') }}" class="subsection-link">
+                            <i class="fas fa-dollar-sign"></i> Prices
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('packages.index') }}" class="subsection-link">
+                            <i class="fas fa-gift"></i> Packages
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('promo-codes.index') }}" class="subsection-link">
+                            <i class="fas fa-ticket-alt"></i> Promo Codes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('seasons.index') }}" class="subsection-link">
+                            <i class="fas fa-calendar-alt"></i> Seasons
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Services & Add-ons -->
+        <div class="sidebar-section" id="services-addons" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#servicesAddonsCollapse">
+                <i class="fas fa-concierge-bell section-icon"></i>
+                <span class="section-title">Services & Add-ons</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="servicesAddonsCollapse">
+                <ul class="subsection-list">
+                    <li>
+                        <a href="{{ route('services.index') }}" class="subsection-link">
+                            <i class="fas fa-concierge-bell"></i> Services
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('addons.index') }}" class="subsection-link">
+                            <i class="fas fa-plus-circle"></i> Add-ons
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('booking-services.index') }}" class="subsection-link">
+                            <i class="fas fa-clipboard-list"></i> Booking Services
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('booking-addons.index') }}" class="subsection-link">
+                            <i class="fas fa-plus-square"></i> Booking Add-ons
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('booking-modifications.index') }}" class="subsection-link">
+                            <i class="fas fa-edit"></i> Booking Modifications
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <!-- Channel Management -->
         <div class="sidebar-section" id="channel-management" data-role="super_admin,property_manager">
             <div class="section-header" data-bs-toggle="collapse" data-bs-target="#channelCollapse">
@@ -387,6 +449,11 @@
                     <li>
                         <a href="{{ route('resources.index') }}" class="subsection-link">
                             <i class="fas fa-cubes"></i> Resources
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('event-resources.index') }}" class="subsection-link">
+                            <i class="fas fa-tasks"></i> Event Resources
                         </a>
                     </li>
                     <li>
@@ -484,50 +551,74 @@
             <div class="collapse" id="systemAdminCollapse">
                 <ul class="subsection-list">
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#userManagementSubmenu">
-                            <i class="fas fa-users"></i> User Management
-                            <i class="fas fa-chevron-right float-end"></i>
+                        <a href="{{ route('users.index') }}" class="subsection-link">
+                            <i class="fas fa-user"></i> Users
                         </a>
-                        <ul class="collapse sub-submenu" id="userManagementSubmenu">
-                            <li><a href="{{ route('users.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user"></i> Users</a></li>
-                            <li><a href="{{ route('roles.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user-tag"></i> Roles</a></li>
-                            <li><a href="{{ route('user-properties.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-building"></i> User Properties</a></li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#systemConfigSubmenu">
-                            <i class="fas fa-cog"></i> System Configuration
-                            <i class="fas fa-chevron-right float-end"></i>
+                        <a href="{{ route('roles.index') }}" class="subsection-link">
+                            <i class="fas fa-user-tag"></i> Roles
                         </a>
-                        <ul class="collapse sub-submenu" id="systemConfigSubmenu">
-                            <li><a href="{{ route('languages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-language"></i> Languages</a></li>
-                            <li><a href="{{ route('translations.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-language"></i> Translations</a></li>
-                            <li><a href="{{ route('currencies.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-money-bill"></i> Currencies</a></li>
-                            <li><a href="{{ route('exchange-rates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-exchange-alt"></i> Exchange Rates</a></li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#communicationSubmenu">
-                            <i class="fas fa-envelope"></i> Communication
-                            <i class="fas fa-chevron-right float-end"></i>
+                        <a href="{{ route('user-properties.index') }}" class="subsection-link">
+                            <i class="fas fa-building-user"></i> User Properties
                         </a>
-                        <ul class="collapse sub-submenu" id="communicationSubmenu">
-                            <li><a href="{{ route('email-templates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-envelope"></i> Email Templates</a></li>
-                            <li><a href="{{ route('sms-templates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-sms"></i> SMS Templates</a></li>
-                            <li><a href="{{ route('messages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-comment"></i> Messages</a></li>
-                            <li><a href="{{ route('notification-logs.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-bell"></i> Notification Logs</a></li>
-                        </ul>
                     </li>
                     <li>
-                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#securitySubmenu">
-                            <i class="fas fa-shield-alt"></i> Security
-                            <i class="fas fa-chevron-right float-end"></i>
+                        <a href="{{ route('currencies.index') }}" class="subsection-link">
+                            <i class="fas fa-money-bill"></i> Currencies
                         </a>
-                        <ul class="collapse sub-submenu" id="securitySubmenu">
-                            <li><a href="{{ route('api-keys.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-key"></i> API Keys</a></li>
-                            <li><a href="{{ route('personal-access-tokens.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-key"></i> Personal Access Tokens</a></li>
-                            <li><a href="{{ route('audit-logs.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-history"></i> Audit Logs</a></li>
-                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ route('languages.index') }}" class="subsection-link">
+                            <i class="fas fa-language"></i> Languages
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('translations.index') }}" class="subsection-link">
+                            <i class="fas fa-language"></i> Translations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('exchange-rates.index') }}" class="subsection-link">
+                            <i class="fas fa-exchange-alt"></i> Exchange Rates
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('email-templates.index') }}" class="subsection-link">
+                            <i class="fas fa-envelope"></i> Email Templates
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('sms-templates.index') }}" class="subsection-link">
+                            <i class="fas fa-sms"></i> SMS Templates
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('messages.index') }}" class="subsection-link">
+                            <i class="fas fa-comment"></i> Messages
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('notification-logs.index') }}" class="subsection-link">
+                            <i class="fas fa-bell"></i> Notification Logs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('api-keys.index') }}" class="subsection-link">
+                            <i class="fas fa-key"></i> API Keys
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('personal-access-tokens.index') }}" class="subsection-link">
+                            <i class="fas fa-key"></i> Personal Access Tokens
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('audit-logs.index') }}" class="subsection-link">
+                            <i class="fas fa-history"></i> Audit Logs
+                        </a>
                     </li>
                 </ul>
             </div>

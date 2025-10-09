@@ -10,7 +10,7 @@ class RoomAmenity extends Model
     use HasFactory;
 
     protected $fillable = [
-        'room_id',
+        'room_type_id',
         'amenity_id',
     ];
 

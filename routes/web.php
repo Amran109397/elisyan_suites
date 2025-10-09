@@ -37,12 +37,14 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuditLogController;
-
-// Pricing Controllers (নতুন যোগ করুন)
+// Additional Controllers
 use App\Http\Controllers\PriceController;
-use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PromoCodeController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\UserPropertyController;
+use App\Http\Controllers\WaitingListController;
+use App\Http\Controllers\RoomImageController;
 
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -132,18 +134,41 @@ Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->g
     Route::post('payments/{payment}/mark-refunded', [PaymentController::class, 'markAsRefunded'])->name('payments.mark-refunded');
 });
 
-// Pricing Management Routes (নতুন যোগ করুন)
+// Price Management Routes
 Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('prices', PriceController::class);
-    Route::resource('seasons', SeasonController::class);
+});
+
+// Package Management Routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('packages', PackageController::class);
+});
+
+// Promo Code Management Routes - Updated to match sidebar
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('promo-codes', PromoCodeController::class);
+});
+
+// Season Management Routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('seasons', SeasonController::class);
+});
+
+// User Property Assignment Routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('user-properties', UserPropertyController::class);
+});
+
+// Waiting List Routes - Updated to match sidebar
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('waiting-list', WaitingListController::class);
 });
 
 // New Routes - Room Management
 Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
     Route::resource('room-amenities', RoomAmenityController::class);
     Route::resource('room-status-logs', RoomStatusLogController::class);
+    Route::resource('room-images', RoomImageController::class);
 });
 
 // New Routes - Booking Management
@@ -181,22 +206,50 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
     Route::resource('feedback', FeedbackController::class);
 });
 
-// New Routes - Maintenance
+// New Routes - Maintenance - Updated to match sidebar
 Route::middleware(['auth', 'role:super_admin,property_manager,housekeeping'])->group(function () {
-    Route::resource('maintenance', MaintenanceController::class);
+    Route::resource('maintenance-issues', MaintenanceController::class);
 });
 
 // New Routes - Housekeeping
 Route::middleware(['auth', 'role:super_admin,property_manager,housekeeping'])->group(function () {
     Route::resource('housekeeping-staffs', HousekeepingStaffController::class);
     Route::resource('housekeeping-tasks', HousekeepingTaskController::class);
+    
+    // Additional Housekeeping Task Routes
+    Route::post('housekeeping-tasks/{task}/start', [HousekeepingTaskController::class, 'start'])->name('housekeeping-tasks.start');
+    Route::post('housekeeping-tasks/{task}/complete', [HousekeepingTaskController::class, 'complete'])->name('housekeeping-tasks.complete');
+    Route::post('housekeeping-tasks/{task}/cancel', [HousekeepingTaskController::class, 'cancel'])->name('housekeeping-tasks.cancel');
 });
 
 // New Routes - Events
 Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('events', EventController::class);
+    Route::get('events/calendar-data', [EventController::class, 'calendarData'])->name('events.calendar-data');
+    
+    // Event Status Routes
+    Route::post('events/{event}/publish', [EventController::class, 'publish'])->name('events.publish');
+    Route::post('events/{event}/start', [EventController::class, 'start'])->name('events.start');
+    Route::post('events/{event}/complete', [EventController::class, 'complete'])->name('events.complete');
+    Route::post('events/{event}/cancel', [EventController::class, 'cancel'])->name('events.cancel');
+});
+
+// New Routes - Event Bookings
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('event-bookings', EventBookingController::class);
+    
+    // Event Booking Status Routes
+    Route::post('event-bookings/{booking}/confirm', [EventBookingController::class, 'confirm'])->name('event-bookings.confirm');
+    Route::post('event-bookings/{booking}/cancel', [EventBookingController::class, 'cancel'])->name('event-bookings.cancel');
+});
+
+// New Routes - Resources
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('resources', ResourceController::class);
+});
+
+// New Routes - Event Resources
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('event-resources', EventResourceController::class);
 });
 
@@ -205,11 +258,56 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
     Route::resource('treatments', TreatmentController::class);
     Route::resource('therapists', TherapistController::class);
     Route::resource('appointments', AppointmentController::class);
+    
+    // Appointment Routes
+    Route::get('appointments/calendar-data', [AppointmentController::class, 'calendarData'])->name('appointments.calendar-data');
+    Route::post('appointments/{appointment}/confirm', [AppointmentController::class, 'confirm'])->name('appointments.confirm');
+    Route::post('appointments/{appointment}/start', [AppointmentController::class, 'start'])->name('appointments.start');
+    Route::post('appointments/{appointment}/complete', [AppointmentController::class, 'complete'])->name('appointments.complete');
+    Route::post('appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
 });
 
 // New Routes - Audit Logs (Super Admin only)
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
+    Route::get('audit-logs/export', [AuditLogController::class, 'export'])->name('audit-logs.export');
+});
+
+// API Routes for dynamic data
+Route::middleware(['auth'])->group(function () {
+    // Room Types by Property
+    Route::get('/api/room-types/by-property/{propertyId}', function($propertyId) {
+        return App\Models\RoomType::where('property_id', $propertyId)->get();
+    });
+    
+    // Rooms by Property and Room Type
+    Route::get('/api/rooms/by-property-type', function(Request $request) {
+        $propertyId = $request->input('property_id');
+        $roomTypeId = $request->input('room_type_id');
+        $checkInDate = $request->input('check_in_date');
+        $checkOutDate = $request->input('check_out_date');
+        
+        $query = App\Models\Room::where('property_id', $propertyId)
+            ->where('room_type_id', $roomTypeId)
+            ->where('status', 'available');
+            
+        // Check availability for the given dates
+        if ($checkInDate && $checkOutDate) {
+            $bookedRooms = App\Models\Booking::where('property_id', $propertyId)
+                ->where(function($query) use ($checkInDate, $checkOutDate) {
+                    $query->where(function($q) use ($checkInDate, $checkOutDate) {
+                        $q->where('check_in_date', '<=', $checkOutDate)
+                            ->where('check_out_date', '>=', $checkInDate);
+                    });
+                })
+                ->whereNotIn('status', ['cancelled', 'no_show'])
+                ->pluck('room_id');
+                
+            $query->whereNotIn('id', $bookedRooms);
+        }
+        
+        return $query->get();
+    });
 });
 
 // Placeholder routes for sidebar items that don't have controllers yet
@@ -227,10 +325,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('room-assignments', function () {
             return 'Room Assignments Page - Under Construction';
         })->name('room-assignments.index');
-        
-        Route::get('waiting-list', function () {
-            return 'Waiting List Page - Under Construction';
-        })->name('waiting-list.index');
     });
     
     // Room Management
@@ -238,15 +332,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('amenities', function () {
             return 'Amenities Page - Under Construction';
         })->name('amenities.index');
-        
-        Route::get('room-images', function () {
-            return 'Room Images Page - Under Construction';
-        })->name('room-images.index');
-    });
-    
-    // Housekeeping & Maintenance
-    Route::middleware(['role:super_admin,property_manager,housekeeping'])->group(function () {
-        // These are now handled by proper controllers
     });
     
     // Financial Management
@@ -334,11 +419,6 @@ Route::middleware(['auth'])->group(function () {
         })->name('suppliers.index');
     });
     
-    // Guest Relations & Loyalty
-    Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        // These are now handled by proper controllers
-    });
-    
     // Channel Management
     Route::middleware(['role:super_admin,property_manager'])->group(function () {
         Route::get('channels', function () {
@@ -356,11 +436,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('channel-sync-logs', function () {
             return 'Channel Sync Logs Page - Under Construction';
         })->name('channel-sync-logs.index');
-    });
-    
-    // Events & Appointments
-    Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        // These are now handled by proper controllers
     });
     
     // Asset Management
@@ -446,10 +521,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('personal-access-tokens', function () {
             return 'Personal Access Tokens Page - Under Construction';
         })->name('personal-access-tokens.index');
-        
-        Route::get('audit-logs', function () {
-            return 'Audit Logs Page - Under Construction';
-        })->name('audit-logs.index');
     });
 });
 

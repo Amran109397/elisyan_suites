@@ -9,9 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('room_amenities', function (Blueprint $table) {
-            $table->timestamps();
+            // ✅ FIRST CREATE THE COLUMNS
+            $table->foreignId('room_type_id')->constrained()->onDelete('cascade');
+            $table->foreignId('amenity_id')->constrained()->onDelete('cascade');
             
+            // ✅ THEN SET PRIMARY KEY
             $table->primary(['room_type_id', 'amenity_id']);
+            
+            $table->timestamps();
         });
     }
 
