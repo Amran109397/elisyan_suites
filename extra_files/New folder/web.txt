@@ -12,6 +12,31 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\FloorController;
+// New Controllers
+use App\Http\Controllers\RoomAmenityController;
+use App\Http\Controllers\RoomStatusLogController;
+use App\Http\Controllers\BookingModificationController;
+use App\Http\Controllers\BookingServiceController;
+use App\Http\Controllers\BookingAddonController;
+use App\Http\Controllers\AddonController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PropertyAmenityController;
+use App\Http\Controllers\GuestPreferenceController;
+use App\Http\Controllers\LoyaltyProgramController;
+use App\Http\Controllers\LoyaltyMemberController;
+use App\Http\Controllers\LoyaltyPointController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\HousekeepingStaffController;
+use App\Http\Controllers\HousekeepingTaskController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventBookingController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\EventResourceController;
+use App\Http\Controllers\TreatmentController;
+use App\Http\Controllers\TherapistController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AuditLogController;
 
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -101,6 +126,78 @@ Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->g
     Route::post('payments/{payment}/mark-refunded', [PaymentController::class, 'markAsRefunded'])->name('payments.mark-refunded');
 });
 
+// New Routes - Room Management
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('room-amenities', RoomAmenityController::class);
+    Route::resource('room-status-logs', RoomStatusLogController::class);
+});
+
+// New Routes - Booking Management
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('booking-modifications', BookingModificationController::class);
+    Route::resource('booking-services', BookingServiceController::class);
+    Route::resource('booking-addons', BookingAddonController::class);
+});
+
+// New Routes - Addons & Services
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('addons', AddonController::class);
+    Route::resource('services', ServiceController::class);
+});
+
+// New Routes - Property Management
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('property-amenities', PropertyAmenityController::class);
+});
+
+// New Routes - Guest Management
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('guest-preferences', GuestPreferenceController::class);
+});
+
+// New Routes - Loyalty Programs
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('loyalty-programs', LoyaltyProgramController::class);
+    Route::resource('loyalty-members', LoyaltyMemberController::class);
+    Route::resource('loyalty-points', LoyaltyPointController::class);
+});
+
+// New Routes - Feedback
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('feedback', FeedbackController::class);
+});
+
+// New Routes - Maintenance
+Route::middleware(['auth', 'role:super_admin,property_manager,housekeeping'])->group(function () {
+    Route::resource('maintenance', MaintenanceController::class);
+});
+
+// New Routes - Housekeeping
+Route::middleware(['auth', 'role:super_admin,property_manager,housekeeping'])->group(function () {
+    Route::resource('housekeeping-staffs', HousekeepingStaffController::class);
+    Route::resource('housekeeping-tasks', HousekeepingTaskController::class);
+});
+
+// New Routes - Events
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('events', EventController::class);
+    Route::resource('event-bookings', EventBookingController::class);
+    Route::resource('resources', ResourceController::class);
+    Route::resource('event-resources', EventResourceController::class);
+});
+
+// New Routes - Treatments & Therapists
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('treatments', TreatmentController::class);
+    Route::resource('therapists', TherapistController::class);
+    Route::resource('appointments', AppointmentController::class);
+});
+
+// New Routes - Audit Logs (Super Admin only)
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
+});
+
 // Placeholder routes for sidebar items that don't have controllers yet
 Route::middleware(['auth'])->group(function () {
     // Front Desk Operations
@@ -135,17 +232,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Housekeeping & Maintenance
     Route::middleware(['role:super_admin,property_manager,housekeeping'])->group(function () {
-        Route::get('housekeeping-staff', function () {
-            return 'Housekeeping Staff Page - Under Construction';
-        })->name('housekeeping-staff.index');
-        
-        Route::get('housekeeping-tasks', function () {
-            return 'Housekeeping Tasks Page - Under Construction';
-        })->name('housekeeping-tasks.index');
-        
-        Route::get('maintenance-issues', function () {
-            return 'Maintenance Issues Page - Under Construction';
-        })->name('maintenance-issues.index');
+        // These are now handled by proper controllers
     });
     
     // Financial Management
@@ -235,25 +322,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Guest Relations & Loyalty
     Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        Route::get('guest-preferences', function () {
-            return 'Guest Preferences Page - Under Construction';
-        })->name('guest-preferences.index');
-        
-        Route::get('loyalty-programs', function () {
-            return 'Loyalty Programs Page - Under Construction';
-        })->name('loyalty-programs.index');
-        
-        Route::get('loyalty-members', function () {
-            return 'Loyalty Members Page - Under Construction';
-        })->name('loyalty-members.index');
-        
-        Route::get('loyalty-points', function () {
-            return 'Loyalty Points Page - Under Construction';
-        })->name('loyalty-points.index');
-        
-        Route::get('feedback', function () {
-            return 'Feedback Page - Under Construction';
-        })->name('feedback.index');
+        // These are now handled by proper controllers
     });
     
     // Channel Management
@@ -277,29 +346,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Events & Appointments
     Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        Route::get('events', function () {
-            return 'Events Page - Under Construction';
-        })->name('events.index');
-        
-        Route::get('event-bookings', function () {
-            return 'Event Bookings Page - Under Construction';
-        })->name('event-bookings.index');
-        
-        Route::get('resources', function () {
-            return 'Resources Page - Under Construction';
-        })->name('resources.index');
-        
-        Route::get('treatments', function () {
-            return 'Treatments Page - Under Construction';
-        })->name('treatments.index');
-        
-        Route::get('therapists', function () {
-            return 'Therapists Page - Under Construction';
-        })->name('therapists.index');
-        
-        Route::get('appointments', function () {
-            return 'Appointments Page - Under Construction';
-        })->name('appointments.index');
+        // These are now handled by proper controllers
     });
     
     // Asset Management

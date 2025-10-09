@@ -1,0 +1,26 @@
+migrations file toiri korechi
+guests,rooms,payments,currencies,room-types,properties,amenities,checkins,checkouts,floors,packages,prices,promocodes,roomassignments,roomimages,seasons,userproperties, waitinglists, room_amenities, room_status_logs, booking_modifiacations, booking_services, booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs, loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks, events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs 
+
+
+
+
+controllers file toiri korechi
+guests,rooms,payments,currencies,room-types,properties,amenities,checkins,checkouts,floors,packages,prices,promocodes,roomassignments,roomimages,seasons,userproperties, waitinglists, room_amenities, room_status_logs, booking_modifiacations, booking_services, booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs, loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks, events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs 
+
+
+
+
+
+models toiri korechi 
+guests,rooms,payments,currencies,room-types,properties,amenities,checkins,checkouts,floors,packages,prices,promocodes,roomassignments,roomimages,seasons,userproperties, waitinglists, room_amenities, room_status_logs, booking_modifiacations, booking_services, booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs, loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks, events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs 
+
+
+
+
+
+view file toiri korechi
+guests,rooms,payments,currencies,room-types,properties,amenities,checkins,checkouts,floors,packages,prices,promocodes,roomassignments,roomimages,seasons,userproperties, waitinglists, room_amenities, room_status_logs, booking_modifiacations, booking_services, booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs, loyalty_members, loyalty_points, feedback, maintenance,
+
+
+egulor migration, models,controller file toiri korechi kintu view file toiri korini 
+Audit-logs, Appointments, treatements, therapists, resources, housekeeping-tasks, housekeeping-staffs, events, event-resources, event-bookings.

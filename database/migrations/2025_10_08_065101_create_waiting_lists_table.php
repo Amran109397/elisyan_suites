@@ -6,21 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('waiting_lists', function (Blueprint $table) {
             $table->id();
+            $table->date('check_in_date');
+            $table->date('check_out_date');
+            $table->integer('adults');
+            $table->integer('children')->default(0);
+            $table->enum('status', ['waiting', 'contacted', 'booked', 'cancelled'])->default('waiting');
+            $table->integer('priority')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('waiting_lists');
     }

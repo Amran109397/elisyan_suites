@@ -6,21 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('maintenance_issues', function (Blueprint $table) {
             $table->id();
+            
+            $table->string('issue_type');
+            $table->text('description');
+            $table->enum('status', ['reported', 'in_progress', 'resolved', 'cancelled'])->default('reported');
+            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
+            
+            $table->timestamp('resolved_at')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('maintenance_issues');
     }

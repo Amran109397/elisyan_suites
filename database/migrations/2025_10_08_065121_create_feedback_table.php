@@ -6,21 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
+           
+          
+            $table->integer('rating');
+            $table->string('category')->nullable();
+            $table->text('comments');
+            $table->enum('status', ['new', 'reviewed', 'resolved', 'dismissed'])->default('new');
+            $table->text('response')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('feedback');
     }

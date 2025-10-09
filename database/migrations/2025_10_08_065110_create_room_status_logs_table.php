@@ -6,21 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('room_status_logs', function (Blueprint $table) {
             $table->id();
+           
+            $table->enum('status', ['available', 'occupied', 'maintenance', 'cleaning', 'out_of_service', 'blocked', 'renovation']);
+            
+            $table->timestamp('changed_at');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('room_status_logs');
     }

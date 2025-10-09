@@ -6,21 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('room_images', function (Blueprint $table) {
             $table->id();
+            $table->string('image_path');
+            $table->string('alt_text');
+            $table->boolean('is_primary')->default(false);
+            $table->integer('display_order')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('room_images');
     }
