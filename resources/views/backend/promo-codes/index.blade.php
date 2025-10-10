@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Promo Codes</h3>
                     <div class="card-tools">
-                        <a href="{{ route('promocodes.create') }}" class="btn btn-primary">
+                        <a href="{{ route('promo-codes.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> New Promo Code
                         </a>
                     </div>
@@ -63,20 +63,20 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('promocodes.show', $promoCode->id) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('promo-codes.show', $promoCode->id) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('promocodes.edit', $promoCode->id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('promo-codes.edit', $promoCode->id) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('promocodes.toggle-active', $promoCode->id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ route('promo-codes.toggle-active', $promoCode->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit" class="btn btn-sm {{ $promoCode->is_active ? 'btn-warning' : 'btn-success' }}" title="{{ $promoCode->is_active ? 'Deactivate' : 'Activate' }}">
                                             <i class="fas {{ $promoCode->is_active ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                                         </button>
                                     </form>
-                                    <form action="{{ route('promocodes.destroy', $promoCode->id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ route('promo-codes.destroy', $promoCode->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">

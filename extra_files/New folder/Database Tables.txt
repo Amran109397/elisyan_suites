@@ -1,0 +1,1321 @@
+Table users {
+  id integer [primary key]
+  name varchar
+  email varchar [unique]
+  password varchar
+  role_id integer
+  profile_image varchar
+  can_access_pos boolean [default: false]
+  pos_outlet_ids text
+  last_login_at timestamp [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table roles {
+  id integer [primary key]
+  name varchar
+  description text
+  permissions json [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table properties {
+  id integer [primary key]
+  name varchar
+  description text
+  address varchar
+  city varchar
+  country varchar
+  phone varchar
+  email varchar
+  logo varchar
+  check_in_time time [default: '14:00:00']
+  check_out_time time [default: '12:00:00']
+  timezone varchar [default: 'UTC']
+  currency_id integer
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table user_properties {
+  user_id integer
+  property_id integer
+  is_primary boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table room_types {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  base_price decimal(12, 2)
+  max_occupancy integer
+  size_sqm decimal(10, 2) [null]
+  bed_type varchar [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table rooms {
+  id integer [primary key]
+  property_id integer
+  room_type_id integer
+  floor_id integer
+  room_number varchar
+  status enum('available', 'occupied', 'maintenance', 'cleaning', 'out_of_service', 'blocked', 'renovation')
+  is_smoking boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table amenities {
+  id integer [primary key]
+  name varchar
+  icon varchar
+  category enum('room', 'bathroom', 'entertainment', 'other')
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table room_amenities {
+  room_type_id integer
+  amenity_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table room_images {
+  id integer [primary key]
+  room_type_id integer
+  image_path varchar
+  alt_text varchar
+  is_primary boolean [default: false]
+  display_order integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table floors {
+  id integer [primary key]
+  property_id integer
+  floor_number integer
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table guests {
+  id integer [primary key]
+  user_id integer [unique, null]
+  first_name varchar
+  last_name varchar
+  email varchar
+  phone varchar
+  date_of_birth date [null]
+  id_type enum('passport', 'nid', 'driving_license', 'other') [null]
+  id_number varchar [null]
+  id_image_path varchar [null]
+  nationality varchar [null]
+  address text [null]
+  vip_status boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table guest_preferences {
+  id integer [primary key]
+  guest_id integer
+  preference_type varchar
+  preference_value varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table bookings {
+  id integer [primary key]
+  property_id integer
+  guest_id integer
+  room_id integer [null]
+  room_type_id integer
+  check_in_date date
+  check_out_date date
+  total_nights integer
+  adults integer [default: 1]
+  children integer [default: 0]
+  infants integer [default: 0]
+  special_requests text [null]
+  status enum('pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show', 'modified')
+  booking_source enum('website', 'walk_in', 'phone', 'ota', 'travel_agent', 'corporate')
+  booking_reference varchar [unique]
+  total_price decimal(12, 2)
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table booking_addons {
+  id integer [primary key]
+  booking_id integer
+  addon_id integer
+  quantity integer
+  price decimal(10, 2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table addons {
+  id integer [primary key]
+  name varchar
+  description text
+  price decimal(10, 2)
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table waiting_list {
+  id integer [primary key]
+  property_id integer
+  guest_id integer
+  room_type_id integer
+  check_in_date date
+  check_out_date date
+  adults integer
+  children integer
+  status enum('waiting', 'contacted', 'booked', 'cancelled')
+  priority integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table booking_modifications {
+  id integer [primary key]
+  booking_id integer
+  modified_by integer
+  modification_type varchar
+  old_values json
+  new_values json
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table payments {
+  id integer [primary key]
+  booking_id integer
+  guest_id integer
+  payment_gateway_id integer [null]
+  amount decimal(12, 2)
+  payment_method enum('credit_card', 'debit_card', 'cash', 'mobile_banking', 'bank_transfer', 'voucher')
+  payment_type enum('advance', 'partial', 'full', 'refund', 'deposit')
+  payment_status enum('pending', 'completed', 'failed', 'refunded', 'voided')
+  transaction_id varchar [unique, null]
+  remarks text [null]
+  paid_at timestamp [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+  processed_by integer [null]
+}
+
+Table payment_gateways {
+  id integer [primary key]
+  name varchar
+  config json
+  is_active boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table invoices {
+  id integer [primary key]
+  booking_id integer
+  invoice_number varchar [unique]
+  issue_date date
+  due_date date
+  amount decimal(12, 2)
+  tax_amount decimal(10, 2)
+  status enum('draft', 'sent', 'paid', 'overdue', 'cancelled', 'voided')
+  pdf_path varchar
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table loyalty_programs {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  points_per_currency decimal(10, 2) [default: 1.00]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table loyalty_members {
+  id integer [primary key]
+  guest_id integer
+  loyalty_program_id integer
+  points integer [default: 0]
+  tier varchar
+  join_date date
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table loyalty_points {
+  id integer [primary key]
+  loyalty_member_id integer
+  points integer
+  activity varchar
+  reference_id varchar [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table feedback {
+  id integer [primary key]
+  property_id integer
+  guest_id integer
+  booking_id integer [null]
+  rating integer
+  category varchar [null]
+  comments text
+  status enum('new', 'reviewed', 'resolved', 'dismissed')
+  response text [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table prices {
+  id integer [primary key]
+  room_type_id integer
+  date date
+  price decimal(12, 2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table seasons {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  start_date date
+  end_date date
+  price_adjustment decimal(5, 2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table packages {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  price decimal(12, 2)
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table promo_codes {
+  id integer [primary key]
+  code varchar [unique]
+  discount_type enum('percentage', 'fixed', 'free_night')
+  discount_value decimal(10, 2)
+  max_uses integer
+  used_count integer [default: 0]
+  valid_from date
+  valid_until date
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table check_ins {
+  id integer [primary key]
+  booking_id integer
+  checked_by integer
+  id_document_path varchar
+  notes text
+  actual_check_in timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table check_outs {
+  id integer [primary key]
+  booking_id integer
+  checked_by integer
+  final_bill decimal(12, 2)
+  payment_status enum('pending', 'paid', 'partial')
+  notes text
+  actual_check_out timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table room_assignments {
+  id integer [primary key]
+  booking_id integer
+  room_id integer
+  assigned_by integer
+  assigned_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table housekeeping_staff {
+  id integer [primary key]
+  property_id integer
+  user_id integer
+  employee_id varchar [unique]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table housekeeping_tasks {
+  id integer [primary key]
+  property_id integer
+  room_id integer
+  staff_id integer
+  task_type enum('cleaning', 'maintenance', 'inspection', 'turndown')
+  status enum('assigned', 'in_progress', 'completed', 'cancelled', 'skipped')
+  priority enum('low', 'medium', 'high', 'urgent')
+  due_date timestamp
+  completed_at timestamp [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table room_status_logs {
+  id integer [primary key]
+  room_id integer
+  status enum('available', 'occupied', 'maintenance', 'cleaning', 'out_of_service', 'blocked', 'renovation')
+  changed_by integer
+  changed_at timestamp
+  notes text
+}
+
+Table maintenance_issues {
+  id integer [primary key]
+  room_id integer
+  reported_by integer
+  issue_type varchar
+  description text
+  status enum('reported', 'in_progress', 'resolved', 'cancelled')
+  priority enum('low', 'medium', 'high', 'urgent')
+  assigned_to integer [null]
+  resolved_at timestamp [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table pos_outlets {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  type enum('restaurant', 'bar', 'coffee_shop', 'spa', 'gift_shop', 'other')
+  location varchar
+  opening_hours json
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pos_categories {
+  id integer [primary key]
+  outlet_id integer
+  name varchar
+  description text
+  display_order integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pos_products {
+  id integer [primary key]
+  category_id integer
+  name varchar
+  description text
+  price decimal(10, 2)
+  cost decimal(10, 2)
+  sku varchar [unique]
+  barcode varchar [unique, null]
+  is_available boolean [default: true]
+  image varchar
+  is_taxable boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pos_orders {
+  id integer [primary key]
+  outlet_id integer
+  order_number varchar [unique]
+  table_number varchar [null]
+  guest_id integer [null]
+  room_id integer [null]
+  staff_id integer
+  status enum('new', 'in_progress', 'ready', 'served', 'completed', 'cancelled')
+  order_type enum('dine_in', 'takeaway', 'room_service', 'delivery')
+  subtotal decimal(12, 2)
+  tax_amount decimal(10, 2)
+  discount_amount decimal(10, 2) [default: 0.00]
+  total_amount decimal(12, 2)
+  notes text [null]
+  ordered_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table pos_order_items {
+  id integer [primary key]
+  order_id integer
+  product_id integer
+  quantity integer
+  price decimal(10, 2)
+  subtotal decimal(10, 2)
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table pos_payments {
+  id integer [primary key]
+  order_id integer
+  payment_method enum('cash', 'credit_card', 'debit_card', 'room_charge', 'mobile_payment', 'voucher', 'other')
+  amount decimal(12, 2)
+  transaction_id varchar [unique, null]
+  status enum('pending', 'completed', 'failed', 'refunded')
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table pos_inventory {
+  id integer [primary key]
+  product_id integer
+  outlet_id integer
+  quantity decimal(10, 2)
+  reorder_level decimal(10, 2)
+  last_updated timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table menus {
+  id integer [primary key]
+  outlet_id integer
+  name varchar
+  description text
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table menu_categories {
+  id integer [primary key]
+  menu_id integer
+  name varchar
+  display_order integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table menu_items {
+  id integer [primary key]
+  category_id integer
+  name varchar
+  description text
+  price decimal(10, 2)
+  image varchar
+  is_available boolean [default: true]
+  allergens json [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table room_service_orders {
+  id integer [primary key]
+  booking_id integer
+  status enum('pending', 'confirmed', 'preparing', 'delivered', 'cancelled')
+  order_time timestamp
+  delivery_time timestamp [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table room_service_order_items {
+  id integer [primary key]
+  order_id integer
+  menu_item_id integer
+  quantity integer
+  price decimal(10, 2)
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table inventory_categories {
+  id integer [primary key]
+  name varchar
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table inventory_items {
+  id integer [primary key]
+  category_id integer
+  name varchar
+  description text
+  unit varchar
+  sku varchar [unique]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table inventory_stocks {
+  id integer [primary key]
+  item_id integer
+  property_id integer
+  location varchar
+  quantity decimal(10, 2)
+  last_updated timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table inventory_transactions {
+  id integer [primary key]
+  item_id integer
+  property_id integer
+  transaction_type enum('in', 'out', 'adjustment', 'transfer')
+  quantity decimal(10, 2)
+  reference_id varchar [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table purchase_orders {
+  id integer [primary key]
+  property_id integer
+  supplier_id integer
+  order_number varchar [unique]
+  order_date date
+  expected_delivery_date date
+  status enum('draft', 'sent', 'partially_received', 'received', 'cancelled')
+  total_amount decimal(12, 2)
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table purchase_order_items {
+  id integer [primary key]
+  purchase_order_id integer
+  item_id integer
+  quantity decimal(10, 2)
+  unit_price decimal(10, 2)
+  total_price decimal(12, 2)
+  received_quantity decimal(10, 2) [default: 0.00]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table suppliers {
+  id integer [primary key]
+  name varchar
+  contact_person varchar
+  email varchar
+  phone varchar
+  address text
+  tax_id varchar [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table expense_categories {
+  id integer [primary key]
+  name varchar
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table expenses {
+  id integer [primary key]
+  property_id integer
+  category_id integer
+  amount decimal(12, 2)
+  expense_date date
+  description text
+  receipt_path varchar [null]
+  approved_by integer [null]
+  status enum('pending', 'approved', 'rejected', 'paid')
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table accounts_payable {
+  id integer [primary key]
+  property_id integer
+  supplier_id integer
+  invoice_number varchar
+  invoice_date date
+  due_date date
+  amount decimal(12, 2)
+  paid_amount decimal(12, 2) [default: 0.00]
+  status enum('unpaid', 'partially_paid', 'paid', 'overdue')
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table accounts_payable_payments {
+  id integer [primary key]
+  accounts_payable_id integer
+  amount decimal(12, 2)
+  payment_date date
+  payment_method varchar
+  transaction_id varchar [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table accounts_receivable {
+  id integer [primary key]
+  property_id integer
+  guest_id integer
+  booking_id integer
+  invoice_number varchar
+  invoice_date date
+  due_date date
+  amount decimal(12, 2)
+  paid_amount decimal(12, 2) [default: 0.00]
+  status enum('unpaid', 'partially_paid', 'paid', 'overdue')
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table accounts_receivable_payments {
+  id integer [primary key]
+  accounts_receivable_id integer
+  amount decimal(12, 2)
+  payment_date date
+  payment_method varchar
+  transaction_id varchar [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table taxes {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  rate decimal(5, 2)
+  type enum('percentage', 'fixed')
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table financial_reports {
+  id integer [primary key]
+  property_id integer
+  report_type varchar
+  report_date date
+  data json
+  generated_by integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table reports {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  type varchar
+  parameters json
+  generated_at timestamp
+  file_path varchar
+  generated_by integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table scheduled_reports {
+  id integer [primary key]
+  property_id integer
+  report_id integer
+  frequency varchar
+  next_run datetime
+  recipients json
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table report_data {
+  id integer [primary key]
+  report_id integer
+  data json
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table analytics {
+  id integer [primary key]
+  property_id integer
+  metric_name varchar
+  metric_value decimal(15, 2)
+  date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table email_templates {
+  id integer [primary key]
+  name varchar
+  subject varchar
+  content text
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table sms_templates {
+  id integer [primary key]
+  name varchar
+  content text
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table notifications {
+  id integer [primary key]
+  user_id integer
+  type varchar
+  title varchar
+  message text
+  is_read boolean [default: false]
+  data json [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table messages {
+  id integer [primary key]
+  sender_id integer
+  receiver_id integer
+  subject varchar
+  message text
+  is_read boolean [default: false]
+  parent_id integer [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table notification_logs {
+  id integer [primary key]
+  template_id integer
+  recipient varchar
+  notification_type enum('email', 'sms')
+  status enum('sent', 'failed', 'delivered', 'bounced')
+  sent_at timestamp [null]
+  error_message text [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table channels {
+  id integer [primary key]
+  name varchar
+  description text
+  api_key varchar
+  api_secret varchar
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table channel_properties {
+  id integer [primary key]
+  channel_id integer
+  property_id integer
+  external_property_id varchar
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table channel_bookings {
+  id integer [primary key]
+  channel_id integer
+  property_id integer
+  room_id integer
+  external_booking_id varchar
+  check_in_date date
+  check_out_date date
+  status enum('pending', 'confirmed', 'cancelled')
+  total_price decimal(12, 2)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table channel_sync_logs {
+  id integer [primary key]
+  channel_id integer
+  property_id integer
+  sync_type varchar
+  status enum('success', 'failed', 'partial')
+  message text
+  synced_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table api_keys {
+  id integer [primary key]
+  user_id integer
+  name varchar
+  key varchar [unique]
+  last_used_at timestamp [null]
+  expires_at timestamp [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table api_logs {
+  id integer [primary key]
+  api_key_id integer
+  endpoint varchar
+  method varchar
+  request json
+  response json
+  status_code integer
+  ip_address varchar
+  user_agent varchar
+  response_time_ms integer
+  created_at timestamp
+}
+
+Table languages {
+  id integer [primary key]
+  code varchar [unique]
+  name varchar
+  is_active boolean [default: true]
+  is_default boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table translations {
+  id integer [primary key]
+  language_id integer
+  key varchar
+  value text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table currencies {
+  id integer [primary key]
+  code varchar [unique]
+  name varchar
+  symbol varchar
+  is_active boolean [default: true]
+  is_default boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table exchange_rates {
+  id integer [primary key]
+  from_currency_id integer
+  to_currency_id integer
+  rate decimal(10, 6)
+  date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table asset_categories {
+  id integer [primary key]
+  name varchar
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table assets {
+  id integer [primary key]
+  property_id integer
+  category_id integer
+  name varchar
+  description text
+  purchase_date date
+  purchase_price decimal(12, 2)
+  current_value decimal(12, 2)
+  expected_lifespan integer
+  depreciation_rate decimal(5, 2)
+  location varchar
+  status enum('active', 'maintenance', 'retired', 'disposed')
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table asset_maintenance {
+  id integer [primary key]
+  asset_id integer
+  maintenance_type varchar
+  description text
+  cost decimal(12, 2)
+  maintenance_date date
+  performed_by varchar
+  next_maintenance_date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table asset_depreciation {
+  id integer [primary key]
+  asset_id integer
+  depreciation_amount decimal(12, 2)
+  depreciated_value decimal(12, 2)
+  depreciation_date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table property_amenities {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  icon varchar
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table services {
+  id integer [primary key]
+  name varchar
+  description text
+  price decimal(12, 2)
+  icon varchar
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table booking_services {
+  id integer [primary key]
+  booking_id integer
+  service_id integer
+  quantity integer
+  price decimal(12, 2)
+  service_date date [null]
+  service_time time [null]
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table personal_access_tokens {
+  id integer [primary key]
+  tokenable_type varchar
+  tokenable_id integer
+  name varchar
+  token varchar [unique]
+  abilities text
+  last_used_at timestamp [null]
+  expires_at timestamp [null]
+  created_at timestamp
+}
+
+Table dashboard_metrics {
+  id integer [primary key]
+  property_id integer
+  metric_name varchar
+  metric_value decimal(15, 2)
+  date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table events {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  start_date datetime
+  end_date datetime
+  capacity integer
+  setup_time integer [default: 0]
+  cleanup_time integer [default: 0]
+  status enum('draft', 'published', 'ongoing', 'completed', 'cancelled')
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table event_bookings {
+  id integer [primary key]
+  event_id integer
+  guest_id integer
+  number_of_attendees integer
+  status enum('pending', 'confirmed', 'cancelled')
+  total_price decimal(12, 2)
+  special_requests text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table resources {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  type varchar
+  capacity integer [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table event_resources {
+  id integer [primary key]
+  event_id integer
+  resource_id integer
+  quantity integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table treatments {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  description text
+  duration integer
+  price decimal(12, 2)
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table therapists {
+  id integer [primary key]
+  property_id integer
+  name varchar
+  email varchar
+  phone varchar
+  specialization varchar [null]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table appointments {
+  id integer [primary key]
+  property_id integer
+  treatment_id integer
+  therapist_id integer
+  guest_id integer
+  date date
+  time time
+  status enum('scheduled', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show')
+  notes text [null]
+  created_at timestamp
+  updated_at timestamp
+  created_by integer [null]
+}
+
+Table audit_logs {
+  id integer [primary key]
+  table_name varchar(100) [not null]
+  record_id integer [not null]
+  action enum('insert', 'update', 'delete') [not null]
+  old_values json [null]
+  new_values json [null]
+  user_id integer [null]
+  ip_address varchar(45) [null]
+  user_agent text [null]
+  created_at timestamp [default: CURRENT_TIMESTAMP]
+}
+
+// Relationships
+Ref: roles.id > users.role_id
+Ref: properties.id > user_properties.property_id
+Ref: users.id > user_properties.user_id
+Ref: properties.id > room_types.property_id
+Ref: properties.id > rooms.property_id
+Ref: properties.id > floors.property_id
+Ref: properties.id > bookings.property_id
+Ref: properties.id > waiting_list.property_id
+Ref: properties.id > loyalty_programs.property_id
+Ref: properties.id > feedback.property_id
+Ref: properties.id > seasons.property_id
+Ref: properties.id > packages.property_id
+Ref: properties.id > pos_outlets.property_id
+Ref: properties.id > inventory_stocks.property_id
+Ref: properties.id > expenses.property_id
+Ref: properties.id > taxes.property_id
+Ref: properties.id > financial_reports.property_id
+Ref: properties.id > reports.property_id
+Ref: properties.id > scheduled_reports.property_id
+Ref: properties.id > analytics.property_id
+Ref: properties.id > channel_properties.property_id
+Ref: properties.id > channel_bookings.property_id
+Ref: properties.id > channel_sync_logs.property_id
+Ref: properties.id > assets.property_id
+Ref: properties.id > property_amenities.property_id
+Ref: properties.id > events.property_id
+Ref: properties.id > resources.property_id
+Ref: properties.id > treatments.property_id
+Ref: properties.id > therapists.property_id
+Ref: properties.id > appointments.property_id
+Ref: room_types.id > rooms.room_type_id
+Ref: room_types.id > room_amenities.room_type_id
+Ref: room_types.id > room_images.room_type_id
+Ref: room_types.id > prices.room_type_id
+Ref: amenities.id > room_amenities.amenity_id
+Ref: floors.id > rooms.floor_id
+Ref: users.id > guests.user_id
+Ref: guests.id > guest_preferences.guest_id
+Ref: guests.id > waiting_list.guest_id
+Ref: guests.id > loyalty_members.guest_id
+Ref: guests.id > feedback.guest_id
+Ref: guests.id > accounts_receivable.guest_id
+Ref: guests.id > pos_orders.guest_id
+Ref: guests.id > appointments.guest_id
+Ref: rooms.id > bookings.room_id
+Ref: room_types.id > bookings.room_type_id
+Ref: rooms.id > room_assignments.room_id
+Ref: rooms.id > housekeeping_tasks.room_id
+Ref: rooms.id > room_status_logs.room_id
+Ref: rooms.id > maintenance_issues.room_id
+Ref: rooms.id > pos_orders.room_id
+Ref: bookings.id > room_service_orders.booking_id
+Ref: bookings.id > booking_addons.booking_id
+Ref: bookings.id > payments.booking_id
+Ref: bookings.id > invoices.booking_id
+Ref: bookings.id > check_ins.booking_id
+Ref: bookings.id > check_outs.booking_id
+Ref: bookings.id > booking_modifications.booking_id
+Ref: bookings.id > room_assignments.booking_id
+Ref: bookings.id > booking_services.booking_id
+Ref: bookings.id > accounts_receivable.booking_id
+Ref: addons.id > booking_addons.addon_id
+Ref: payment_gateways.id > payments.payment_gateway_id
+Ref: loyalty_programs.id > loyalty_members.loyalty_program_id
+Ref: loyalty_members.id > loyalty_points.loyalty_member_id
+Ref: pos_outlets.id > pos_categories.outlet_id
+Ref: pos_outlets.id > pos_orders.outlet_id
+Ref: pos_outlets.id > pos_inventory.outlet_id
+Ref: pos_outlets.id > menus.outlet_id
+Ref: pos_categories.id > pos_products.category_id
+Ref: pos_orders.id > pos_order_items.order_id
+Ref: pos_orders.id > pos_payments.order_id
+Ref: pos_products.id > pos_inventory.product_id
+Ref: menus.id > menu_categories.menu_id
+Ref: menu_categories.id > menu_items.category_id
+Ref: menu_items.id > room_service_order_items.menu_item_id
+Ref: inventory_categories.id > inventory_items.category_id
+Ref: inventory_items.id > inventory_stocks.item_id
+Ref: inventory_items.id > inventory_transactions.item_id
+Ref: properties.id > inventory_transactions.property_id
+Ref: suppliers.id > purchase_orders.supplier_id
+Ref: purchase_orders.id > purchase_order_items.purchase_order_id
+Ref: expense_categories.id > expenses.category_id
+Ref: suppliers.id > accounts_payable.supplier_id
+Ref: accounts_payable.id > accounts_payable_payments.accounts_payable_id
+Ref: accounts_receivable.id > accounts_receivable_payments.accounts_receivable_id
+Ref: reports.id > scheduled_reports.report_id
+Ref: reports.id > report_data.report_id
+Ref: email_templates.id > notification_logs.template_id
+Ref: sms_templates.id > notification_logs.template_id
+Ref: channels.id > channel_properties.channel_id
+Ref: channels.id > channel_bookings.channel_id
+Ref: channels.id > channel_sync_logs.channel_id
+Ref: users.id > api_keys.user_id
+Ref: api_keys.id > api_logs.api_key_id
+Ref: languages.id > translations.language_id
+Ref: currencies.id > exchange_rates.from_currency_id
+Ref: currencies.id > exchange_rates.to_currency_id
+Ref: currencies.id > properties.currency_id
+Ref: asset_categories.id > assets.category_id
+Ref: assets.id > asset_maintenance.asset_id
+Ref: assets.id > asset_depreciation.asset_id
+Ref: services.id > booking_services.service_id
+Ref: events.id > event_bookings.event_id
+Ref: resources.id > event_resources.resource_id
+Ref: treatments.id > appointments.treatment_id
+Ref: therapists.id > appointments.therapist_id
+Ref: users.id > housekeeping_staff.user_id
+Ref: properties.id > housekeeping_staff.property_id
+Ref: users.id > check_ins.checked_by
+Ref: users.id > check_outs.checked_by
+Ref: users.id > room_assignments.assigned_by
+Ref: users.id > maintenance_issues.reported_by
+Ref: users.id > pos_orders.staff_id
+Ref: users.id > booking_modifications.modified_by
+Ref: users.id > notifications.user_id
+Ref: users.id > messages.sender_id
+Ref: users.id > messages.receiver_id
+Ref: users.id > personal_access_tokens.tokenable_id
+Ref: users.id > financial_reports.generated_by
+Ref: users.id > reports.generated_by
+Ref: users.id > expenses.approved_by
+Ref: users.id > maintenance_issues.assigned_to
+Ref: users.id > users.created_by
+Ref: users.id > properties.created_by
+Ref: users.id > room_types.created_by
+Ref: users.id > rooms.created_by
+Ref: users.id > guests.created_by
+Ref: users.id > bookings.created_by
+Ref: users.id > payments.created_by
+Ref: users.id > invoices.created_by
+Ref: users.id > housekeeping_tasks.created_by
+Ref: users.id > maintenance_issues.created_by
+Ref: users.id > pos_orders.created_by
+Ref: users.id > pos_payments.created_by
+Ref: users.id > room_service_orders.created_by
+Ref: users.id > inventory_transactions.created_by
+Ref: users.id > purchase_orders.created_by
+Ref: users.id > expenses.created_by
+Ref: users.id > events.created_by
+Ref: users.id > event_bookings.created_by
+Ref: users.id > appointments.created_by
+Ref: users.id > audit_logs.user_id

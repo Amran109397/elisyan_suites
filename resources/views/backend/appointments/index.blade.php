@@ -11,9 +11,9 @@
                         <a href="{{ route('appointments.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> New Appointment
                         </a>
-                        <button class="btn btn-info" onclick="showCalendarView()">
+                        <a href="{{ route('appointments.calendar') }}" class="btn btn-info">
                             <i class="fas fa-calendar"></i> Calendar View
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -61,12 +61,18 @@
                             @foreach($appointments as $appointment)
                             <tr>
                                 <td>{{ $appointment->id }}</td>
-                                <td>{{ $appointment->guest->full_name }}</td>
-                                <td>{{ $appointment->treatment->name }}</td>
-                                <td>{{ $appointment->therapist->name }}</td>
-                                <td>{{ $appointment->date->format('d M Y') }} at {{ $appointment->time->format('H:i') }}</td>
+                                <td>{{ $appointment->guest->full_name ?? 'N/A' }}</td>
+                                <td>{{ $appointment->treatment->name ?? 'N/A' }}</td>
+                                <td>{{ $appointment->therapist->name ?? 'N/A' }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $appointment->status == 'completed' ? 'success' : ($appointment->status == 'cancelled' ? 'danger' : ($appointment->status == 'confirmed' ? 'info' : 'warning')) }}">
+                                    @if($appointment->appointment_date && $appointment->appointment_time)
+                                        {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y') }} at {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ $appointment->status == 'completed' ? 'success' : ($appointment->status == 'cancelled' ? 'danger' : ($appointment->status == 'confirmed' ? 'info' : ($appointment->status == 'in_progress' ? 'primary' : 'warning'))) }}">
                                         {{ ucfirst(str_replace('_', ' ', $appointment->status)) }}
                                     </span>
                                 </td>
@@ -103,51 +109,10 @@
         </div>
     </div>
 </div>
-
-<!-- Calendar View Modal -->
-<div class="modal fade" id="calendarViewModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Appointments Calendar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div id="appointmentCalendar" style="height: 500px;"></div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
-
 <script>
-function showCalendarView() {
-    $('#calendarViewModal').modal('show');
-    
-    setTimeout(() => {
-        let calendarEl = document.getElementById('appointmentCalendar');
-        let calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: '/appointments/calendar-data',
-            eventClick: function(info) {
-                if (info.event.url) {
-                    window.location.href = info.event.url;
-                }
-            }
-        });
-        calendar.render();
-    }, 300);
-}
-
  $(document).ready(function() {
     $('#searchAppointments').on('keyup', function() {
         let value = $(this).val().toLowerCase();

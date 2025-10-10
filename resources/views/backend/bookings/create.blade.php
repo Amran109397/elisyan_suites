@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('bookings.store') }}" method="POST">
+                    <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -46,14 +46,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
                                     <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
                                         <option value="">Select Room Type</option>
                                         @foreach($roomTypes as $roomType)
-                                            <option value="{{ $roomType->id }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>{{ $roomType->name }} ({{ number_format($roomType->base_price, 2) }})</option>
+                                            <option value="{{ $roomType->id }}" data-price="{{ $roomType->base_price }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>
+                                                {{ $roomType->name }} (${{ number_format($roomType->base_price, 2) }})
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('room_type_id')
@@ -73,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="check_in_date">Check-in Date <span class="text-danger">*</span></label>
@@ -93,7 +95,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="adults">Adults <span class="text-danger">*</span></label>
@@ -122,7 +124,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
@@ -156,23 +158,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="total_price">Total Price <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price') }}" step="0.01" min="0" required>
-                            @error('total_price')
-                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                            @enderror
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="total_nights">Total Nights</label>
+                                    <input type="number" class="form-control" id="total_nights" name="total_nights" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="total_price">Total Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price') }}" step="0.01" min="0" required>
+                                    @error('total_price')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label for="special_requests">Special Requests</label>
                             <textarea class="form-control @error('special_requests') is-invalid @enderror" id="special_requests" name="special_requests" rows="3">{{ old('special_requests') }}</textarea>
                             @error('special_requests')
                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Create Booking</button>
-                            <a href="{{ route('bookings.index') }}" class="btn btn-default">Cancel</a>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Booking
+                            </button>
+                            <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -180,71 +196,120 @@
         </div>
     </div>
 </div>
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        // Property change handler
-        $('#property_id').change(function() {
-            var propertyId = $(this).val();
-            
-            if (propertyId) {
-                // Update room types based on property
-                $.ajax({
-                    url: '/api/room-types/by-property/' + propertyId,
-                    type: 'GET',
-                    success: function(data) {
-                        $('#room_type_id').empty();
-                        $('#room_type_id').append('<option value="">Select Room Type</option>');
-                        
-                        $.each(data, function(key, value) {
-                            $('#room_type_id').append('<option value="' + value.id + '">' + value.name + ' (' + value.base_price + ')</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#room_type_id').empty();
-                $('#room_type_id').append('<option value="">Select Room Type</option>');
-            }
-        });
-        
-        // Room type change handler
-        $('#room_type_id').change(function() {
-            var propertyId = $('#property_id').val();
-            var roomTypeId = $(this).val();
-            var checkInDate = $('#check_in_date').val();
-            var checkOutDate = $('#check_out_date').val();
-            
-            if (propertyId && roomTypeId && checkInDate && checkOutDate) {
-                // Check available rooms
-                $.ajax({
-                    url: '{{ route("bookings.check-availability") }}',
-                    type: 'GET',
-                    data: {
-                        property_id: propertyId,
-                        room_type_id: roomTypeId,
-                        check_in_date: checkInDate,
-                        check_out_date: checkOutDate
-                    },
-                    success: function(data) {
-                        $('#room_id').empty();
-                        $('#room_id').append('<option value="">Select Room (Optional)</option>');
-                        
-                        $.each(data.rooms, function(key, value) {
-                            $('#room_id').append('<option value="' + value.id + '">' + value.room_number + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#room_id').empty();
-                $('#room_id').append('<option value="">Select Room (Optional)</option>');
-            }
-        });
-        
-        // Date change handlers
-        $('#check_in_date, #check_out_date').change(function() {
-            $('#room_type_id').trigger('change');
-        });
-    });
-</script>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Calculate nights and price when dates change
+    function calculateBookingDetails() {
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        const roomTypeId = $('#room_type_id').val();
+        
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const timeDiff = checkOut.getTime() - checkIn.getTime();
+            const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            $('#total_nights').val(nights);
+            
+            // Calculate price if room type is selected
+            if (roomTypeId && nights > 0) {
+                const selectedRoomType = $('#room_type_id option:selected');
+                const basePrice = selectedRoomType.data('price');
+                const totalPrice = basePrice * nights;
+                $('#total_price').val(totalPrice.toFixed(2));
+            }
+        }
+    }
+
+    // Date change handlers
+    $('#check_in_date, #check_out_date').on('change', function() {
+        calculateBookingDetails();
+        checkRoomAvailability();
+    });
+
+    // Room type change handler
+    $('#room_type_id').on('change', function() {
+        calculateBookingDetails();
+        checkRoomAvailability();
+    });
+
+    // Property change handler
+    $('#property_id').on('change', function() {
+        const propertyId = $(this).val();
+        $('#room_id').html('<option value="">Select Room (Optional)</option>');
+        
+        if (propertyId) {
+            // You can add AJAX call here to load room types based on property
+        }
+    });
+
+    // Check room availability
+    function checkRoomAvailability() {
+        const propertyId = $('#property_id').val();
+        const roomTypeId = $('#room_type_id').val();
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        
+        if (propertyId && roomTypeId && checkInDate && checkOutDate) {
+            $.ajax({
+                url: '{{ route("bookings.check-availability") }}',
+                type: 'GET',
+                data: {
+                    property_id: propertyId,
+                    room_type_id: roomTypeId,
+                    check_in_date: checkInDate,
+                    check_out_date: checkOutDate
+                },
+                success: function(response) {
+                    $('#room_id').html('<option value="">Select Room (Optional)</option>');
+                    if (response.rooms && response.rooms.length > 0) {
+                        $.each(response.rooms, function(key, room) {
+                            $('#room_id').append('<option value="' + room.id + '">' + room.room_number + '</option>');
+                        });
+                    } else {
+                        $('#room_id').append('<option value="">No rooms available</option>');
+                    }
+                },
+                error: function() {
+                    $('#room_id').html('<option value="">Error loading rooms</option>');
+                }
+            });
+        }
+    }
+
+    // Form validation
+    $('#bookingForm').on('submit', function(e) {
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (checkIn < today) {
+                e.preventDefault();
+                alert('Check-in date cannot be in the past.');
+                return false;
+            }
+            
+            if (checkOut <= checkIn) {
+                e.preventDefault();
+                alert('Check-out date must be after check-in date.');
+                return false;
+            }
+        }
+    });
+
+    // Set minimum date for check-in to today
+    const today = new Date().toISOString().split('T')[0];
+    $('#check_in_date').attr('min', today);
+    $('#check_out_date').attr('min', today);
+});
+</script>
+@endpush

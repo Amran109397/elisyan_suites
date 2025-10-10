@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventBooking;
-use App\Models\Event;
-use App\Models\Guest;
+use App\Models\Event; // Event মডেল import করুন
 use Illuminate\Http\Request;
 
 class EventBookingController extends Controller
@@ -17,14 +16,15 @@ class EventBookingController extends Controller
 
     public function index()
     {
-        $eventBookings = EventBooking::with('event', 'guest')->get();
-        return view('backend.event-bookings.index', compact('eventBookings'));
+        $eventBookings = EventBooking::with(['event', 'guest'])->paginate(10);
+        $events = Event::all(); // Events variable যোগ করুন
+        return view('backend.event-bookings.index', compact('eventBookings', 'events'));
     }
 
     public function create()
     {
-        $events = Event::all();
-        $guests = Guest::all();
+        $events = Event::where('status', 'published')->get(); // শুধু published events
+        $guests = \App\Models\Guest::all(); // Guests list
         return view('backend.event-bookings.create', compact('events', 'guests'));
     }
 
@@ -35,8 +35,8 @@ class EventBookingController extends Controller
             'guest_id' => 'required|exists:guests,id',
             'number_of_attendees' => 'required|integer|min:1',
             'total_price' => 'required|numeric|min:0',
-            'status' => 'required|string|max:255',
-            'notes' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,cancelled',
+            'special_requests' => 'nullable|string',
         ]);
 
         EventBooking::create($validated);
@@ -47,13 +47,14 @@ class EventBookingController extends Controller
 
     public function show(EventBooking $eventBooking)
     {
+        $eventBooking->load(['event', 'guest']);
         return view('backend.event-bookings.show', compact('eventBooking'));
     }
 
     public function edit(EventBooking $eventBooking)
     {
-        $events = Event::all();
-        $guests = Guest::all();
+        $events = Event::where('status', 'published')->get();
+        $guests = \App\Models\Guest::all();
         return view('backend.event-bookings.edit', compact('eventBooking', 'events', 'guests'));
     }
 
@@ -64,8 +65,8 @@ class EventBookingController extends Controller
             'guest_id' => 'required|exists:guests,id',
             'number_of_attendees' => 'required|integer|min:1',
             'total_price' => 'required|numeric|min:0',
-            'status' => 'required|string|max:255',
-            'notes' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,cancelled',
+            'special_requests' => 'nullable|string',
         ]);
 
         $eventBooking->update($validated);

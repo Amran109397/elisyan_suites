@@ -8,13 +8,13 @@
                 <div class="card-header">
                     <h3 class="card-title">New Promo Code</h3>
                     <div class="card-tools">
-                        <a href="{{ route('promocodes.index') }}" class="btn btn-default">
+                        <a href="{{ route('promo-codes.index') }}" class="btn btn-default">
                             <i class="fas fa-arrow-left"></i> Back
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('promocodes.store') }}" method="POST">
+                    <form action="{{ route('promo-codes.store') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -98,7 +98,7 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Create Promo Code</button>
-                            <a href="{{ route('promocodes.index') }}" class="btn btn-default">Cancel</a>
+                            <a href="{{ route('promo-codes.index') }}" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

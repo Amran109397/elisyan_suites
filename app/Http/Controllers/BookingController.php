@@ -20,7 +20,10 @@ class BookingController extends Controller
 
     public function index()
     {
-        $bookings = Booking::with('property', 'guest', 'room', 'roomType')->get();
+        $bookings = Booking::with('property', 'guest', 'room', 'roomType')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+        
         return view('backend.bookings.index', compact('bookings'));
     }
 
@@ -50,15 +53,29 @@ class BookingController extends Controller
             'total_price' => 'required|numeric|min:0',
         ]);
 
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
+
+        // Generate booking reference
+        $validated['booking_reference'] = 'BKG' . date('Ym') . strtoupper(substr(uniqid(), -4));
+
         Booking::create($validated);
 
         return redirect()->route('bookings.index')
             ->with('success', 'Booking created successfully.');
     }
 
-    public function show(Booking $booking)
+    public function show($id)
     {
-        $booking->load('property', 'guest', 'room', 'roomType', 'payments', 'addons', 'services');
+        $booking = Booking::with(['property', 'guest', 'room', 'roomType', 'payments'])->find($id);
+        
+        if (!$booking) {
+            abort(404, 'Booking not found');
+        }
+        
         return view('backend.bookings.show', compact('booking'));
     }
 
@@ -67,7 +84,11 @@ class BookingController extends Controller
         $properties = Property::where('is_active', true)->get();
         $guests = Guest::all();
         $roomTypes = RoomType::where('is_active', true)->get();
-        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes'));
+        $rooms = Room::where('property_id', $booking->property_id)
+                    ->where('room_type_id', $booking->room_type_id)
+                    ->where('status', 'available')
+                    ->get();
+        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes', 'rooms'));
     }
 
     public function update(Request $request, Booking $booking)
@@ -87,6 +108,12 @@ class BookingController extends Controller
             'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
             'total_price' => 'required|numeric|min:0',
         ]);
+
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
 
         $booking->update($validated);
 
@@ -129,7 +156,8 @@ class BookingController extends Controller
                                 $q->where('check_in_date', '<=', $checkInDate)
                                     ->where('check_out_date', '>=', $checkOutDate);
                             });
-                    });
+                    })
+                    ->whereNotNull('room_id');
             })
             ->get();
 
@@ -139,49 +167,119 @@ class BookingController extends Controller
         ]);
     }
 
+    public function confirm(Booking $booking)
+    {
+        $booking->update(['status' => 'confirmed']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking confirmed successfully.');
+    }
+
+    public function cancel(Booking $booking)
+    {
+        $booking->update(['status' => 'cancelled']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking cancelled successfully.');
+    }
+
     public function calendar()
     {
-        return view('backend.bookings.calendar');
+        $totalBookings = Booking::count();
+        $pendingBookings = Booking::where('status', 'pending')->count();
+        $confirmedBookings = Booking::where('status', 'confirmed')->count();
+        $checkedInBookings = Booking::where('status', 'checked_in')->count();
+        $checkedOutBookings = Booking::where('status', 'checked_out')->count();
+        $cancelledBookings = Booking::where('status', 'cancelled')->count();
+
+        return view('backend.bookings.calendar', compact(
+            'totalBookings',
+            'pendingBookings',
+            'confirmedBookings',
+            'checkedInBookings',
+            'checkedOutBookings',
+            'cancelledBookings'
+        ));
     }
 
     public function calendarData(Request $request)
     {
-        $start = $request->start;
-        $end = $request->end;
-        
-        $bookings = Booking::whereBetween('check_in_date', [$start, $end])
-            ->orWhereBetween('check_out_date', [$start, $end])
-            ->with('guest', 'room')
-            ->get();
+        try {
+            $searchTerm = $request->get('search');
+            
+            $bookings = Booking::with(['guest', 'room', 'property'])
+                ->when($searchTerm, function($query) use ($searchTerm) {
+                    return $query->where(function($q) use ($searchTerm) {
+                        $q->whereHas('guest', function($guestQuery) use ($searchTerm) {
+                            $guestQuery->where('first_name', 'like', '%' . $searchTerm . '%')
+                                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('room', function($roomQuery) use ($searchTerm) {
+                            $roomQuery->where('room_number', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('property', function($propertyQuery) use ($searchTerm) {
+                            $propertyQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhere('booking_reference', 'like', '%' . $searchTerm . '%');
+                    });
+                })
+                ->get();
 
-        $events = [];
-        
-        foreach ($bookings as $booking) {
-            $events[] = [
-                'id' => $booking->id,
-                'title' => $booking->guest->full_name . ' - ' . ($booking->room ? $booking->room->room_number : 'No Room'),
-                'start' => $booking->check_in_date,
-                'end' => $booking->check_out_date,
-                'color' => $this->getBookingColor($booking->status),
-                'url' => route('bookings.show', $booking->id)
-            ];
+            $formattedBookings = [];
+            
+            foreach ($bookings as $booking) {
+                $guestName = $booking->guest ? $booking->guest->full_name : 'Unknown Guest';
+                $roomNumber = $booking->room ? $booking->room->room_number : 'Not Assigned';
+                $propertyName = $booking->property ? $booking->property->name : 'Unknown Property';
+                
+                $color = $this->getBookingColor($booking->status);
+                
+                $bookingUrl = route('bookings.show', $booking->id);
+                
+                $formattedBookings[] = [
+                    'id' => $booking->id,
+                    'title' => $guestName . ' - ' . $roomNumber,
+                    'start' => $booking->check_in_date->format('Y-m-d'),
+                    'end' => Carbon::parse($booking->check_out_date)->addDay()->format('Y-m-d'),
+                    'color' => $color,
+                    'url' => $bookingUrl,
+                    'extendedProps' => [
+                        'guest' => $guestName,
+                        'room' => $roomNumber,
+                        'property' => $propertyName,
+                        'status' => $booking->status,
+                        'nights' => $booking->total_nights,
+                        'total_price' => $booking->total_price,
+                    ]
+                ];
+            }
+
+            return response()->json($formattedBookings);
+
+        } catch (\Exception $e) {
+            \Log::error('Calendar data error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load calendar data'], 500);
         }
-
-        return response()->json($events);
     }
 
     private function getBookingColor($status)
     {
-        $colors = [
-            'pending' => '#ffc107',
-            'confirmed' => '#28a745',
-            'checked_in' => '#17a2b8',
-            'checked_out' => '#6c757d',
-            'cancelled' => '#dc3545',
-            'no_show' => '#343a40',
-            'modified' => '#6610f2'
-        ];
-
-        return $colors[$status] ?? '#007bff';
+        switch ($status) {
+            case 'confirmed':
+                return '#28a745';
+            case 'checked_in':
+                return '#17a2b8';
+            case 'checked_out':
+                return '#6c757d';
+            case 'cancelled':
+                return '#dc3545';
+            case 'no_show':
+                return '#343a40';
+            case 'modified':
+                return '#6610f2';
+            case 'pending':
+            default:
+                return '#ffc107';
+        }
     }
 }

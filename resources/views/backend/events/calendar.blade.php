@@ -6,73 +6,64 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Bookings Calendar</h3>
+                    <h3 class="card-title">Events Calendar</h3>
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 200px;">
-                            <input type="text" id="calendarSearch" class="form-control" placeholder="Search bookings...">
+                            <input type="text" id="calendarSearch" class="form-control" placeholder="Search events...">
                             <div class="input-group-append">
                                 <button class="btn btn-default">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
                         </div>
-                        <a href="{{ route('bookings.index') }}" class="btn btn-default ml-2">
+                        <a href="{{ route('events.index') }}" class="btn btn-default ml-2">
                             <i class="fas fa-list"></i> List View
                         </a>
-                        <a href="{{ route('bookings.create') }}" class="btn btn-primary ml-2">
-                            <i class="fas fa-plus"></i> New Booking
+                        <a href="{{ route('events.create') }}" class="btn btn-primary ml-2">
+                            <i class="fas fa-plus"></i> New Event
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <!-- Booking Overview Section -->
+                    <!-- Event Overview Section -->
                     <div class="row mb-4">
                         <div class="col-md-12">
-                            <div class="booking-overview">
-                                <h5 class="mb-3">Booking Overview</h5>
+                            <div class="event-overview">
+                                <h5 class="mb-3">Event Overview</h5>
                                 <div class="row">
                                     <div class="col-md-2 col-sm-4">
                                         <div class="info-box bg-gradient-info">
-                                            <span class="info-box-icon"><i class="fas fa-calendar-check"></i></span>
+                                            <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Total</span>
-                                                <span class="info-box-number">{{ $totalBookings }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-sm-4">
-                                        <div class="info-box bg-gradient-warning">
-                                            <span class="info-box-icon"><i class="fas fa-clock"></i></span>
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">Pending</span>
-                                                <span class="info-box-number">{{ $pendingBookings }}</span>
+                                                <span class="info-box-text">Total Events</span>
+                                                <span class="info-box-number">{{ $totalEvents }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-4">
                                         <div class="info-box bg-gradient-success">
-                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                            <span class="info-box-icon"><i class="fas fa-play-circle"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Confirmed</span>
-                                                <span class="info-box-number">{{ $confirmedBookings }}</span>
+                                                <span class="info-box-text">Published</span>
+                                                <span class="info-box-number">{{ $publishedEvents }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-4">
-                                        <div class="info-box bg-gradient-teal">
-                                            <span class="info-box-icon"><i class="fas fa-sign-in-alt"></i></span>
+                                        <div class="info-box bg-gradient-primary">
+                                            <span class="info-box-icon"><i class="fas fa-spinner"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Checked In</span>
-                                                <span class="info-box-number">{{ $checkedInBookings }}</span>
+                                                <span class="info-box-text">Ongoing</span>
+                                                <span class="info-box-number">{{ $ongoingEvents }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-sm-4">
                                         <div class="info-box bg-gradient-secondary">
-                                            <span class="info-box-icon"><i class="fas fa-sign-out-alt"></i></span>
+                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
                                             <div class="info-box-content">
-                                                <span class="info-box-text">Checked Out</span>
-                                                <span class="info-box-number">{{ $checkedOutBookings }}</span>
+                                                <span class="info-box-text">Completed</span>
+                                                <span class="info-box-number">{{ $completedEvents }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -81,7 +72,16 @@
                                             <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Cancelled</span>
-                                                <span class="info-box-number">{{ $cancelledBookings }}</span>
+                                                <span class="info-box-number">{{ $cancelledEvents }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-warning">
+                                            <span class="info-box-icon"><i class="fas fa-file-alt"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Draft</span>
+                                                <span class="info-box-number">{{ $draftEvents }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +93,7 @@
                     <!-- Calendar Section -->
                     <div class="row">
                         <div class="col-md-12">
-                            <div id="bookingCalendar"></div>
+                            <div id="eventCalendar"></div>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
 
 @push('styles')
 <style>
-.booking-overview {
+.event-overview {
     background: #f8f9fa;
     padding: 20px;
     border-radius: 8px;
@@ -135,10 +135,6 @@
 .info-box-number {
     font-size: 18px;
     font-weight: 700;
-}
-
-.bg-gradient-teal {
-    background: linear-gradient(45deg, #20c997, #17a2b8) !important;
 }
 
 /* FullCalendar Custom Styles */
@@ -192,14 +188,12 @@
     background-color: #e7f3ff !important;
 }
 
-/* Booking status colors */
-.booking-pending { background-color: #ffc107; color: #000; }
-.booking-confirmed { background-color: #28a745; color: #fff; }
-.booking-checked_in { background-color: #17a2b8; color: #fff; }
-.booking-checked_out { background-color: #6c757d; color: #fff; }
-.booking-cancelled { background-color: #dc3545; color: #fff; }
-.booking-no_show { background-color: #343a40; color: #fff; }
-.booking-modified { background-color: #6610f2; color: #fff; }
+/* Event status colors */
+.event-draft { background-color: #ffc107; color: #000; }
+.event-published { background-color: #28a745; color: #fff; }
+.event-ongoing { background-color: #007bff; color: #fff; }
+.event-completed { background-color: #6c757d; color: #fff; }
+.event-cancelled { background-color: #dc3545; color: #fff; }
 
 @media (max-width: 768px) {
     .fc-toolbar {
@@ -211,11 +205,11 @@
         text-align: center;
     }
     
-    .booking-overview .row {
+    .event-overview .row {
         margin: 0 -5px;
     }
     
-    .booking-overview .col-md-2 {
+    .event-overview .col-md-2 {
         padding: 0 5px;
     }
 }
@@ -228,12 +222,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('bookingCalendar');
-    
-    if (!calendarEl) {
-        console.error('Calendar element not found');
-        return;
-    }
+    var calendarEl = document.getElementById('eventCalendar');
     
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -248,57 +237,35 @@ document.addEventListener('DOMContentLoaded', function() {
         selectable: false,
         nowIndicator: true,
         dayMaxEvents: true,
-        events: {
-            url: '{{ route("bookings.calendar-data") }}',
-            method: 'GET',
-            extraParams: function() {
-                return {
-                    search: $('#calendarSearch').val() || ''
-                };
-            },
-            failure: function(error) {
-                console.error('Error fetching events:', error);
-                alert('Events could not be loaded. Please check console for details.');
-            }
-        },
+        events: '{{ route("events.calendar-data") }}',
         eventClick: function(info) {
-            console.log('Event clicked:', info.event);
             if (info.event.url) {
                 window.location.href = info.event.url;
-                return false;
             }
         },
         eventDidMount: function(info) {
-            // Add custom class based on booking status
+            // Add custom class based on event status
             const status = info.event.extendedProps.status;
-            if (status) {
-                info.el.classList.add('booking-' + status);
-            }
+            info.el.classList.add('event-' + status);
             
             // Add tooltip
-            if (info.event.extendedProps) {
-                $(info.el).tooltip({
-                    title: `
-                        <strong>${info.event.title}</strong><br>
-                        <small>Property: ${info.event.extendedProps.property || 'N/A'}</small><br>
-                        <small>Room: ${info.event.extendedProps.room || 'N/A'}</small><br>
-                        <small>Status: ${info.event.extendedProps.status || 'N/A'}</small><br>
-                        <small>Nights: ${info.event.extendedProps.nights || 'N/A'}</small><br>
-                        <small>Total: $${info.event.extendedProps.total_price || '0'}</small>
-                    `,
-                    html: true,
-                    placement: 'top',
-                    container: 'body'
-                });
-            }
+            $(info.el).tooltip({
+                title: `
+                    <strong>${info.event.title}</strong><br>
+                    <small>Property: ${info.event.extendedProps.property}</small><br>
+                    <small>Status: ${info.event.extendedProps.status}</small><br>
+                    <small>Capacity: ${info.event.extendedProps.capacity}</small>
+                `,
+                html: true,
+                placement: 'top',
+                container: 'body'
+            });
         },
         loading: function(isLoading) {
             if (isLoading) {
-                $('#bookingCalendar').addClass('loading');
-                console.log('Loading events...');
+                $('#eventCalendar').addClass('loading');
             } else {
-                $('#bookingCalendar').removeClass('loading');
-                console.log('Events loaded');
+                $('#eventCalendar').removeClass('loading');
             }
         }
     });
@@ -307,9 +274,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Search functionality
     $('#calendarSearch').on('keyup', function() {
-        console.log('Searching:', $(this).val());
+        const searchTerm = $(this).val().toLowerCase();
         calendar.refetchEvents();
     });
+});
+
+// Responsive handling
+$(window).on('resize', function() {
+    $('#eventCalendar').fullCalendar('render');
 });
 </script>
 @endpush

@@ -11,9 +11,9 @@
                         <a href="{{ route('events.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> New Event
                         </a>
-                        <button class="btn btn-info" onclick="showCalendarView()">
+                        <a href="{{ route('events.calendar') }}" class="btn btn-info">
                             <i class="fas fa-calendar"></i> Calendar View
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
