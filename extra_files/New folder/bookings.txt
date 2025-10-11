@@ -1,4 +1,500 @@
-egulo bookings index.blade.php er code
+eta hocche bookings er migration file
+
+// database/migrations/2023_10_01_000007_create_bookings_table.php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('bookings', function (Blueprint $table) {
+            $table->id();
+            $table->integer('property_id');
+            $table->integer('guest_id');
+            $table->integer('room_id')->nullable();
+            $table->integer('room_type_id');
+            $table->date('check_in_date');
+            $table->date('check_out_date');
+            $table->integer('total_nights');
+            $table->integer('adults')->default(1);
+            $table->integer('children')->default(0);
+            $table->integer('infants')->default(0);
+            $table->text('special_requests')->nullable();
+            $table->enum('status', ['pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled', 'no_show', 'modified']);
+            $table->enum('booking_source', ['website', 'walk_in', 'phone', 'ota', 'travel_agent', 'corporate']);
+            $table->string('booking_reference')->unique();
+            $table->decimal('total_price', 12, 2);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('bookings');
+    }
+};
+
+eta hocche bookings er model file
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Booking extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'property_id',
+        'guest_id',
+        'room_id',
+        'room_type_id',
+        'check_in_date',
+        'check_out_date',
+        'total_nights',
+        'adults',
+        'children',
+        'infants',
+        'special_requests',
+        'status',
+        'booking_source',
+        'booking_reference',
+        'total_price',
+    ];
+
+    protected $casts = [
+        'check_in_date' => 'date',
+        'check_out_date' => 'date',
+        'total_price' => 'decimal:2',
+    ];
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
+
+    public function guest()
+    {
+        return $this->belongsTo(Guest::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function roomType()
+    {
+        return $this->belongsTo(RoomType::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function addons()
+    {
+        return $this->hasMany(BookingAddon::class);
+    }
+
+    public function services()
+    {
+        return $this->hasMany(BookingService::class);
+    }
+
+    public function checkIn()
+    {
+        return $this->hasOne(CheckIn::class);
+    }
+
+    public function checkOut()
+    {
+        return $this->hasOne(CheckOut::class);
+    }
+
+    public function modifications()
+    {
+        return $this->hasMany(BookingModification::class);
+    }
+
+    public function roomAssignments()
+    {
+        return $this->hasMany(RoomAssignment::class);
+    }
+
+    public function roomServiceOrders()
+    {
+        return $this->hasMany(RoomServiceOrder::class);
+    }
+
+    public function accountsReceivable()
+    {
+        return $this->hasOne(AccountsReceivable::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    // Calculate total paid amount
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()
+            ->where('payment_status', 'completed')
+            ->sum('amount');
+    }
+
+    // Calculate remaining amount
+    public function getRemainingAmountAttribute()
+    {
+        return $this->total_price - $this->total_paid;
+    }
+
+    // Check if booking is fully paid
+    public function getIsFullyPaidAttribute()
+    {
+        return $this->remaining_amount <= 0;
+    }
+
+    // Generate booking reference
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($booking) {
+            if (empty($booking->booking_reference)) {
+                $booking->booking_reference = 'BKG' . date('Ym') . strtoupper(substr(md5(uniqid(rand(), true)), 0, 4));
+            }
+            
+            if (empty($booking->total_nights)) {
+                $checkIn = new \DateTime($booking->check_in_date);
+                $checkOut = new \DateTime($booking->check_out_date);
+                $interval = $checkIn->diff($checkOut);
+                $booking->total_nights = $interval->days;
+            }
+        });
+    }
+
+    // app/Models/Booking.php
+public function calculateTotalPrice()
+{
+    $roomType = $this->roomType;
+    $nights = $this->total_nights;
+
+    $basePrice = $roomType->base_price * $nights;
+    
+
+    
+    return $basePrice;
+}
+}
+
+
+
+eta hocche bookings er bookingscontroller file
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Booking;
+use App\Models\Property;
+use App\Models\Guest;
+use App\Models\Room;
+use App\Models\RoomType;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+class BookingController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:super_admin,property_manager,receptionist');
+    }
+
+    public function index()
+    {
+        $bookings = Booking::with('property', 'guest', 'room', 'roomType')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+        
+        return view('backend.bookings.index', compact('bookings'));
+    }
+
+    public function create()
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        return view('backend.bookings.create', compact('properties', 'guests', 'roomTypes'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date|after_or_equal:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
+
+        // Generate booking reference
+        $validated['booking_reference'] = 'BKG' . date('Ym') . strtoupper(substr(uniqid(), -4));
+
+        Booking::create($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking created successfully.');
+    }
+
+    public function show($id)
+    {
+        $booking = Booking::with(['property', 'guest', 'room', 'roomType', 'payments'])->find($id);
+        
+        if (!$booking) {
+            abort(404, 'Booking not found');
+        }
+        
+        return view('backend.bookings.show', compact('booking'));
+    }
+
+    public function edit(Booking $booking)
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $rooms = Room::where('property_id', $booking->property_id)
+                    ->where('room_type_id', $booking->room_type_id)
+                    ->where('status', 'available')
+                    ->get();
+        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes', 'rooms'));
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
+
+        $booking->update($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking updated successfully.');
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking deleted successfully.');
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+        ]);
+
+        $propertyId = $request->property_id;
+        $roomTypeId = $request->room_type_id;
+        $checkInDate = $request->check_in_date;
+        $checkOutDate = $request->check_out_date;
+
+        $availableRooms = Room::where('property_id', $propertyId)
+            ->where('room_type_id', $roomTypeId)
+            ->where('status', 'available')
+            ->whereNotIn('id', function ($query) use ($checkInDate, $checkOutDate) {
+                $query->select('room_id')
+                    ->from('bookings')
+                    ->where('status', '!=', 'cancelled')
+                    ->where(function ($q) use ($checkInDate, $checkOutDate) {
+                        $q->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
+                            ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
+                            ->orWhere(function ($q) use ($checkInDate, $checkOutDate) {
+                                $q->where('check_in_date', '<=', $checkInDate)
+                                    ->where('check_out_date', '>=', $checkOutDate);
+                            });
+                    })
+                    ->whereNotNull('room_id');
+            })
+            ->get();
+
+        return response()->json([
+            'available' => $availableRooms->count(),
+            'rooms' => $availableRooms
+        ]);
+    }
+
+    public function confirm(Booking $booking)
+    {
+        $booking->update(['status' => 'confirmed']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking confirmed successfully.');
+    }
+
+    public function cancel(Booking $booking)
+    {
+        $booking->update(['status' => 'cancelled']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking cancelled successfully.');
+    }
+
+    public function calendar()
+    {
+        $totalBookings = Booking::count();
+        $pendingBookings = Booking::where('status', 'pending')->count();
+        $confirmedBookings = Booking::where('status', 'confirmed')->count();
+        $checkedInBookings = Booking::where('status', 'checked_in')->count();
+        $checkedOutBookings = Booking::where('status', 'checked_out')->count();
+        $cancelledBookings = Booking::where('status', 'cancelled')->count();
+
+        return view('backend.bookings.calendar', compact(
+            'totalBookings',
+            'pendingBookings',
+            'confirmedBookings',
+            'checkedInBookings',
+            'checkedOutBookings',
+            'cancelledBookings'
+        ));
+    }
+
+    public function calendarData(Request $request)
+    {
+        try {
+            $searchTerm = $request->get('search');
+            
+            $bookings = Booking::with(['guest', 'room', 'property'])
+                ->when($searchTerm, function($query) use ($searchTerm) {
+                    return $query->where(function($q) use ($searchTerm) {
+                        $q->whereHas('guest', function($guestQuery) use ($searchTerm) {
+                            $guestQuery->where('first_name', 'like', '%' . $searchTerm . '%')
+                                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('room', function($roomQuery) use ($searchTerm) {
+                            $roomQuery->where('room_number', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('property', function($propertyQuery) use ($searchTerm) {
+                            $propertyQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhere('booking_reference', 'like', '%' . $searchTerm . '%');
+                    });
+                })
+                ->get();
+
+            $formattedBookings = [];
+            
+            foreach ($bookings as $booking) {
+                $guestName = $booking->guest ? $booking->guest->full_name : 'Unknown Guest';
+                $roomNumber = $booking->room ? $booking->room->room_number : 'Not Assigned';
+                $propertyName = $booking->property ? $booking->property->name : 'Unknown Property';
+                
+                $color = $this->getBookingColor($booking->status);
+                
+                $bookingUrl = route('bookings.show', $booking->id);
+                
+                $formattedBookings[] = [
+                    'id' => $booking->id,
+                    'title' => $guestName . ' - ' . $roomNumber,
+                    'start' => $booking->check_in_date->format('Y-m-d'),
+                    'end' => Carbon::parse($booking->check_out_date)->addDay()->format('Y-m-d'),
+                    'color' => $color,
+                    'url' => $bookingUrl,
+                    'extendedProps' => [
+                        'guest' => $guestName,
+                        'room' => $roomNumber,
+                        'property' => $propertyName,
+                        'status' => $booking->status,
+                        'nights' => $booking->total_nights,
+                        'total_price' => $booking->total_price,
+                    ]
+                ];
+            }
+
+            return response()->json($formattedBookings);
+
+        } catch (\Exception $e) {
+            \Log::error('Calendar data error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load calendar data'], 500);
+        }
+    }
+
+    private function getBookingColor($status)
+    {
+        switch ($status) {
+            case 'confirmed':
+                return '#28a745';
+            case 'checked_in':
+                return '#17a2b8';
+            case 'checked_out':
+                return '#6c757d';
+            case 'cancelled':
+                return '#dc3545';
+            case 'no_show':
+                return '#343a40';
+            case 'modified':
+                return '#6610f2';
+            case 'pending':
+            default:
+                return '#ffc107';
+        }
+    }
+}
+
+
+
+
+eta hocche bookings er index.blade.php file
 
 @extends('backend.layouts.app')
 
@@ -19,7 +515,36 @@ egulo bookings index.blade.php er code
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-striped">
+                    <!-- Search and Filter Section -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="searchBookings" placeholder="Search bookings...">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterStatus">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="checked_in">Checked In</option>
+                                <option value="checked_out">Checked Out</option>
+                                <option value="cancelled">Cancelled</option>
+                                <option value="no_show">No Show</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterProperty">
+                                <option value="">All Properties</option>
+                                @foreach($properties = App\Models\Property::all() as $property)
+                                    <option value="{{ $property->id }}">{{ $property->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" class="form-control" id="filterDate">
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-striped table-hover" id="bookingsTable">
                         <thead>
                             <tr>
                                 <th>Reference</th>
@@ -36,9 +561,9 @@ egulo bookings index.blade.php er code
                         <tbody>
                             @foreach($bookings as $booking)
                             <tr>
-                                <td>{{ $booking->booking_reference }}</td>
-                                <td>{{ $booking->guest->full_name }}</td>
-                                <td>{{ $booking->property->name }}</td>
+                                <td>{{ $booking->booking_reference ?? 'N/A' }}</td>
+                                <td>{{ $booking->guest->full_name ?? 'N/A' }}</td>
+                                <td>{{ $booking->property->name ?? 'N/A' }}</td>
                                 <td>{{ $booking->room ? $booking->room->room_number : 'Not assigned' }}</td>
                                 <td>{{ $booking->check_in_date }}</td>
                                 <td>{{ $booking->check_out_date }}</td>
@@ -47,26 +572,56 @@ egulo bookings index.blade.php er code
                                         {{ ucfirst($booking->status) }}
                                     </span>
                                 </td>
-                                <td>{{ number_format($booking->total_price, 2) }}</td>
+                                <td>${{ number_format($booking->total_price, 2) }}</td>
                                 <td>
-                                    <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <div class="btn-group">
+                                        <a href="{{ route('bookings.show', $booking->id) }}" class="btn btn-sm btn-info" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('bookings.edit', $booking->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        <!-- Quick Actions -->
+                                        @if($booking->status == 'pending')
+                                            <form action="{{ route('bookings.confirm', $booking->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-success" title="Confirm Booking" onclick="return confirm('Confirm this booking?')">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                        
+                                        @if(!in_array($booking->status, ['cancelled', 'checked_out']))
+                                            <form action="{{ route('bookings.cancel', $booking->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Cancel Booking" onclick="return confirm('Cancel this booking?')">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                        
+                                        <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete" onclick="return confirm('Are you sure?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            Showing {{ $bookings->firstItem() }} to {{ $bookings->lastItem() }} of {{ $bookings->total() }} entries
+                        </div>
+                        {{ $bookings->links() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,7 +629,37 @@ egulo bookings index.blade.php er code
 </div>
 @endsection
 
-egulo bookings create.blade.php er code
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Search functionality
+    $('#searchBookings').on('keyup', function() {
+        let value = $(this).val().toLowerCase();
+        $('#bookingsTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+    
+    // Filter functionality
+    $('#filterStatus, #filterProperty, #filterDate').on('change', function() {
+        let statusValue = $('#filterStatus').val().toLowerCase();
+        let propertyValue = $('#filterProperty').val();
+        let dateValue = $('#filterDate').val();
+        
+        $('#bookingsTable tbody tr').filter(function() {
+            let statusMatch = statusValue === '' || $(this).find('td:eq(6)').text().toLowerCase().indexOf(statusValue) > -1;
+            let propertyMatch = propertyValue === '' || $(this).find('td:eq(2)').text().includes($('#filterProperty option:selected').text());
+            let dateMatch = dateValue === '' || $(this).find('td:eq(4)').text().includes(dateValue) || $(this).find('td:eq(5)').text().includes(dateValue);
+            
+            $(this).toggle(statusMatch && propertyMatch && dateMatch);
+        });
+    });
+});
+</script>
+@endpush
+
+
+eta hocche bookings er create.blade.php file
 
 @extends('backend.layouts.app')
 
@@ -92,7 +677,7 @@ egulo bookings create.blade.php er code
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('bookings.store') }}" method="POST">
+                    <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -124,14 +709,16 @@ egulo bookings create.blade.php er code
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
                                     <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
                                         <option value="">Select Room Type</option>
                                         @foreach($roomTypes as $roomType)
-                                            <option value="{{ $roomType->id }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>{{ $roomType->name }} ({{ number_format($roomType->base_price, 2) }})</option>
+                                            <option value="{{ $roomType->id }}" data-price="{{ $roomType->base_price }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>
+                                                {{ $roomType->name }} (${{ number_format($roomType->base_price, 2) }})
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('room_type_id')
@@ -151,7 +738,7 @@ egulo bookings create.blade.php er code
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="check_in_date">Check-in Date <span class="text-danger">*</span></label>
@@ -171,7 +758,7 @@ egulo bookings create.blade.php er code
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="adults">Adults <span class="text-danger">*</span></label>
@@ -200,7 +787,7 @@ egulo bookings create.blade.php er code
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
@@ -234,23 +821,37 @@ egulo bookings create.blade.php er code
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="total_price">Total Price <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price') }}" step="0.01" min="0" required>
-                            @error('total_price')
-                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                            @enderror
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="total_nights">Total Nights</label>
+                                    <input type="number" class="form-control" id="total_nights" name="total_nights" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="total_price">Total Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control @error('total_price') is-invalid @enderror" id="total_price" name="total_price" value="{{ old('total_price') }}" step="0.01" min="0" required>
+                                    @error('total_price')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label for="special_requests">Special Requests</label>
                             <textarea class="form-control @error('special_requests') is-invalid @enderror" id="special_requests" name="special_requests" rows="3">{{ old('special_requests') }}</textarea>
                             @error('special_requests')
                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Create Booking</button>
-                            <a href="{{ route('bookings.index') }}" class="btn btn-default">Cancel</a>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Booking
+                            </button>
+                            <a href="{{ route('bookings.index') }}" class="btn btn-default">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -258,76 +859,127 @@ egulo bookings create.blade.php er code
         </div>
     </div>
 </div>
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        // Property change handler
-        $('#property_id').change(function() {
-            var propertyId = $(this).val();
-            
-            if (propertyId) {
-                // Update room types based on property
-                $.ajax({
-                    url: '/api/room-types/by-property/' + propertyId,
-                    type: 'GET',
-                    success: function(data) {
-                        $('#room_type_id').empty();
-                        $('#room_type_id').append('<option value="">Select Room Type</option>');
-                        
-                        $.each(data, function(key, value) {
-                            $('#room_type_id').append('<option value="' + value.id + '">' + value.name + ' (' + value.base_price + ')</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#room_type_id').empty();
-                $('#room_type_id').append('<option value="">Select Room Type</option>');
-            }
-        });
-        
-        // Room type change handler
-        $('#room_type_id').change(function() {
-            var propertyId = $('#property_id').val();
-            var roomTypeId = $(this).val();
-            var checkInDate = $('#check_in_date').val();
-            var checkOutDate = $('#check_out_date').val();
-            
-            if (propertyId && roomTypeId && checkInDate && checkOutDate) {
-                // Check available rooms
-                $.ajax({
-                    url: '{{ route("bookings.check-availability") }}',
-                    type: 'GET',
-                    data: {
-                        property_id: propertyId,
-                        room_type_id: roomTypeId,
-                        check_in_date: checkInDate,
-                        check_out_date: checkOutDate
-                    },
-                    success: function(data) {
-                        $('#room_id').empty();
-                        $('#room_id').append('<option value="">Select Room (Optional)</option>');
-                        
-                        $.each(data.rooms, function(key, value) {
-                            $('#room_id').append('<option value="' + value.id + '">' + value.room_number + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#room_id').empty();
-                $('#room_id').append('<option value="">Select Room (Optional)</option>');
-            }
-        });
-        
-        // Date change handlers
-        $('#check_in_date, #check_out_date').change(function() {
-            $('#room_type_id').trigger('change');
-        });
-    });
-</script>
 @endsection
 
-egulo bookings edit.blade.php er code 
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Calculate nights and price when dates change
+    function calculateBookingDetails() {
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        const roomTypeId = $('#room_type_id').val();
+        
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const timeDiff = checkOut.getTime() - checkIn.getTime();
+            const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            $('#total_nights').val(nights);
+            
+            // Calculate price if room type is selected
+            if (roomTypeId && nights > 0) {
+                const selectedRoomType = $('#room_type_id option:selected');
+                const basePrice = selectedRoomType.data('price');
+                const totalPrice = basePrice * nights;
+                $('#total_price').val(totalPrice.toFixed(2));
+            }
+        }
+    }
+
+    // Date change handlers
+    $('#check_in_date, #check_out_date').on('change', function() {
+        calculateBookingDetails();
+        checkRoomAvailability();
+    });
+
+    // Room type change handler
+    $('#room_type_id').on('change', function() {
+        calculateBookingDetails();
+        checkRoomAvailability();
+    });
+
+    // Property change handler
+    $('#property_id').on('change', function() {
+        const propertyId = $(this).val();
+        $('#room_id').html('<option value="">Select Room (Optional)</option>');
+        
+        if (propertyId) {
+            // You can add AJAX call here to load room types based on property
+        }
+    });
+
+    // Check room availability
+    function checkRoomAvailability() {
+        const propertyId = $('#property_id').val();
+        const roomTypeId = $('#room_type_id').val();
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        
+        if (propertyId && roomTypeId && checkInDate && checkOutDate) {
+            $.ajax({
+                url: '{{ route("bookings.check-availability") }}',
+                type: 'GET',
+                data: {
+                    property_id: propertyId,
+                    room_type_id: roomTypeId,
+                    check_in_date: checkInDate,
+                    check_out_date: checkOutDate
+                },
+                success: function(response) {
+                    $('#room_id').html('<option value="">Select Room (Optional)</option>');
+                    if (response.rooms && response.rooms.length > 0) {
+                        $.each(response.rooms, function(key, room) {
+                            $('#room_id').append('<option value="' + room.id + '">' + room.room_number + '</option>');
+                        });
+                    } else {
+                        $('#room_id').append('<option value="">No rooms available</option>');
+                    }
+                },
+                error: function() {
+                    $('#room_id').html('<option value="">Error loading rooms</option>');
+                }
+            });
+        }
+    }
+
+    // Form validation
+    $('#bookingForm').on('submit', function(e) {
+        const checkInDate = $('#check_in_date').val();
+        const checkOutDate = $('#check_out_date').val();
+        
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (checkIn < today) {
+                e.preventDefault();
+                alert('Check-in date cannot be in the past.');
+                return false;
+            }
+            
+            if (checkOut <= checkIn) {
+                e.preventDefault();
+                alert('Check-out date must be after check-in date.');
+                return false;
+            }
+        }
+    });
+
+    // Set minimum date for check-in to today
+    const today = new Date().toISOString().split('T')[0];
+    $('#check_in_date').attr('min', today);
+    $('#check_out_date').attr('min', today);
+});
+</script>
+@endpush
+
+
+eta hocche bookings er edit.blade.php file
+
 @extends('backend.layouts.app')
 
 @section('content')
@@ -516,7 +1168,8 @@ egulo bookings edit.blade.php er code
 </div>
 @endsection
 
-egulo bookings show.blade.php er code 
+
+eta hocche bookings er show.blade.php file
 
 @extends('backend.layouts.app')
 
@@ -663,8 +1316,7 @@ egulo bookings show.blade.php er code
 </div>
 @endsection
 
-egulo bookings calender.blade.php er code 
-
+eta hocche bookings er index.blade.php file
 
 @extends('backend.layouts.app')
 
@@ -674,15 +1326,96 @@ egulo bookings calender.blade.php er code
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Booking Calendar</h3>
+                    <h3 class="card-title">Bookings Calendar</h3>
                     <div class="card-tools">
-                        <a href="{{ route('bookings.index') }}" class="btn btn-default">
-                            <i class="fas fa-arrow-left"></i> Back to List
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <input type="text" id="calendarSearch" class="form-control" placeholder="Search bookings...">
+                            <div class="input-group-append">
+                                <button class="btn btn-default">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <a href="{{ route('bookings.index') }}" class="btn btn-default ml-2">
+                            <i class="fas fa-list"></i> List View
+                        </a>
+                        <a href="{{ route('bookings.create') }}" class="btn btn-primary ml-2">
+                            <i class="fas fa-plus"></i> New Booking
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="calendar" style="height: 600px;"></div>
+                    <!-- Booking Overview Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="booking-overview">
+                                <h5 class="mb-3">Booking Overview</h5>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-info">
+                                            <span class="info-box-icon"><i class="fas fa-calendar-check"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total</span>
+                                                <span class="info-box-number">{{ $totalBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-warning">
+                                            <span class="info-box-icon"><i class="fas fa-clock"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Pending</span>
+                                                <span class="info-box-number">{{ $pendingBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-success">
+                                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Confirmed</span>
+                                                <span class="info-box-number">{{ $confirmedBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-teal">
+                                            <span class="info-box-icon"><i class="fas fa-sign-in-alt"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Checked In</span>
+                                                <span class="info-box-number">{{ $checkedInBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-secondary">
+                                            <span class="info-box-icon"><i class="fas fa-sign-out-alt"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Checked Out</span>
+                                                <span class="info-box-number">{{ $checkedOutBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4">
+                                        <div class="info-box bg-gradient-danger">
+                                            <span class="info-box-icon"><i class="fas fa-times-circle"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Cancelled</span>
+                                                <span class="info-box-number">{{ $cancelledBookings }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Section -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="bookingCalendar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -690,381 +1423,213 @@ egulo bookings calender.blade.php er code
 </div>
 @endsection
 
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+@push('styles')
+<style>
+.booking-overview {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.info-box {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.info-box .info-box-icon {
+    border-radius: 6px 0 0 6px;
+}
+
+.info-box .info-box-content {
+    padding: 10px;
+}
+
+.info-box-text {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.info-box-number {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.bg-gradient-teal {
+    background: linear-gradient(45deg, #20c997, #17a2b8) !important;
+}
+
+/* FullCalendar Custom Styles */
+.fc-event {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 2px 4px;
+    margin: 1px;
+}
+
+.fc-event-title {
+    font-weight: 600;
+}
+
+.fc-daygrid-event-dot {
+    display: none;
+}
+
+.fc-toolbar {
+    flex-wrap: wrap;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px !important;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #495057;
+}
+
+.fc-button {
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+}
+
+.fc-button-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.fc-button-active {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+.fc-day-today {
+    background-color: #e7f3ff !important;
+}
+
+/* Booking status colors */
+.booking-pending { background-color: #ffc107; color: #000; }
+.booking-confirmed { background-color: #28a745; color: #fff; }
+.booking-checked_in { background-color: #17a2b8; color: #fff; }
+.booking-checked_out { background-color: #6c757d; color: #fff; }
+.booking-cancelled { background-color: #dc3545; color: #fff; }
+.booking-no_show { background-color: #343a40; color: #fff; }
+.booking-modified { background-color: #6610f2; color: #fff; }
+
+@media (max-width: 768px) {
+    .fc-toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .fc-toolbar-chunk {
+        text-align: center;
+    }
+    
+    .booking-overview .row {
+        margin: 0 -5px;
+    }
+    
+    .booking-overview .col-md-2 {
+        padding: 0 5px;
+    }
+}
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('bookingCalendar');
+    
+    if (!calendarEl) {
+        console.error('Calendar element not found');
+        return;
+    }
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        themeSystem: 'bootstrap5',
+        navLinks: true,
+        editable: false,
+        selectable: false,
+        nowIndicator: true,
+        dayMaxEvents: true,
+        events: {
+            url: '{{ route("bookings.calendar-data") }}',
+            method: 'GET',
+            extraParams: function() {
+                return {
+                    search: $('#calendarSearch').val() || ''
+                };
             },
-            events: '{{ route("bookings.calendar-data") }}',
-            eventClick: function(info) {
-                if (info.event.url) {
-                    window.location.href = info.event.url;
-                }
+            failure: function(error) {
+                console.error('Error fetching events:', error);
+                alert('Events could not be loaded. Please check console for details.');
             }
-        });
-        calendar.render();
-    });
-</script>
-@endsection
-
-
-egulo bookings er model bookings.php er code 
-
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Booking extends Model
-{
-    use HasFactory, SoftDeletes;
-
-    protected $fillable = [
-        'property_id',
-        'guest_id',
-        'room_id',
-        'room_type_id',
-        'check_in_date',
-        'check_out_date',
-        'total_nights',
-        'adults',
-        'children',
-        'infants',
-        'special_requests',
-        'status',
-        'booking_source',
-        'booking_reference',
-        'total_price',
-    ];
-
-    protected $casts = [
-        'check_in_date' => 'date',
-        'check_out_date' => 'date',
-        'total_price' => 'decimal:2',
-    ];
-
-    public function property()
-    {
-        return $this->belongsTo(Property::class);
-    }
-
-    public function guest()
-    {
-        return $this->belongsTo(Guest::class);
-    }
-
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
-
-    public function roomType()
-    {
-        return $this->belongsTo(RoomType::class);
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function addons()
-    {
-        return $this->hasMany(BookingAddon::class);
-    }
-
-    public function services()
-    {
-        return $this->hasMany(BookingService::class);
-    }
-
-    public function checkIn()
-    {
-        return $this->hasOne(CheckIn::class);
-    }
-
-    public function checkOut()
-    {
-        return $this->hasOne(CheckOut::class);
-    }
-
-    public function modifications()
-    {
-        return $this->hasMany(BookingModification::class);
-    }
-
-    public function roomAssignments()
-    {
-        return $this->hasMany(RoomAssignment::class);
-    }
-
-    public function roomServiceOrders()
-    {
-        return $this->hasMany(RoomServiceOrder::class);
-    }
-
-    public function accountsReceivable()
-    {
-        return $this->hasOne(AccountsReceivable::class);
-    }
-
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class);
-    }
-
-    // Calculate total paid amount
-    public function getTotalPaidAttribute()
-    {
-        return $this->payments()
-            ->where('payment_status', 'completed')
-            ->sum('amount');
-    }
-
-    // Calculate remaining amount
-    public function getRemainingAmountAttribute()
-    {
-        return $this->total_price - $this->total_paid;
-    }
-
-    // Check if booking is fully paid
-    public function getIsFullyPaidAttribute()
-    {
-        return $this->remaining_amount <= 0;
-    }
-
-    // Generate booking reference
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($booking) {
-            if (empty($booking->booking_reference)) {
-                $booking->booking_reference = 'BKG' . date('Ym') . strtoupper(substr(md5(uniqid(rand(), true)), 0, 4));
+        },
+        eventClick: function(info) {
+            console.log('Event clicked:', info.event);
+            if (info.event.url) {
+                window.location.href = info.event.url;
+                return false;
+            }
+        },
+        eventDidMount: function(info) {
+            // Add custom class based on booking status
+            const status = info.event.extendedProps.status;
+            if (status) {
+                info.el.classList.add('booking-' + status);
             }
             
-            if (empty($booking->total_nights)) {
-                $checkIn = new \DateTime($booking->check_in_date);
-                $checkOut = new \DateTime($booking->check_out_date);
-                $interval = $checkIn->diff($checkOut);
-                $booking->total_nights = $interval->days;
+            // Add tooltip
+            if (info.event.extendedProps) {
+                $(info.el).tooltip({
+                    title: `
+                        <strong>${info.event.title}</strong><br>
+                        <small>Property: ${info.event.extendedProps.property || 'N/A'}</small><br>
+                        <small>Room: ${info.event.extendedProps.room || 'N/A'}</small><br>
+                        <small>Status: ${info.event.extendedProps.status || 'N/A'}</small><br>
+                        <small>Nights: ${info.event.extendedProps.nights || 'N/A'}</small><br>
+                        <small>Total: $${info.event.extendedProps.total_price || '0'}</small>
+                    `,
+                    html: true,
+                    placement: 'top',
+                    container: 'body'
+                });
             }
-        });
-    }
-
-    // app/Models/Booking.php
-public function calculateTotalPrice()
-{
-    $roomType = $this->roomType;
-    $nights = $this->total_nights;
-    
-    // মৌলিক মূল্য হিসাব
-    $basePrice = $roomType->base_price * $nights;
-    
-    // এখানে অতিরিক্ত চার্জ, ডিসকাউন্ট ইত্যাদি যোগ করা যেতে পারে
-    
-    return $basePrice;
-}
-}
-
-egulo bookings er controller BookingController.php er code
-
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\Booking;
-use App\Models\Property;
-use App\Models\Guest;
-use App\Models\Room;
-use App\Models\RoomType;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-
-class BookingController extends Controller
-{
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('role:super_admin,property_manager,receptionist');
-    }
-
-    public function index()
-    {
-        $bookings = Booking::with('property', 'guest', 'room', 'roomType')->get();
-        return view('backend.bookings.index', compact('bookings'));
-    }
-
-    public function create()
-    {
-        $properties = Property::where('is_active', true)->get();
-        $guests = Guest::all();
-        $roomTypes = RoomType::where('is_active', true)->get();
-        return view('backend.bookings.create', compact('properties', 'guests', 'roomTypes'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'guest_id' => 'required|exists:guests,id',
-            'room_id' => 'nullable|exists:rooms,id',
-            'room_type_id' => 'required|exists:room_types,id',
-            'check_in_date' => 'required|date|after_or_equal:today',
-            'check_out_date' => 'required|date|after:check_in_date',
-            'adults' => 'required|integer|min:1',
-            'children' => 'required|integer|min:0',
-            'infants' => 'required|integer|min:0',
-            'special_requests' => 'nullable|string',
-            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
-            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
-            'total_price' => 'required|numeric|min:0',
-        ]);
-
-        Booking::create($validated);
-
-        return redirect()->route('bookings.index')
-            ->with('success', 'Booking created successfully.');
-    }
-
-    public function show(Booking $booking)
-    {
-        $booking->load('property', 'guest', 'room', 'roomType', 'payments', 'addons', 'services');
-        return view('backend.bookings.show', compact('booking'));
-    }
-
-    public function edit(Booking $booking)
-    {
-        $properties = Property::where('is_active', true)->get();
-        $guests = Guest::all();
-        $roomTypes = RoomType::where('is_active', true)->get();
-        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes'));
-    }
-
-    public function update(Request $request, Booking $booking)
-    {
-        $validated = $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'guest_id' => 'required|exists:guests,id',
-            'room_id' => 'nullable|exists:rooms,id',
-            'room_type_id' => 'required|exists:room_types,id',
-            'check_in_date' => 'required|date',
-            'check_out_date' => 'required|date|after:check_in_date',
-            'adults' => 'required|integer|min:1',
-            'children' => 'required|integer|min:0',
-            'infants' => 'required|integer|min:0',
-            'special_requests' => 'nullable|string',
-            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
-            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
-            'total_price' => 'required|numeric|min:0',
-        ]);
-
-        $booking->update($validated);
-
-        return redirect()->route('bookings.index')
-            ->with('success', 'Booking updated successfully.');
-    }
-
-    public function destroy(Booking $booking)
-    {
-        $booking->delete();
-        return redirect()->route('bookings.index')
-            ->with('success', 'Booking deleted successfully.');
-    }
-
-    public function checkAvailability(Request $request)
-    {
-        $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'room_type_id' => 'required|exists:room_types,id',
-            'check_in_date' => 'required|date',
-            'check_out_date' => 'required|date|after:check_in_date',
-        ]);
-
-        $propertyId = $request->property_id;
-        $roomTypeId = $request->room_type_id;
-        $checkInDate = $request->check_in_date;
-        $checkOutDate = $request->check_out_date;
-
-        $availableRooms = Room::where('property_id', $propertyId)
-            ->where('room_type_id', $roomTypeId)
-            ->where('status', 'available')
-            ->whereNotIn('id', function ($query) use ($checkInDate, $checkOutDate) {
-                $query->select('room_id')
-                    ->from('bookings')
-                    ->where('status', '!=', 'cancelled')
-                    ->where(function ($q) use ($checkInDate, $checkOutDate) {
-                        $q->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
-                            ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
-                            ->orWhere(function ($q) use ($checkInDate, $checkOutDate) {
-                                $q->where('check_in_date', '<=', $checkInDate)
-                                    ->where('check_out_date', '>=', $checkOutDate);
-                            });
-                    });
-            })
-            ->get();
-
-        return response()->json([
-            'available' => $availableRooms->count(),
-            'rooms' => $availableRooms
-        ]);
-    }
-
-    public function calendar()
-    {
-        return view('backend.bookings.calendar');
-    }
-
-    public function calendarData(Request $request)
-    {
-        $start = $request->start;
-        $end = $request->end;
-        
-        $bookings = Booking::whereBetween('check_in_date', [$start, $end])
-            ->orWhereBetween('check_out_date', [$start, $end])
-            ->with('guest', 'room')
-            ->get();
-
-        $events = [];
-        
-        foreach ($bookings as $booking) {
-            $events[] = [
-                'id' => $booking->id,
-                'title' => $booking->guest->full_name . ' - ' . ($booking->room ? $booking->room->room_number : 'No Room'),
-                'start' => $booking->check_in_date,
-                'end' => $booking->check_out_date,
-                'color' => $this->getBookingColor($booking->status),
-                'url' => route('bookings.show', $booking->id)
-            ];
+        },
+        loading: function(isLoading) {
+            if (isLoading) {
+                $('#bookingCalendar').addClass('loading');
+                console.log('Loading events...');
+            } else {
+                $('#bookingCalendar').removeClass('loading');
+                console.log('Events loaded');
+            }
         }
+    });
 
-        return response()->json($events);
-    }
+    calendar.render();
 
-    private function getBookingColor($status)
-    {
-        $colors = [
-            'pending' => '#ffc107',
-            'confirmed' => '#28a745',
-            'checked_in' => '#17a2b8',
-            'checked_out' => '#6c757d',
-            'cancelled' => '#dc3545',
-            'no_show' => '#343a40',
-            'modified' => '#6610f2'
-        ];
-
-        return $colors[$status] ?? '#007bff';
-    }
-}
+    // Search functionality
+    $('#calendarSearch').on('keyup', function() {
+        console.log('Searching:', $(this).val());
+        calendar.refetchEvents();
+    });
+});
+</script>
+@endpush

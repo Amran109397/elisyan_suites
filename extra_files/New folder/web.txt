@@ -37,6 +37,16 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuditLogController;
+// Add these controllers
+use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\CheckOutController;
+use App\Http\Controllers\RoomAssignmentController;
+use App\Http\Controllers\WaitingListController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PriceController;
+use App\Http\Controllers\PromoCodeController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\RoomImageController;
 
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -115,7 +125,9 @@ Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->g
     Route::get('bookings/calendar-data', [BookingController::class, 'calendarData'])->name('bookings.calendar-data');
     Route::post('bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    
 });
+
 
 // Payment routes
 Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
@@ -124,6 +136,48 @@ Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->g
     Route::post('payments/{payment}/mark-completed', [PaymentController::class, 'markAsCompleted'])->name('payments.mark-completed');
     Route::post('payments/{payment}/mark-failed', [PaymentController::class, 'markAsFailed'])->name('payments.mark-failed');
     Route::post('payments/{payment}/mark-refunded', [PaymentController::class, 'markAsRefunded'])->name('payments.mark-refunded');
+});
+
+// Check-in routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('check-ins', CheckInController::class);
+});
+
+// Check-out routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('check-outs', CheckOutController::class);
+});
+
+// Room Assignment routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('room-assignments', RoomAssignmentController::class);
+});
+
+// Waiting List routes - Fixed route name to match sidebar
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('waiting-list', WaitingListController::class)->names([
+        'index' => 'waiting-list.index',
+        'create' => 'waiting-list.create',
+        'store' => 'waiting-list.store',
+        'show' => 'waiting-list.show',
+        'edit' => 'waiting-list.edit',
+        'update' => 'waiting-list.update',
+        'destroy' => 'waiting-list.destroy'
+    ]);
+});
+
+// Pricing routes
+Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
+    Route::resource('prices', PriceController::class);
+    Route::post('prices/bulk-store', [PriceController::class, 'bulkStore'])->name('prices.bulk-store');
+    Route::resource('seasons', SeasonController::class);
+    Route::resource('packages', PackageController::class);
+    Route::resource('promo-codes', PromoCodeController::class);
+});
+
+// Room Images routes
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('room-images', RoomImageController::class);
 });
 
 // New Routes - Room Management
@@ -181,6 +235,8 @@ Route::middleware(['auth', 'role:super_admin,property_manager,housekeeping'])->g
 // New Routes - Events
 Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function () {
     Route::resource('events', EventController::class);
+    Route::get('events-calendar', [EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('events/calendar-data', [EventController::class, 'calendarData'])->name('events.calendar-data');
     Route::resource('event-bookings', EventBookingController::class);
     Route::resource('resources', ResourceController::class);
     Route::resource('event-resources', EventResourceController::class);
@@ -191,6 +247,8 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
     Route::resource('treatments', TreatmentController::class);
     Route::resource('therapists', TherapistController::class);
     Route::resource('appointments', AppointmentController::class);
+    Route::get('appointments-calendar', [AppointmentController::class, 'calendar'])->name('appointments.calendar');
+    Route::get('appointments/calendar-data', [AppointmentController::class, 'calendarData'])->name('appointments.calendar-data');
 });
 
 // New Routes - Audit Logs (Super Admin only)
@@ -200,39 +258,11 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
 // Placeholder routes for sidebar items that don't have controllers yet
 Route::middleware(['auth'])->group(function () {
-    // Front Desk Operations
-    Route::middleware(['role:super_admin,property_manager,receptionist'])->group(function () {
-        Route::get('check-ins', function () {
-            return 'Check-ins Page - Under Construction';
-        })->name('check-ins.index');
-        
-        Route::get('check-outs', function () {
-            return 'Check-outs Page - Under Construction';
-        })->name('check-outs.index');
-        
-        Route::get('room-assignments', function () {
-            return 'Room Assignments Page - Under Construction';
-        })->name('room-assignments.index');
-        
-        Route::get('waiting-list', function () {
-            return 'Waiting List Page - Under Construction';
-        })->name('waiting-list.index');
-    });
-    
     // Room Management
     Route::middleware(['role:super_admin,property_manager,receptionist'])->group(function () {
         Route::get('amenities', function () {
             return 'Amenities Page - Under Construction';
         })->name('amenities.index');
-        
-        Route::get('room-images', function () {
-            return 'Room Images Page - Under Construction';
-        })->name('room-images.index');
-    });
-    
-    // Housekeeping & Maintenance
-    Route::middleware(['role:super_admin,property_manager,housekeeping'])->group(function () {
-        // These are now handled by proper controllers
     });
     
     // Financial Management
@@ -320,11 +350,6 @@ Route::middleware(['auth'])->group(function () {
         })->name('suppliers.index');
     });
     
-    // Guest Relations & Loyalty
-    Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        // These are now handled by proper controllers
-    });
-    
     // Channel Management
     Route::middleware(['role:super_admin,property_manager'])->group(function () {
         Route::get('channels', function () {
@@ -342,11 +367,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('channel-sync-logs', function () {
             return 'Channel Sync Logs Page - Under Construction';
         })->name('channel-sync-logs.index');
-    });
-    
-    // Events & Appointments
-    Route::middleware(['role:super_admin,property_manager'])->group(function () {
-        // These are now handled by proper controllers
     });
     
     // Asset Management
@@ -432,10 +452,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('personal-access-tokens', function () {
             return 'Personal Access Tokens Page - Under Construction';
         })->name('personal-access-tokens.index');
-        
-        Route::get('audit-logs', function () {
-            return 'Audit Logs Page - Under Construction';
-        })->name('audit-logs.index');
     });
 });
 

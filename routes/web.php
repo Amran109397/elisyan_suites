@@ -47,6 +47,10 @@ use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\RoomImageController;
+use App\Http\Controllers\InvoiceController;
+
+
+
 
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -287,6 +291,37 @@ Route::middleware(['auth'])->group(function () {
             return 'Taxes Page - Under Construction';
         })->name('taxes.index');
     });
+
+    // Invoice Routes
+    Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    // Invoice Resource Routes
+    Route::resource('invoices', InvoiceController::class);
+    
+    // Custom Invoice Routes
+    Route::post('invoices/{invoice}/generate-pdf', [InvoiceController::class, 'generatePdf'])->name('invoices.generate-pdf');
+    Route::post('invoices/{invoice}/send', [InvoiceController::class, 'sendInvoice'])->name('invoices.send');
+    Route::get('invoices/{invoice}/download', [InvoiceController::class, 'downloadPdf'])->name('invoices.download');
+    Route::get('invoices/{invoice}/preview', [InvoiceController::class, 'previewPdf'])->name('invoices.preview');
+    
+    // Invoice Status Update Routes
+    Route::post('invoices/{invoice}/mark-sent', [InvoiceController::class, 'markAsSent'])->name('invoices.mark-sent');
+    Route::post('invoices/{invoice}/mark-paid', [InvoiceController::class, 'markAsPaid'])->name('invoices.mark-paid');
+    Route::post('invoices/{invoice}/mark-overdue', [InvoiceController::class, 'markAsOverdue'])->name('invoices.mark-overdue');
+    Route::post('invoices/{invoice}/mark-cancelled', [InvoiceController::class, 'markAsCancelled'])->name('invoices.mark-cancelled');
+    
+    // Bulk Actions
+    Route::post('invoices/bulk-send', [InvoiceController::class, 'bulkSend'])->name('invoices.bulk-send');
+    Route::post('invoices/bulk-delete', [InvoiceController::class, 'bulkDelete'])->name('invoices.bulk-delete');
+    
+    // Invoice Reports
+    Route::get('invoices/reports', [InvoiceController::class, 'reports'])->name('invoices.reports');
+    Route::get('invoices/reports/monthly', [InvoiceController::class, 'monthlyReport'])->name('invoices.reports.monthly');
+    Route::get('invoices/reports/overdue', [InvoiceController::class, 'overdueReport'])->name('invoices.reports.overdue');
+    });
+
+// Invoice Public Routes (for guests to view/pay their invoices)
+Route::get('invoices/public/{invoice_number}/{token}', [InvoiceController::class, 'publicView'])->name('invoices.public.view');
+Route::post('invoices/public/{invoice_number}/{token}/pay', [InvoiceController::class, 'publicPay'])->name('invoices.public.pay');
     
     // POS & Restaurant Operations
     Route::middleware(['role:super_admin,property_manager,pos_staff'])->group(function () {

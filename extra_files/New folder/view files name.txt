@@ -39,8 +39,3 @@ waiting_lists, room_amenities, room_status_logs, booking_modifiacations, booking
 booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs,
 loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks,
 events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs
-
-jegulo kaj korche na
-
-housekeeping staff,housekeeping tasks, maintenance issues, prices,promo codes,events,
-events bookings,resources,event resources,treatments,therapists,appointments,
