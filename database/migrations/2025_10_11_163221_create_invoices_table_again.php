@@ -6,16 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_id');
+            $table->integer('booking_id');
             $table->string('invoice_number')->unique();
             $table->date('issue_date');
             $table->date('due_date');
@@ -23,17 +18,12 @@ return new class extends Migration
             $table->decimal('tax_amount', 10, 2)->default(0);
             $table->enum('status', ['draft', 'sent', 'paid', 'overdue', 'cancelled', 'voided'])->default('draft');
             $table->string('pdf_path')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('invoices');
     }

@@ -78,6 +78,34 @@
             </div>
         </div>
 
+        <!-- Financial Management -->
+        <div class="sidebar-section" id="financial" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#financialCollapse">
+                <i class="fas fa-credit-card section-icon"></i>
+                <span class="section-title">Financial Management</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="financialCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('payments.index') }}" class="subsection-link"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
+                    <li>
+                        <a href="{{ route('invoices.index') }}" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#invoicesSubmenu">
+                            <i class="fas fa-file-invoice"></i> Invoices
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="invoicesSubmenu">
+                            <li><a href="{{ route('invoices.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-file-invoice"></i> All Invoices</a></li>
+                            <li><a href="{{ route('invoices.create') }}" class="subsection-link sub-submenu-item"><i class="fas fa-plus"></i> Create Invoice</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ route('accounts-payable.index') }}" class="subsection-link"><i class="fas fa-hand-holding-usd"></i> Accounts Payable</a></li>
+                    <li><a href="{{ route('accounts-receivable.index') }}" class="subsection-link"><i class="fas fa-money-check-alt"></i> Accounts Receivable</a></li>
+                    <li><a href="{{ route('expenses.index') }}" class="subsection-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                    <li><a href="{{ route('taxes.index') }}" class="subsection-link"><i class="fas fa-percentage"></i> Taxes</a></li>
+                </ul>
+            </div>
+        </div>
+
         <!-- Housekeeping & Maintenance -->
         <div class="sidebar-section" id="housekeeping" data-role="super_admin,property_manager,housekeeping">
             <div class="section-header" data-bs-toggle="collapse" data-bs-target="#housekeepingCollapse">
@@ -90,25 +118,6 @@
                     <li><a href="{{ route('housekeeping-staffs.index') }}" class="subsection-link"><i class="fas fa-user-friends"></i> Housekeeping Staff</a></li>
                     <li><a href="{{ route('housekeeping-tasks.index') }}" class="subsection-link"><i class="fas fa-tasks"></i> Housekeeping Tasks</a></li>
                     <li><a href="{{ route('maintenance.index') }}" class="subsection-link"><i class="fas fa-tools"></i> Maintenance Issues</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Financial Management -->
-        <div class="sidebar-section" id="financial" data-role="super_admin,property_manager">
-            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#financialCollapse">
-                <i class="fas fa-credit-card section-icon"></i>
-                <span class="section-title">Financial Management</span>
-                <i class="fas fa-chevron-down section-arrow"></i>
-            </div>
-            <div class="collapse" id="financialCollapse">
-                <ul class="subsection-list">
-                    <li><a href="{{ route('payments.index') }}" class="subsection-link"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
-                    <li><a href="{{ route('invoices.index') }}" class="subsection-link"><i class="fas fa-file-invoice"></i> Invoices</a></li>
-                    <li><a href="{{ route('accounts-payable.index') }}" class="subsection-link"><i class="fas fa-hand-holding-usd"></i> Accounts Payable</a></li>
-                    <li><a href="{{ route('accounts-receivable.index') }}" class="subsection-link"><i class="fas fa-money-check-alt"></i> Accounts Receivable</a></li>
-                    <li><a href="{{ route('expenses.index') }}" class="subsection-link"><i class="fas fa-receipt"></i> Expenses</a></li>
-                    <li><a href="{{ route('taxes.index') }}" class="subsection-link"><i class="fas fa-percentage"></i> Taxes</a></li>
                 </ul>
             </div>
         </div>

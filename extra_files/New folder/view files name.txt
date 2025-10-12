@@ -4,7 +4,7 @@ floors,packages,prices,promo_codes,room_assignments,room_images,seasons,user_pro
 waiting_lists, room_amenities, room_status_logs, booking_modifiacations, booking_services,
 booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs,
 loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks,
-events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs
+events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs,invoice
 
 
 
@@ -15,7 +15,7 @@ floors,packages,prices,promo_codes,room_assignments,room_images,seasons,user_pro
 waiting_lists, room_amenities, room_status_logs, booking_modifiacations, booking_services,
 booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs,
 loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks,
-events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs
+events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs,invoice
 
 
 
@@ -27,7 +27,7 @@ floors,packages,prices,promo_codes,room_assignments,room_images,seasons,user_pro
 waiting_lists, room_amenities, room_status_logs, booking_modifiacations, booking_services,
 booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs,
 loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks,
-events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs
+events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs,invoice
 
 
 
@@ -38,4 +38,4 @@ floors,packages,prices,promo_codes,room_assignments,room_images,seasons,user_pro
 waiting_lists, room_amenities, room_status_logs, booking_modifiacations, booking_services,
 booking_addons, addons, services, property_amenities, guest_preferences, loyalty_programs,
 loyalty_members, loyalty_points, feedback, maintenance, housekeeping_staffs, housekepping_tasks,
-events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs
+events, event_bookings, resources, event_resources, treatments, therapists, appointsments, audit_logs,invoice

@@ -1,3 +1,4 @@
+// resources/views/backend/invoices/edit.blade.php
 @extends('backend.layouts.app')
 
 @section('content')
@@ -20,6 +21,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="booking_id">Booking <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('booking_id') is-invalid @enderror" id="booking_id" name="booking_id" required>
+                                        <option value="">Select Booking</option>
+                                        @foreach($bookings as $booking)
+                                            <option value="{{ $booking->id }}" {{ old('booking_id', $invoice->booking_id) == $booking->id ? 'selected' : '' }}>
+                                                {{ $booking->booking_reference }} - {{ $booking->guest->full_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('booking_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="issue_date">Issue Date <span class="text-danger">*</span></label>
                                     <input type="date" class="form-control @error('issue_date') is-invalid @enderror" id="issue_date" name="issue_date" value="{{ old('issue_date', $invoice->issue_date) }}" required>
                                     @error('issue_date')
@@ -27,6 +44,8 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="due_date">Due Date <span class="text-danger">*</span></label>
@@ -36,8 +55,6 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="amount">Amount <span class="text-danger">*</span></label>
@@ -47,6 +64,8 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="tax_amount">Tax Amount <span class="text-danger">*</span></label>
@@ -56,8 +75,6 @@
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status <span class="text-danger">*</span></label>
@@ -75,9 +92,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Update Invoice</button>
-                            <a href="{{ route('invoices.index') }}" class="btn btn-default">Cancel</a>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Invoice
+                            </button>
+                            <a href="{{ route('invoices.index') }}" class="btn btn-default">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -86,3 +107,31 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+ $(document).ready(function() {
+    // Form validation
+    $('#invoiceForm').on('submit', function(e) {
+        const issueDate = $('#issue_date').val();
+        const dueDate = $('#due_date').val();
+        
+        if (issueDate && dueDate) {
+            const issue = new Date(issueDate);
+            const due = new Date(dueDate);
+            
+            if (due <= issue) {
+                e.preventDefault();
+                alert('Due date must be after issue date.');
+                return false;
+            }
+        }
+    });
+    
+    // Set minimum date for issue date to today
+    const today = new Date().toISOString().split('T')[0];
+    $('#issue_date').attr('min', today);
+    $('#due_date').attr('min', today);
+});
+</script>
+@endpush

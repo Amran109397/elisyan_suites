@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'booking_id',
@@ -18,7 +19,6 @@ class Invoice extends Model
         'tax_amount',
         'status',
         'pdf_path',
-        'created_by',
     ];
 
     protected $casts = [
@@ -28,41 +28,14 @@ class Invoice extends Model
         'tax_amount' => 'decimal:2',
     ];
 
-    // ফরেন কী ছাড়া রিলেশন
     public function booking()
     {
-        return $this->belongsTo(Booking::class, 'booking_id');
-    }
-
-    // ফরেন কী ছাড়া রিলেশন
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(Booking::class);
     }
 
     public function payments()
     {
         return $this->hasMany(Payment::class);
-    }
-
-    // Calculate total paid amount
-    public function getTotalPaidAttribute()
-    {
-        return $this->payments()
-            ->where('payment_status', 'completed')
-            ->sum('amount');
-    }
-
-    // Calculate remaining amount
-    public function getRemainingAmountAttribute()
-    {
-        return $this->amount - $this->total_paid;
-    }
-
-    // Check if invoice is fully paid
-    public function getIsFullyPaidAttribute()
-    {
-        return $this->remaining_amount <= 0;
     }
 
     // Generate invoice number
@@ -75,5 +48,55 @@ class Invoice extends Model
                 $invoice->invoice_number = 'INV' . date('Ym') . str_pad(random_int(1, 9999), 4, '0', STR_PAD_LEFT);
             }
         });
+    }
+
+    // Calculate total amount
+    public function calculateTotalAmount()
+    {
+        $booking = $this->booking;
+        $totalAmount = $booking->total_price;
+        
+        // Add any additional charges
+        $addonsTotal = $booking->addons()->sum('price');
+        $servicesTotal = $booking->services()->sum('price');
+        
+        $totalAmount += $addonsTotal + $servicesTotal;
+        
+        return $totalAmount;
+    }
+
+    // Calculate tax amount
+    public function calculateTaxAmount()
+    {
+        $totalAmount = $this->calculateTotalAmount();
+        $taxRate = 0.10; // 10% tax rate, can be made configurable
+        
+        return $totalAmount * $taxRate;
+    }
+
+    // Get paid amount
+    public function getPaidAmountAttribute()
+    {
+        return $this->payments()
+            ->where('payment_status', 'completed')
+            ->sum('amount');
+    }
+
+    // Get remaining amount
+    public function getRemainingAmountAttribute()
+    {
+        return $this->amount - $this->paid_amount;
+    }
+
+    // Check if invoice is fully paid
+    public function getIsFullyPaidAttribute()
+    {
+        return $this->remaining_amount <= 0;
+    }
+
+    // Check if invoice is overdue
+    public function getIsOverdueAttribute()
+    {
+        return $this->due_date < now() && !$this->is_fully_paid && in_array($this->status, ['sent', 'overdue']);
     }
 }

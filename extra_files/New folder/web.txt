@@ -47,6 +47,10 @@ use App\Http\Controllers\PriceController;
 use App\Http\Controllers\PromoCodeController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\RoomImageController;
+use App\Http\Controllers\InvoiceController;
+
+
+
 
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -287,7 +291,28 @@ Route::middleware(['auth'])->group(function () {
             return 'Taxes Page - Under Construction';
         })->name('taxes.index');
     });
-    
+
+    // Invoice Routes
+    Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('invoices', InvoiceController::class);
+    Route::post('invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
+    Route::post('invoices/{invoice}/mark-as-paid', [InvoiceController::class, 'markAsPaid'])->name('invoices.mark-as-paid');
+    Route::post('invoices/{invoice}/mark-as-overdue', [InvoiceController::class, 'markAsOverdue'])->name('invoices.mark-as-overdue');
+    Route::post('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
+    Route::get('invoices/{invoice}/generate-pdf', [InvoiceController::class, 'generatePdf'])->name('invoices.generate-pdf');
+    Route::post('invoices/{invoice}/send-email', [InvoiceController::class, 'sendEmail'])->name('invoices.send-email');
+    Route::get('invoices/{invoice}/download-pdf', [InvoiceController::class, 'downloadPdf'])->name('invoices.download-pdf');
+    Route::get('invoices/{invoice}/preview-pdf', [InvoiceController::class, 'previewPdf'])->name('invoices.preview-pdf');
+    Route::post('invoices/bulk-action', [InvoiceController::class, 'bulkAction'])->name('invoices.bulk-action');
+    Route::get('invoices/generate-from-booking/{booking}', [InvoiceController::class, 'generateFromBooking'])->name('invoices.generate-from-booking');
+    Route::get('invoices/statistics', [InvoiceController::class, 'statistics'])->name('invoices.statistics');
+    Route::get('invoices/check-overdue', [InvoiceController::class, 'checkOverdue'])->name('invoices.check-overdue');
+    Route::get('invoices/export-csv', [InvoiceController::class, 'exportCsv'])->name('invoices.export-csv');
+    Route::get('invoices/{invoice}/print', [InvoiceController::class, 'printInvoice'])->name('invoices.print');
+    Route::get('invoices/{invoice}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoices.duplicate');
+    Route::post('invoices/{invoice}/void', [InvoiceController::class, 'void'])->name('invoices.void');
+    });
+        
     // POS & Restaurant Operations
     Route::middleware(['role:super_admin,property_manager,pos_staff'])->group(function () {
         Route::get('pos-outlets', function () {
@@ -464,3 +489,6 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return "Application is working!";
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
