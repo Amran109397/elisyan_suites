@@ -1,4 +1,3 @@
-// database/seeders/FloorSeeder.php
 <?php
 
 namespace Database\Seeders;

@@ -15,8 +15,17 @@ class RoleMiddleware
 
         $user = auth()->user();
         
-        if (!$user->hasRole($role)) {
-            abort(403, 'Unauthorized action.');
+
+        if (str_contains($role, ',')) {
+            $roles = explode(',', $role);
+            if (!$user->hasAnyRole($roles)) {
+                abort(403, 'Unauthorized action.');
+            }
+        } else {
+
+            if (!$user->hasRole($role)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
 
         return $next($request);

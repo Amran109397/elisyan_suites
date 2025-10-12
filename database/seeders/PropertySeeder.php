@@ -1,4 +1,3 @@
-// database/seeders/PropertySeeder.php
 <?php
 
 namespace Database\Seeders;

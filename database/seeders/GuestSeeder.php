@@ -1,4 +1,3 @@
-// database/seeders/GuestSeeder.php
 <?php
 
 namespace Database\Seeders;

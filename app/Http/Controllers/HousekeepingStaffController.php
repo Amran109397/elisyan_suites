@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HousekeepingStaff;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class HousekeepingStaffController extends Controller
@@ -15,13 +16,19 @@ class HousekeepingStaffController extends Controller
 
     public function index()
     {
+        // Temporary empty properties array
+        $properties = collect([]);
+        
         $housekeepingStaffs = HousekeepingStaff::all();
-        return view('backend.housekeeping-staffs.index', compact('housekeepingStaffs'));
+        return view('backend.housekeeping-staffs.index', compact('housekeepingStaffs', 'properties'));
     }
 
     public function create()
     {
-        return view('backend.housekeeping-staffs.create');
+        // Temporary empty properties array
+        $properties = collect([]);
+        
+        return view('backend.housekeeping-staffs.create', compact('properties'));
     }
 
     public function store(Request $request)
@@ -48,7 +55,10 @@ class HousekeepingStaffController extends Controller
 
     public function edit(HousekeepingStaff $housekeepingStaff)
     {
-        return view('backend.housekeeping-staffs.edit', compact('housekeepingStaff'));
+        // Temporary empty properties array
+        $properties = collect([]);
+        
+        return view('backend.housekeeping-staffs.edit', compact('housekeepingStaff', 'properties'));
     }
 
     public function update(Request $request, HousekeepingStaff $housekeepingStaff)

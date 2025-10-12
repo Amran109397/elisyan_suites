@@ -14,7 +14,13 @@ class User extends Authenticatable
         'name',
         'email', 
         'password',
-        'role_id'
+        'role_id',
+        'profile_image',
+        'can_access_pos',
+        'pos_outlet_ids',
+        'last_login_at',
+        'is_active',
+        'created_by'
     ];
 
     protected $hidden = [
@@ -25,15 +31,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'can_access_pos' => 'boolean',
+        'is_active' => 'boolean',
+        'pos_outlet_ids' => 'array',
+        'last_login_at' => 'datetime'
     ];
 
-    // Add relationship to Role
+    // Role relationship
     public function role()
     {
         return $this->belongsTo(Role::class);
     }
 
-    // Add hasRole method
+    // Check specific role
     public function hasRole($roleName)
     {
         if (!$this->role) {
@@ -43,7 +53,7 @@ class User extends Authenticatable
         return $this->role->name === $roleName;
     }
 
-    // Additional helper method to check multiple roles
+    // Check multiple roles
     public function hasAnyRole($roles)
     {
         if (!$this->role) {
@@ -56,5 +66,23 @@ class User extends Authenticatable
 
         return $this->role->name === $roles;
     }
-    
+
+    // Check permission
+    public function hasPermission($permission)
+    {
+        if (!$this->role) {
+            return false;
+        }
+        
+        $permissions = $this->role->permissions ?? [];
+        return in_array($permission, $permissions) || in_array('full_access', $permissions);
+    }
+
+    // Properties relationship (for property managers)
+    public function properties()
+    {
+        return $this->belongsToMany(Property::class, 'user_properties')
+                    ->withPivot('is_primary')
+                    ->withTimestamps();
+    }
 }

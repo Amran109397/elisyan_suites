@@ -1,4 +1,3 @@
-// database/seeders/PaymentSeeder.php
 <?php
 
 namespace Database\Seeders;

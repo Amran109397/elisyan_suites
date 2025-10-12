@@ -1,4 +1,3 @@
-// database/seeders/CurrencySeeder.php
 <?php
 
 namespace Database\Seeders;

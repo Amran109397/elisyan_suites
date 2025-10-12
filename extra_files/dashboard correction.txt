@@ -1,0 +1,884 @@
+eta topnav.blade.php file
+
+<nav class="top-nav">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn d-md-none" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+
+            <div class="top-nav-actions">
+                <!-- Role Switcher -->
+                <div class="role-switcher">
+                    <select id="roleSelector" class="form-select form-select-sm">
+                        <option value="super_admin" {{ auth()->user()->hasRole('super_admin') ? 'selected' : '' }}>Super Admin</option>
+                        <option value="property_manager" {{ auth()->user()->hasRole('property_manager') ? 'selected' : '' }}>Property Manager</option>
+                        <option value="receptionist" {{ auth()->user()->hasRole('receptionist') ? 'selected' : '' }}>Receptionist</option>
+                        <option value="housekeeping" {{ auth()->user()->hasRole('housekeeping') ? 'selected' : '' }}>Housekeeping Staff</option>
+                        <option value="pos_staff" {{ auth()->user()->hasRole('pos_staff') ? 'selected' : '' }}>POS Staff</option>
+                        <option value="maintenance" {{ auth()->user()->hasRole('maintenance') ? 'selected' : '' }}>Maintenance Staff</option>
+                    </select>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <div class="notification-dropdown">
+                    <button class="notification-btn" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </button>
+                    <div class="notification-menu" id="notificationMenu">
+                        <div class="notification-header">
+                            <h6>Notifications</h6>
+                            <a href="#" class="mark-all-read">Mark all as read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="notification-icon bg-primary">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">New booking received</div>
+                                    <div class="notification-time">5 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-success">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Guest checked in - Room 201</div>
+                                    <div class="notification-time">15 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-warning">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Maintenance issue reported - Room 304</div>
+                                    <div class="notification-time">30 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-info">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Payment received - Booking #1234</div>
+                                    <div class="notification-time">1 hour ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon bg-danger">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">Low stock alert - POS Inventory</div>
+                                    <div class="notification-time">2 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" class="view-all-notifications">View all notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-dropdown">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <div class="user-avatar small">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+                        <span class="user-name">{{ auth()->user()->name }}</span>
+                        <i class="fas fa-chevron-down user-menu-arrow"></i>
+                    </button>
+                    <div class="user-menu" id="userMenu">
+                        <a href="#" class="user-menu-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" class="user-menu-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <a href="#" class="user-menu-item">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="user-menu-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+eta sideba.blade.php file
+
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <i class="fas fa-hotel logo-icon"></i>
+            <span class="logo-text">Hotel Manager</span>
+        </div>
+    </div>
+
+    <div class="sidebar-content">
+        <!-- Front Desk Operations -->
+        <div class="sidebar-section" id="front-desk" data-role="super_admin,property_manager,receptionist">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#frontDeskCollapse">
+                <i class="fas fa-calendar-check section-icon"></i>
+                <span class="section-title">Front Desk Operations</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse show" id="frontDeskCollapse">
+                <ul class="subsection-list">
+                    <li>
+                        <a href="{{ route('bookings.index') }}" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#bookingsSubmenu">
+                            <i class="fas fa-calendar-alt"></i> Bookings
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="bookingsSubmenu">
+                            <li><a href="{{ route('bookings.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-list"></i> All Bookings</a></li>
+                            <li><a href="{{ route('booking-addons.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-plus"></i> Booking Add-ons</a></li>
+                            <li><a href="{{ route('booking-modifications.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-edit"></i> Booking Modifications</a></li>
+                            <li><a href="{{ route('booking-services.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-concierge-bell"></i> Booking Services</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ route('guests.index') }}" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#guestsSubmenu">
+                            <i class="fas fa-users"></i> Guests
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="guestsSubmenu">
+                            <li><a href="{{ route('guests.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user-friends"></i> All Guests</a></li>
+                            <li><a href="{{ route('guest-preferences.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-heart"></i> Guest Preferences</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ route('check-ins.index') }}" class="subsection-link"><i class="fas fa-sign-in-alt"></i> Check-ins</a></li>
+                    <li><a href="{{ route('check-outs.index') }}" class="subsection-link"><i class="fas fa-sign-out-alt"></i> Check-outs</a></li>
+                    <li><a href="{{ route('room-assignments.index') }}" class="subsection-link"><i class="fas fa-door-open"></i> Room Assignments</a></li>
+                    <li><a href="{{ route('waiting-list.index') }}" class="subsection-link"><i class="fas fa-list"></i> Waiting List</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Room Management -->
+        <div class="sidebar-section" id="room-management" data-role="super_admin,property_manager,receptionist">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#roomManagementCollapse">
+                <i class="fas fa-bed section-icon"></i>
+                <span class="section-title">Room Management</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="roomManagementCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('properties.index') }}" class="subsection-link"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="{{ route('room-types.index') }}" class="subsection-link"><i class="fas fa-th-large"></i> Room Types</a></li>
+                    <li><a href="{{ route('rooms.index') }}" class="subsection-link"><i class="fas fa-door-closed"></i> Rooms</a></li>
+                    <li><a href="{{ route('floors.index') }}" class="subsection-link"><i class="fas fa-layer-group"></i> Floors</a></li>
+                    <li>
+                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#pricingSubmenu">
+                            <i class="fas fa-dollar-sign"></i> Pricing
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="pricingSubmenu">
+                            <li><a href="{{ route('prices.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-tag"></i> Prices</a></li>
+                            <li><a href="{{ route('seasons.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-calendar"></i> Seasons</a></li>
+                            <li><a href="{{ route('packages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-gift"></i> Packages</a></li>
+                            <li><a href="{{ route('promo-codes.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-ticket-alt"></i> Promo Codes</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ route('room-amenities.index') }}" class="subsection-link"><i class="fas fa-concierge-bell"></i> Room Amenities</a></li>
+                    <li><a href="{{ route('room-images.index') }}" class="subsection-link"><i class="fas fa-images"></i> Room Images</a></li>
+                    <li><a href="{{ route('room-status-logs.index') }}" class="subsection-link"><i class="fas fa-info-circle"></i> Room Status</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Financial Management -->
+        <div class="sidebar-section" id="financial" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#financialCollapse">
+                <i class="fas fa-credit-card section-icon"></i>
+                <span class="section-title">Financial Management</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="financialCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('payments.index') }}" class="subsection-link"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
+                    <li>
+                        <a href="{{ route('invoices.index') }}" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#invoicesSubmenu">
+                            <i class="fas fa-file-invoice"></i> Invoices
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="invoicesSubmenu">
+                            <li><a href="{{ route('invoices.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-file-invoice"></i> All Invoices</a></li>
+                            <li><a href="{{ route('invoices.create') }}" class="subsection-link sub-submenu-item"><i class="fas fa-plus"></i> Create Invoice</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ route('accounts-payable.index') }}" class="subsection-link"><i class="fas fa-hand-holding-usd"></i> Accounts Payable</a></li>
+                    <li><a href="{{ route('accounts-receivable.index') }}" class="subsection-link"><i class="fas fa-money-check-alt"></i> Accounts Receivable</a></li>
+                    <li><a href="{{ route('expenses.index') }}" class="subsection-link"><i class="fas fa-receipt"></i> Expenses</a></li>
+                    <li><a href="{{ route('taxes.index') }}" class="subsection-link"><i class="fas fa-percentage"></i> Taxes</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Housekeeping & Maintenance -->
+        <div class="sidebar-section" id="housekeeping" data-role="super_admin,property_manager,housekeeping">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#housekeepingCollapse">
+                <i class="fas fa-broom section-icon"></i>
+                <span class="section-title">Housekeeping & Maintenance</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="housekeepingCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('housekeeping-staffs.index') }}" class="subsection-link"><i class="fas fa-user-friends"></i> Housekeeping Staff</a></li>
+                    <li><a href="{{ route('housekeeping-tasks.index') }}" class="subsection-link"><i class="fas fa-tasks"></i> Housekeeping Tasks</a></li>
+                    <li><a href="{{ route('maintenance.index') }}" class="subsection-link"><i class="fas fa-tools"></i> Maintenance Issues</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- POS & Restaurant Operations -->
+        <div class="sidebar-section" id="pos" data-role="super_admin,property_manager,pos_staff">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#posCollapse">
+                <i class="fas fa-store section-icon"></i>
+                <span class="section-title">POS & Restaurant Operations</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="posCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('pos-outlets.index') }}" class="subsection-link"><i class="fas fa-store-alt"></i> POS Outlets</a></li>
+                    <li><a href="{{ route('pos-categories.index') }}" class="subsection-link"><i class="fas fa-tags"></i> POS Categories</a></li>
+                    <li><a href="{{ route('pos-products.index') }}" class="subsection-link"><i class="fas fa-box"></i> POS Products</a></li>
+                    <li><a href="{{ route('pos-orders.index') }}" class="subsection-link"><i class="fas fa-shopping-cart"></i> POS Orders</a></li>
+                    <li><a href="{{ route('pos-payments.index') }}" class="subsection-link"><i class="fas fa-cash-register"></i> POS Payments</a></li>
+                    <li><a href="{{ route('pos-inventory.index') }}" class="subsection-link"><i class="fas fa-warehouse"></i> POS Inventory</a></li>
+                    <li><a href="{{ route('menus.index') }}" class="subsection-link"><i class="fas fa-utensils"></i> Menus</a></li>
+                    <li><a href="{{ route('room-service-orders.index') }}" class="subsection-link"><i class="fas fa-room-service"></i> Room Service</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Inventory & Procurement -->
+        <div class="sidebar-section" id="inventory" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#inventoryCollapse">
+                <i class="fas fa-boxes section-icon"></i>
+                <span class="section-title">Inventory & Procurement</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="inventoryCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('inventory-categories.index') }}" class="subsection-link"><i class="fas fa-folder"></i> Inventory Categories</a></li>
+                    <li><a href="{{ route('inventory-items.index') }}" class="subsection-link"><i class="fas fa-box-open"></i> Inventory Items</a></li>
+                    <li><a href="{{ route('inventory-stocks.index') }}" class="subsection-link"><i class="fas fa-warehouse"></i> Inventory Stocks</a></li>
+                    <li><a href="{{ route('inventory-transactions.index') }}" class="subsection-link"><i class="fas fa-exchange-alt"></i> Inventory Transactions</a></li>
+                    <li><a href="{{ route('purchase-orders.index') }}" class="subsection-link"><i class="fas fa-file-invoice-dollar"></i> Purchase Orders</a></li>
+                    <li><a href="{{ route('suppliers.index') }}" class="subsection-link"><i class="fas fa-truck"></i> Suppliers</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Guest Relations & Loyalty -->
+        <div class="sidebar-section" id="guest-relations" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#guestRelationsCollapse">
+                <i class="fas fa-heart section-icon"></i>
+                <span class="section-title">Guest Relations & Loyalty</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="guestRelationsCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('guest-preferences.index') }}" class="subsection-link"><i class="fas fa-heart"></i> Guest Preferences</a></li>
+                    <li><a href="{{ route('loyalty-programs.index') }}" class="subsection-link"><i class="fas fa-star"></i> Loyalty Programs</a></li>
+                    <li><a href="{{ route('loyalty-members.index') }}" class="subsection-link"><i class="fas fa-users-cog"></i> Loyalty Members</a></li>
+                    <li><a href="{{ route('loyalty-points.index') }}" class="subsection-link"><i class="fas fa-coins"></i> Loyalty Points</a></li>
+                    <li><a href="{{ route('feedback.index') }}" class="subsection-link"><i class="fas fa-comment-alt"></i> Feedback</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Channel Management -->
+        <div class="sidebar-section" id="channel-management" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#channelCollapse">
+                <i class="fas fa-plug section-icon"></i>
+                <span class="section-title">Channel Management</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="channelCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('channels.index') }}" class="subsection-link"><i class="fas fa-plug"></i> Channels</a></li>
+                    <li><a href="{{ route('channel-properties.index') }}" class="subsection-link"><i class="fas fa-link"></i> Channel Properties</a></li>
+                    <li><a href="{{ route('channel-bookings.index') }}" class="subsection-link"><i class="fas fa-calendar-alt"></i> Channel Bookings</a></li>
+                    <li><a href="{{ route('channel-sync-logs.index') }}" class="subsection-link"><i class="fas fa-sync"></i> Channel Sync Logs</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Events & Appointments -->
+        <div class="sidebar-section" id="events" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#eventsCollapse">
+                <i class="fas fa-calendar-alt section-icon"></i>
+                <span class="section-title">Events & Appointments</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="eventsCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('events.index') }}" class="subsection-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                    <li><a href="{{ route('event-bookings.index') }}" class="subsection-link"><i class="fas fa-ticket-alt"></i> Event Bookings</a></li>
+                    <li><a href="{{ route('resources.index') }}" class="subsection-link"><i class="fas fa-cubes"></i> Resources</a></li>
+                    <li><a href="{{ route('event-resources.index') }}" class="subsection-link"><i class="fas fa-cubes"></i> Event Resources</a></li>
+                    <li><a href="{{ route('treatments.index') }}" class="subsection-link"><i class="fas fa-spa"></i> Treatments</a></li>
+                    <li><a href="{{ route('therapists.index') }}" class="subsection-link"><i class="fas fa-user-md"></i> Therapists</a></li>
+                    <li><a href="{{ route('appointments.index') }}" class="subsection-link"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Asset Management -->
+        <div class="sidebar-section" id="asset-management" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#assetCollapse">
+                <i class="fas fa-couch section-icon"></i>
+                <span class="section-title">Asset Management</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="assetCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('asset-categories.index') }}" class="subsection-link"><i class="fas fa-folder-open"></i> Asset Categories</a></li>
+                    <li><a href="{{ route('assets.index') }}" class="subsection-link"><i class="fas fa-couch"></i> Assets</a></li>
+                    <li><a href="{{ route('asset-maintenance.index') }}" class="subsection-link"><i class="fas fa-wrench"></i> Asset Maintenance</a></li>
+                    <li><a href="{{ route('asset-depreciation.index') }}" class="subsection-link"><i class="fas fa-chart-line"></i> Asset Depreciation</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Reports & Analytics -->
+        <div class="sidebar-section" id="reports" data-role="super_admin,property_manager">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#reportsCollapse">
+                <i class="fas fa-chart-bar section-icon"></i>
+                <span class="section-title">Reports & Analytics</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="reportsCollapse">
+                <ul class="subsection-list">
+                    <li><a href="{{ route('reports.index') }}" class="subsection-link"><i class="fas fa-file-alt"></i> Reports</a></li>
+                    <li><a href="{{ route('scheduled-reports.index') }}" class="subsection-link"><i class="fas fa-clock"></i> Scheduled Reports</a></li>
+                    <li><a href="{{ route('analytics.index') }}" class="subsection-link"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                    <li><a href="{{ route('financial-reports.index') }}" class="subsection-link"><i class="fas fa-file-invoice-dollar"></i> Financial Reports</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- System Administration -->
+        <div class="sidebar-section" id="system-admin" data-role="super_admin">
+            <div class="section-header" data-bs-toggle="collapse" data-bs-target="#systemAdminCollapse">
+                <i class="fas fa-cogs section-icon"></i>
+                <span class="section-title">System Administration</span>
+                <i class="fas fa-chevron-down section-arrow"></i>
+            </div>
+            <div class="collapse" id="systemAdminCollapse">
+                <ul class="subsection-list">
+                    <li>
+                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#userManagementSubmenu">
+                            <i class="fas fa-users"></i> User Management
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="userManagementSubmenu">
+                            <li><a href="{{ route('users.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user"></i> Users</a></li>
+                            <li><a href="{{ route('roles.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-user-tag"></i> Roles</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#systemConfigSubmenu">
+                            <i class="fas fa-cog"></i> System Configuration
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="systemConfigSubmenu">
+                            <li><a href="{{ route('languages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-language"></i> Languages</a></li>
+                            <li><a href="{{ route('translations.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-language"></i> Translations</a></li>
+                            <li><a href="{{ route('currencies.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-money-bill"></i> Currencies</a></li>
+                            <li><a href="{{ route('exchange-rates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-exchange-alt"></i> Exchange Rates</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#communicationSubmenu">
+                            <i class="fas fa-envelope"></i> Communication
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="communicationSubmenu">
+                            <li><a href="{{ route('email-templates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-envelope"></i> Email Templates</a></li>
+                            <li><a href="{{ route('sms-templates.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-sms"></i> SMS Templates</a></li>
+                            <li><a href="{{ route('messages.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-comment"></i> Messages</a></li>
+                            <li><a href="{{ route('notification-logs.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-bell"></i> Notification Logs</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#securitySubmenu">
+                            <i class="fas fa-shield-alt"></i> Security
+                            <i class="fas fa-chevron-right float-end"></i>
+                        </a>
+                        <ul class="collapse sub-submenu" id="securitySubmenu">
+                            <li><a href="{{ route('api-keys.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-key"></i> API Keys</a></li>
+                            <li><a href="{{ route('personal-access-tokens.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-key"></i> Personal Access Tokens</a></li>
+                            <li><a href="{{ route('audit-logs.index') }}" class="subsection-link sub-submenu-item"><i class="fas fa-history"></i> Audit Logs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+            <div class="user-info">
+                <div class="user-name">{{ auth()->user()->name }}</div>
+                <div class="user-role">{{ auth()->user()->role->name }}</div>
+            </div>
+        </div>
+        <a href="{{ route('logout') }}" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+    </div>
+</nav>
+
+
+
+eta holo js file
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('sidebar');
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('active');
+        });
+    }
+
+    // Notification dropdown
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationMenu = document.getElementById('notificationMenu');
+
+    if (notificationBtn && notificationMenu) {
+        notificationBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            notificationMenu.classList.toggle('show');
+
+            // Close user menu if open
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu) {
+                userMenu.classList.remove('show');
+            }
+        });
+    }
+
+    // User dropdown
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+
+    if (userMenuBtn && userMenu) {
+        userMenuBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            userMenu.classList.toggle('show');
+
+            // Close notification menu if open
+            if (notificationMenu) {
+                notificationMenu.classList.remove('show');
+            }
+        });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function () {
+        if (notificationMenu) {
+            notificationMenu.classList.remove('show');
+        }
+        if (userMenu) {
+            userMenu.classList.remove('show');
+        }
+    });
+
+    // Role-based dashboard functionality
+    const roleSelector = document.getElementById('roleSelector');
+
+    if (roleSelector) {
+        roleSelector.addEventListener('change', function () {
+            const selectedRole = this.value;
+            updateDashboardForRole(selectedRole);
+            updateRoleIndicator(selectedRole);
+        });
+
+        // Initialize with default role
+        const currentRole = roleSelector.value;
+        updateDashboardForRole(currentRole);
+        updateRoleIndicator(currentRole);
+    }
+
+    function updateDashboardForRole(role) {
+        // Hide all role-specific elements
+        document.querySelectorAll('[data-role]').forEach(el => {
+            el.classList.remove('visible');
+        });
+
+        // Show elements for selected role
+        document.querySelectorAll(`[data-role*="${role}"], [data-role="all"]`).forEach(el => {
+            el.classList.add('visible');
+        });
+
+        // Update sidebar navigation
+        updateSidebarForRole(role);
+
+        // Update dashboard content
+        updateDashboardContentForRole(role);
+
+        // Update stats cards
+        updateStatsForRole(role);
+    }
+
+    function updateRoleIndicator(role) {
+        const pageTitle = document.querySelector('.page-title');
+        if (pageTitle) {
+            // Remove existing role indicator
+            const existingIndicator = pageTitle.querySelector('.role-indicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+
+            // Add new role indicator
+            const indicator = document.createElement('span');
+            indicator.className = `role-indicator role-${role}`;
+            indicator.textContent = role.replace('_', ' ').toUpperCase();
+            pageTitle.appendChild(indicator);
+        }
+    }
+
+    function updateSidebarForRole(role) {
+        const rolePermissions = {
+            super_admin: ['all'],
+            property_manager: ['front-desk', 'room-management', 'financial', 'pos', 'inventory', 'reports', 'system-admin', 'guest-relations', 'channel-management', 'events', 'asset-management'],
+            receptionist: ['front-desk', 'room-management'],
+            housekeeping: ['housekeeping'],
+            pos_staff: ['pos'],
+            maintenance: ['housekeeping']
+        };
+
+        document.querySelectorAll('.sidebar-section').forEach(section => {
+            const sectionId = section.id;
+            const hasPermission = rolePermissions[role].includes('all') ||
+                rolePermissions[role].includes(sectionId);
+
+            if (hasPermission) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    }
+
+    function updateDashboardContentForRole(role) {
+        // Update welcome message
+        const welcomeMessage = document.querySelector('.welcome-message');
+        if (welcomeMessage) {
+            const messages = {
+                super_admin: 'Welcome to Hotel Management System - Super Admin Dashboard',
+                property_manager: 'Welcome to Property Management Dashboard',
+                receptionist: 'Welcome to Front Desk Operations',
+                housekeeping: 'Welcome to Housekeeping Management',
+                pos_staff: 'Welcome to POS Operations',
+                maintenance: 'Welcome to Maintenance Management'
+            };
+            welcomeMessage.textContent = messages[role] || 'Welcome to Dashboard';
+        }
+
+        // Update quick actions visibility
+        document.querySelectorAll('.quick-action').forEach(action => {
+            const actionRoles = action.getAttribute('data-role');
+            if (actionRoles && actionRoles.includes(role)) {
+                action.classList.add('visible');
+            } else {
+                action.classList.remove('visible');
+            }
+        });
+
+        // Update activity feed based on role
+        updateActivityFeedForRole(role);
+    }
+
+    function updateStatsForRole(role) {
+        const roleStats = {
+            super_admin: [
+                { icon: 'fas fa-building', value: '3', label: 'Properties', color: 'primary' },
+                { icon: 'fas fa-users', value: '45', label: 'Total Users', color: 'info' },
+                { icon: 'fas fa-chart-line', value: '$125K', label: 'Total Revenue', color: 'success' },
+                { icon: 'fas fa-door-open', value: '145', label: 'Total Rooms', color: 'warning' }
+            ],
+            property_manager: [
+                { icon: 'fas fa-door-open', value: '145', label: 'Total Rooms', color: 'primary' },
+                { icon: 'fas fa-chart-bar', value: '78%', label: 'Occupancy Rate', color: 'success' },
+                { icon: 'fas fa-dollar-sign', value: '$12,450', label: "Today's Revenue", color: 'info' },
+                { icon: 'fas fa-sign-in-alt', value: '24', label: "Today's Check-ins", color: 'warning' }
+            ],
+            receptionist: [
+                { icon: 'fas fa-calendar-check', value: '12', label: "Today's Check-ins", color: 'success' },
+                { icon: 'fas fa-sign-out-alt', value: '8', label: "Today's Check-outs", color: 'info' },
+                { icon: 'fas fa-list', value: '5', label: 'Pending Bookings', color: 'warning' },
+                { icon: 'fas fa-users', value: '3', label: 'Waiting List', color: 'danger' }
+            ],
+            housekeeping: [
+                { icon: 'fas fa-broom', value: '24', label: 'Completed Tasks', color: 'success' },
+                { icon: 'fas fa-tasks', value: '8', label: 'In Progress', color: 'warning' },
+                { icon: 'fas fa-exclamation-triangle', value: '3', label: 'Urgent Tasks', color: 'danger' },
+                { icon: 'fas fa-check-circle', value: '95%', label: 'Completion Rate', color: 'info' }
+            ],
+            pos_staff: [
+                { icon: 'fas fa-shopping-cart', value: '45', label: 'Today\'s Orders', color: 'primary' },
+                { icon: 'fas fa-dollar-sign', value: '$3,250', label: 'Today\'s Revenue', color: 'success' },
+                { icon: 'fas fa-utensils', value: '12', label: 'Active Tables', color: 'info' },
+                { icon: 'fas fa-clock', value: '15', label: 'Pending Orders', color: 'warning' }
+            ],
+            maintenance: [
+                { icon: 'fas fa-tools', value: '8', label: 'Open Issues', color: 'danger' },
+                { icon: 'fas fa-wrench', value: '5', label: 'In Progress', color: 'warning' },
+                { icon: 'fas fa-check', value: '12', label: 'Completed Today', color: 'success' },
+                { icon: 'fas fa-calendar', value: '3', label: 'Scheduled', color: 'info' }
+            ]
+        };
+
+        const statsContainer = document.querySelector('.stats-container .row');
+        if (statsContainer && roleStats[role]) {
+            statsContainer.innerHTML = '';
+
+            roleStats[role].forEach(stat => {
+                const statCol = document.createElement('div');
+                statCol.className = 'col-xl-3 col-md-6 mb-4';
+                statCol.innerHTML = `
+                    <div class="stat-card ${stat.color}">
+                        <div class="stat-card-body">
+                            <div class="stat-icon">
+                                <i class="${stat.icon}"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">${stat.value}</div>
+                                <div class="stat-label">${stat.label}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                statsContainer.appendChild(statCol);
+            });
+        }
+    }
+
+    function updateActivityFeedForRole(role) {
+        const roleActivities = {
+            super_admin: [
+                { icon: 'fas fa-user-plus', color: 'primary', title: 'New user registered - Property Manager', time: '5 minutes ago' },
+                { icon: 'fas fa-building', color: 'info', title: 'New property added - Downtown Hotel', time: '15 minutes ago' },
+                { icon: 'fas fa-chart-line', color: 'success', title: 'Monthly revenue target achieved', time: '1 hour ago' },
+                { icon: 'fas fa-shield-alt', color: 'warning', title: 'Security audit completed', time: '2 hours ago' },
+                { icon: 'fas fa-database', color: 'danger', title: 'Database backup completed', time: '3 hours ago' }
+            ],
+            property_manager: [
+                { icon: 'fas fa-chart-line', color: 'success', title: 'Occupancy rate increased to 78%', time: '10 minutes ago' },
+                { icon: 'fas fa-dollar-sign', color: 'primary', title: 'Monthly revenue target achieved', time: '30 minutes ago' },
+                { icon: 'fas fa-users', color: 'info', title: 'New staff member joined', time: '1 hour ago' },
+                { icon: 'fas fa-star', color: 'warning', title: 'Guest satisfaction score updated', time: '2 hours ago' },
+                { icon: 'fas fa-clipboard-check', color: 'success', title: 'Monthly report generated', time: '3 hours ago' }
+            ],
+            receptionist: [
+                { icon: 'fas fa-calendar-check', color: 'primary', title: 'New booking received - Room 201', time: '5 minutes ago' },
+                { icon: 'fas fa-sign-in-alt', color: 'success', title: 'Guest checked in - Room 305', time: '15 minutes ago' },
+                { icon: 'fas fa-phone', color: 'info', title: 'Phone reservation received', time: '30 minutes ago' },
+                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Guest complaint - Room 104', time: '1 hour ago' },
+                { icon: 'fas fa-credit-card', color: 'success', title: 'Payment received - Booking #1234', time: '2 hours ago' }
+            ],
+            housekeeping: [
+                { icon: 'fas fa-broom', color: 'success', title: 'Room cleaning completed - 201', time: '10 minutes ago' },
+                { icon: 'fas fa-tasks', color: 'warning', title: 'New cleaning task assigned - 305', time: '20 minutes ago' },
+                { icon: 'fas fa-tools', color: 'danger', title: 'Maintenance issue reported - 104', time: '30 minutes ago' },
+                { icon: 'fas fa-check', color: 'success', title: 'Inspection completed - 201', time: '45 minutes ago' },
+                { icon: 'fas fa-clock', color: 'info', title: 'Turndown service scheduled', time: '1 hour ago' }
+            ],
+            pos_staff: [
+                { icon: 'fas fa-shopping-cart', color: 'primary', title: 'New order received - Table 5', time: '5 minutes ago' },
+                { icon: 'fas fa-utensils', color: 'success', title: 'Order completed - Table 3', time: '15 minutes ago' },
+                { icon: 'fas fa-credit-card', color: 'info', title: 'Payment processed - Table 7', time: '20 minutes ago' },
+                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Low stock alert - Coffee', time: '30 minutes ago' },
+                { icon: 'fas fa-room-service', color: 'success', title: 'Room service delivered - 201', time: '45 minutes ago' }
+            ],
+            maintenance: [
+                { icon: 'fas fa-tools', color: 'danger', title: 'Urgent maintenance - AC Room 304', time: '5 minutes ago' },
+                { icon: 'fas fa-wrench', color: 'warning', title: 'In progress - Plumbing Room 105', time: '15 minutes ago' },
+                { icon: 'fas fa-check', color: 'success', title: 'Completed - Electrical Room 201', time: '30 minutes ago' },
+                { icon: 'fas fa-calendar', color: 'info', title: 'Scheduled maintenance - Elevator', time: '1 hour ago' },
+                { icon: 'fas fa-clipboard-list', color: 'primary', title: 'New work order created', time: '2 hours ago' }
+            ]
+        };
+
+        const activityFeed = document.querySelector('.activity-feed');
+        if (activityFeed && roleActivities[role]) {
+            activityFeed.innerHTML = '';
+
+            roleActivities[role].forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-icon bg-${activity.color}">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                activityFeed.appendChild(activityItem);
+            });
+        }
+    }
+
+    // Initialize revenue chart
+    const revenueCtx = document.getElementById('revenueChart');
+    if (revenueCtx) {
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Simulate real-time updates
+    setInterval(function () {
+        // Update random metric
+        const metrics = document.querySelectorAll('.stat-value');
+        if (metrics.length > 0) {
+            const randomMetric = metrics[Math.floor(Math.random() * metrics.length)];
+            const currentValue = randomMetric.textContent;
+
+            // Handle different value types
+            if (currentValue.includes('$')) {
+                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
+                const change = Math.floor(Math.random() * 1000) - 500;
+                randomMetric.textContent = '$' + (numericValue + change).toLocaleString();
+            } else if (currentValue.includes('%')) {
+                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
+                const change = Math.floor(Math.random() * 10) - 5;
+                const newValue = Math.max(0, Math.min(100, numericValue + change));
+                randomMetric.textContent = newValue + '%';
+            } else {
+                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
+                const change = Math.floor(Math.random() * 5) - 2;
+                randomMetric.textContent = Math.max(0, numericValue + change);
+            }
+        }
+
+        // Add new activity based on current role
+        const currentRole = document.getElementById('roleSelector').value;
+        const activities = {
+            super_admin: [
+                { icon: 'fas fa-user-plus', color: 'primary', title: 'New user registered' },
+                { icon: 'fas fa-building', color: 'info', title: 'New property added' },
+                { icon: 'fas fa-chart-line', color: 'success', title: 'Revenue target achieved' },
+                { icon: 'fas fa-shield-alt', color: 'warning', title: 'Security audit completed' },
+                { icon: 'fas fa-database', color: 'danger', title: 'Database backup completed' }
+            ],
+            property_manager: [
+                { icon: 'fas fa-chart-line', color: 'success', title: 'Occupancy rate updated' },
+                { icon: 'fas fa-dollar-sign', color: 'primary', title: 'Revenue milestone reached' },
+                { icon: 'fas fa-users', color: 'info', title: 'Staff performance updated' },
+                { icon: 'fas fa-star', color: 'warning', title: 'Guest satisfaction updated' },
+                { icon: 'fas fa-clipboard-check', color: 'success', title: 'Report generated' }
+            ],
+            receptionist: [
+                { icon: 'fas fa-calendar-check', color: 'primary', title: 'New booking received' },
+                { icon: 'fas fa-sign-in-alt', color: 'success', title: 'Guest checked in' },
+                { icon: 'fas fa-sign-out-alt', color: 'info', title: 'Guest checked out' },
+                { icon: 'fas fa-tools', color: 'warning', title: 'Maintenance issue reported' },
+                { icon: 'fas fa-credit-card', color: 'success', title: 'Payment received' }
+            ],
+            housekeeping: [
+                { icon: 'fas fa-broom', color: 'success', title: 'Room cleaning completed' },
+                { icon: 'fas fa-tasks', color: 'warning', title: 'New task assigned' },
+                { icon: 'fas fa-tools', color: 'danger', title: 'Maintenance issue reported' },
+                { icon: 'fas fa-check', color: 'success', title: 'Inspection completed' },
+                { icon: 'fas fa-clock', color: 'info', title: 'Service scheduled' }
+            ],
+            pos_staff: [
+                { icon: 'fas fa-shopping-cart', color: 'primary', title: 'New order received' },
+                { icon: 'fas fa-utensils', color: 'success', title: 'Order completed' },
+                { icon: 'fas fa-credit-card', color: 'info', title: 'Payment processed' },
+                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Low stock alert' },
+                { icon: 'fas fa-room-service', color: 'success', title: 'Room service delivered' }
+            ],
+            maintenance: [
+                { icon: 'fas fa-tools', color: 'danger', title: 'Urgent maintenance reported' },
+                { icon: 'fas fa-wrench', color: 'warning', title: 'Maintenance in progress' },
+                { icon: 'fas fa-check', color: 'success', title: 'Maintenance completed' },
+                { icon: 'fas fa-calendar', color: 'info', title: 'Maintenance scheduled' },
+                { icon: 'fas fa-clipboard-list', color: 'primary', title: 'Work order created' }
+            ]
+        };
+
+        const roleActivities = activities[currentRole] || activities.super_admin;
+        const randomActivity = roleActivities[Math.floor(Math.random() * roleActivities.length)];
+        const activityFeed = document.querySelector('.activity-feed');
+
+        if (activityFeed) {
+            const newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            newActivity.innerHTML = `
+                <div class="activity-icon bg-${randomActivity.color}">
+                    <i class="${randomActivity.icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${randomActivity.title}</div>
+                    <div class="activity-time">Just now</div>
+                </div>
+            `;
+
+            // Add to the top
+            activityFeed.insertBefore(newActivity, activityFeed.firstChild);
+
+            // Remove oldest activity if more than 5
+            if (activityFeed.children.length > 5) {
+                activityFeed.removeChild(activityFeed.lastChild);
+            }
+        }
+    }, 10000); // Update every 10 seconds
+});

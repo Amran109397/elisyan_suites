@@ -15,12 +15,16 @@ class HousekeepingTaskController extends Controller
         $this->middleware('role:super_admin,property_manager,housekeeping');
     }
 
-    public function index()
+   public function index()
     {
-        $housekeepingTasks = HousekeepingTask::with('room', 'housekeepingStaff')->latest()->get();
-        return view('backend.housekeeping-tasks.index', compact('housekeepingTasks'));
+    
+    $properties = collect([]);
+    
+    
+    $tasks = HousekeepingTask::with('room', 'housekeepingStaff')->latest()->paginate(10);
+    
+    return view('backend.housekeeping-tasks.index', compact('tasks', 'properties'));
     }
-
     public function create()
     {
         $rooms = Room::all();

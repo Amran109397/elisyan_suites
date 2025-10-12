@@ -1,4 +1,3 @@
-// database/seeders/BookingSeeder.php
 <?php
 
 namespace Database\Seeders;

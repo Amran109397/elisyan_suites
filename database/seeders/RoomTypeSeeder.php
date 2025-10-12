@@ -1,4 +1,3 @@
-// database/seeders/RoomTypeSeeder.php
 <?php
 
 namespace Database\Seeders;

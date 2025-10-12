@@ -21,9 +21,13 @@
                         <div class="col-md-4">
                             <select class="form-select" id="filterProperty">
                                 <option value="">All Properties</option>
-                                @foreach($properties as $property)
-                                    <option value="{{ $property->id }}">{{ $property->name }}</option>
-                                @endforeach
+                                @if(isset($properties) && $properties->count() > 0)
+                                    @foreach($properties as $property)
+                                        <option value="{{ $property->id }}">{{ $property->name }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">No Properties Available</option>
+                                @endif
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -40,34 +44,36 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Employee ID</th>
-                                <th>Property</th>
-                                <th>User</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Shift</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($staff as $member)
+                            @foreach($housekeepingStaffs as $staff)
                             <tr>
-                                <td>{{ $member->id }}</td>
-                                <td>{{ $member->name }}</td>
-                                <td>{{ $member->employee_id }}</td>
-                                <td>{{ $member->property->name }}</td>
-                                <td>{{ $member->user ? $member->user->name : 'N/A' }}</td>
+                                <td>{{ $staff->id }}</td>
+                                <td>{{ $staff->name }}</td>
+                                <td>{{ $staff->phone }}</td>
+                                <td>{{ $staff->email ?? 'N/A' }}</td>
+                                <td>{{ $staff->position }}</td>
+                                <td>{{ $staff->shift }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $member->is_active ? 'success' : 'danger' }}">
-                                        {{ $member->is_active ? 'Active' : 'Inactive' }}
+                                    <span class="badge bg-{{ $staff->is_active ? 'success' : 'danger' }}">
+                                        {{ $staff->is_active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('housekeeping-staffs.show', $member->id) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('housekeeping-staffs.show', $staff->id) }}" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('housekeeping-staffs.edit', $member->id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('housekeeping-staffs.edit', $staff->id) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('housekeeping-staffs.destroy', $member->id) }}" method="POST" style="display: inline;">
+                                    <form action="{{ route('housekeeping-staffs.destroy', $staff->id) }}" method="POST" style="display: inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
@@ -79,13 +85,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                            Showing {{ $staff->firstItem() }} to {{ $staff->lastItem() }} of {{ $staff->total() }} entries
-                        </div>
-                        {{ $staff->links() }}
-                    </div>
                 </div>
             </div>
         </div>
