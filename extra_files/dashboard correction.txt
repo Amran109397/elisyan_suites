@@ -1,5 +1,6 @@
 eta topnav.blade.php file
 
+
 <nav class="top-nav">
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center">
@@ -11,17 +12,7 @@ eta topnav.blade.php file
             </div>
 
             <div class="top-nav-actions">
-                <!-- Role Switcher -->
-                <div class="role-switcher">
-                    <select id="roleSelector" class="form-select form-select-sm">
-                        <option value="super_admin" {{ auth()->user()->hasRole('super_admin') ? 'selected' : '' }}>Super Admin</option>
-                        <option value="property_manager" {{ auth()->user()->hasRole('property_manager') ? 'selected' : '' }}>Property Manager</option>
-                        <option value="receptionist" {{ auth()->user()->hasRole('receptionist') ? 'selected' : '' }}>Receptionist</option>
-                        <option value="housekeeping" {{ auth()->user()->hasRole('housekeeping') ? 'selected' : '' }}>Housekeeping Staff</option>
-                        <option value="pos_staff" {{ auth()->user()->hasRole('pos_staff') ? 'selected' : '' }}>POS Staff</option>
-                        <option value="maintenance" {{ auth()->user()->hasRole('maintenance') ? 'selected' : '' }}>Maintenance Staff</option>
-                    </select>
-                </div>
+                <!-- Role Switcher removed as per requirement -->
 
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="Search...">
@@ -118,7 +109,12 @@ eta topnav.blade.php file
     </div>
 </nav>
 
-eta sideba.blade.php file
+
+
+
+
+eta sidebar.blade.php file
+
 
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -451,9 +447,11 @@ eta sideba.blade.php file
 
 
 
-eta holo js file
+eta app.js file
 
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('Dashboard initialized');
+    
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
@@ -472,12 +470,7 @@ document.addEventListener('DOMContentLoaded', function () {
         notificationBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             notificationMenu.classList.toggle('show');
-
-            // Close user menu if open
-            const userMenu = document.getElementById('userMenu');
-            if (userMenu) {
-                userMenu.classList.remove('show');
-            }
+            userMenu.classList.remove('show');
         });
     }
 
@@ -489,261 +482,18 @@ document.addEventListener('DOMContentLoaded', function () {
         userMenuBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             userMenu.classList.toggle('show');
-
-            // Close notification menu if open
-            if (notificationMenu) {
-                notificationMenu.classList.remove('show');
-            }
+            notificationMenu.classList.remove('show');
         });
     }
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', function () {
-        if (notificationMenu) {
-            notificationMenu.classList.remove('show');
-        }
-        if (userMenu) {
-            userMenu.classList.remove('show');
-        }
+        if (notificationMenu) notificationMenu.classList.remove('show');
+        if (userMenu) userMenu.classList.remove('show');
     });
 
-    // Role-based dashboard functionality
-    const roleSelector = document.getElementById('roleSelector');
-
-    if (roleSelector) {
-        roleSelector.addEventListener('change', function () {
-            const selectedRole = this.value;
-            updateDashboardForRole(selectedRole);
-            updateRoleIndicator(selectedRole);
-        });
-
-        // Initialize with default role
-        const currentRole = roleSelector.value;
-        updateDashboardForRole(currentRole);
-        updateRoleIndicator(currentRole);
-    }
-
-    function updateDashboardForRole(role) {
-        // Hide all role-specific elements
-        document.querySelectorAll('[data-role]').forEach(el => {
-            el.classList.remove('visible');
-        });
-
-        // Show elements for selected role
-        document.querySelectorAll(`[data-role*="${role}"], [data-role="all"]`).forEach(el => {
-            el.classList.add('visible');
-        });
-
-        // Update sidebar navigation
-        updateSidebarForRole(role);
-
-        // Update dashboard content
-        updateDashboardContentForRole(role);
-
-        // Update stats cards
-        updateStatsForRole(role);
-    }
-
-    function updateRoleIndicator(role) {
-        const pageTitle = document.querySelector('.page-title');
-        if (pageTitle) {
-            // Remove existing role indicator
-            const existingIndicator = pageTitle.querySelector('.role-indicator');
-            if (existingIndicator) {
-                existingIndicator.remove();
-            }
-
-            // Add new role indicator
-            const indicator = document.createElement('span');
-            indicator.className = `role-indicator role-${role}`;
-            indicator.textContent = role.replace('_', ' ').toUpperCase();
-            pageTitle.appendChild(indicator);
-        }
-    }
-
-    function updateSidebarForRole(role) {
-        const rolePermissions = {
-            super_admin: ['all'],
-            property_manager: ['front-desk', 'room-management', 'financial', 'pos', 'inventory', 'reports', 'system-admin', 'guest-relations', 'channel-management', 'events', 'asset-management'],
-            receptionist: ['front-desk', 'room-management'],
-            housekeeping: ['housekeeping'],
-            pos_staff: ['pos'],
-            maintenance: ['housekeeping']
-        };
-
-        document.querySelectorAll('.sidebar-section').forEach(section => {
-            const sectionId = section.id;
-            const hasPermission = rolePermissions[role].includes('all') ||
-                rolePermissions[role].includes(sectionId);
-
-            if (hasPermission) {
-                section.style.display = 'block';
-            } else {
-                section.style.display = 'none';
-            }
-        });
-    }
-
-    function updateDashboardContentForRole(role) {
-        // Update welcome message
-        const welcomeMessage = document.querySelector('.welcome-message');
-        if (welcomeMessage) {
-            const messages = {
-                super_admin: 'Welcome to Hotel Management System - Super Admin Dashboard',
-                property_manager: 'Welcome to Property Management Dashboard',
-                receptionist: 'Welcome to Front Desk Operations',
-                housekeeping: 'Welcome to Housekeeping Management',
-                pos_staff: 'Welcome to POS Operations',
-                maintenance: 'Welcome to Maintenance Management'
-            };
-            welcomeMessage.textContent = messages[role] || 'Welcome to Dashboard';
-        }
-
-        // Update quick actions visibility
-        document.querySelectorAll('.quick-action').forEach(action => {
-            const actionRoles = action.getAttribute('data-role');
-            if (actionRoles && actionRoles.includes(role)) {
-                action.classList.add('visible');
-            } else {
-                action.classList.remove('visible');
-            }
-        });
-
-        // Update activity feed based on role
-        updateActivityFeedForRole(role);
-    }
-
-    function updateStatsForRole(role) {
-        const roleStats = {
-            super_admin: [
-                { icon: 'fas fa-building', value: '3', label: 'Properties', color: 'primary' },
-                { icon: 'fas fa-users', value: '45', label: 'Total Users', color: 'info' },
-                { icon: 'fas fa-chart-line', value: '$125K', label: 'Total Revenue', color: 'success' },
-                { icon: 'fas fa-door-open', value: '145', label: 'Total Rooms', color: 'warning' }
-            ],
-            property_manager: [
-                { icon: 'fas fa-door-open', value: '145', label: 'Total Rooms', color: 'primary' },
-                { icon: 'fas fa-chart-bar', value: '78%', label: 'Occupancy Rate', color: 'success' },
-                { icon: 'fas fa-dollar-sign', value: '$12,450', label: "Today's Revenue", color: 'info' },
-                { icon: 'fas fa-sign-in-alt', value: '24', label: "Today's Check-ins", color: 'warning' }
-            ],
-            receptionist: [
-                { icon: 'fas fa-calendar-check', value: '12', label: "Today's Check-ins", color: 'success' },
-                { icon: 'fas fa-sign-out-alt', value: '8', label: "Today's Check-outs", color: 'info' },
-                { icon: 'fas fa-list', value: '5', label: 'Pending Bookings', color: 'warning' },
-                { icon: 'fas fa-users', value: '3', label: 'Waiting List', color: 'danger' }
-            ],
-            housekeeping: [
-                { icon: 'fas fa-broom', value: '24', label: 'Completed Tasks', color: 'success' },
-                { icon: 'fas fa-tasks', value: '8', label: 'In Progress', color: 'warning' },
-                { icon: 'fas fa-exclamation-triangle', value: '3', label: 'Urgent Tasks', color: 'danger' },
-                { icon: 'fas fa-check-circle', value: '95%', label: 'Completion Rate', color: 'info' }
-            ],
-            pos_staff: [
-                { icon: 'fas fa-shopping-cart', value: '45', label: 'Today\'s Orders', color: 'primary' },
-                { icon: 'fas fa-dollar-sign', value: '$3,250', label: 'Today\'s Revenue', color: 'success' },
-                { icon: 'fas fa-utensils', value: '12', label: 'Active Tables', color: 'info' },
-                { icon: 'fas fa-clock', value: '15', label: 'Pending Orders', color: 'warning' }
-            ],
-            maintenance: [
-                { icon: 'fas fa-tools', value: '8', label: 'Open Issues', color: 'danger' },
-                { icon: 'fas fa-wrench', value: '5', label: 'In Progress', color: 'warning' },
-                { icon: 'fas fa-check', value: '12', label: 'Completed Today', color: 'success' },
-                { icon: 'fas fa-calendar', value: '3', label: 'Scheduled', color: 'info' }
-            ]
-        };
-
-        const statsContainer = document.querySelector('.stats-container .row');
-        if (statsContainer && roleStats[role]) {
-            statsContainer.innerHTML = '';
-
-            roleStats[role].forEach(stat => {
-                const statCol = document.createElement('div');
-                statCol.className = 'col-xl-3 col-md-6 mb-4';
-                statCol.innerHTML = `
-                    <div class="stat-card ${stat.color}">
-                        <div class="stat-card-body">
-                            <div class="stat-icon">
-                                <i class="${stat.icon}"></i>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-value">${stat.value}</div>
-                                <div class="stat-label">${stat.label}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                statsContainer.appendChild(statCol);
-            });
-        }
-    }
-
-    function updateActivityFeedForRole(role) {
-        const roleActivities = {
-            super_admin: [
-                { icon: 'fas fa-user-plus', color: 'primary', title: 'New user registered - Property Manager', time: '5 minutes ago' },
-                { icon: 'fas fa-building', color: 'info', title: 'New property added - Downtown Hotel', time: '15 minutes ago' },
-                { icon: 'fas fa-chart-line', color: 'success', title: 'Monthly revenue target achieved', time: '1 hour ago' },
-                { icon: 'fas fa-shield-alt', color: 'warning', title: 'Security audit completed', time: '2 hours ago' },
-                { icon: 'fas fa-database', color: 'danger', title: 'Database backup completed', time: '3 hours ago' }
-            ],
-            property_manager: [
-                { icon: 'fas fa-chart-line', color: 'success', title: 'Occupancy rate increased to 78%', time: '10 minutes ago' },
-                { icon: 'fas fa-dollar-sign', color: 'primary', title: 'Monthly revenue target achieved', time: '30 minutes ago' },
-                { icon: 'fas fa-users', color: 'info', title: 'New staff member joined', time: '1 hour ago' },
-                { icon: 'fas fa-star', color: 'warning', title: 'Guest satisfaction score updated', time: '2 hours ago' },
-                { icon: 'fas fa-clipboard-check', color: 'success', title: 'Monthly report generated', time: '3 hours ago' }
-            ],
-            receptionist: [
-                { icon: 'fas fa-calendar-check', color: 'primary', title: 'New booking received - Room 201', time: '5 minutes ago' },
-                { icon: 'fas fa-sign-in-alt', color: 'success', title: 'Guest checked in - Room 305', time: '15 minutes ago' },
-                { icon: 'fas fa-phone', color: 'info', title: 'Phone reservation received', time: '30 minutes ago' },
-                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Guest complaint - Room 104', time: '1 hour ago' },
-                { icon: 'fas fa-credit-card', color: 'success', title: 'Payment received - Booking #1234', time: '2 hours ago' }
-            ],
-            housekeeping: [
-                { icon: 'fas fa-broom', color: 'success', title: 'Room cleaning completed - 201', time: '10 minutes ago' },
-                { icon: 'fas fa-tasks', color: 'warning', title: 'New cleaning task assigned - 305', time: '20 minutes ago' },
-                { icon: 'fas fa-tools', color: 'danger', title: 'Maintenance issue reported - 104', time: '30 minutes ago' },
-                { icon: 'fas fa-check', color: 'success', title: 'Inspection completed - 201', time: '45 minutes ago' },
-                { icon: 'fas fa-clock', color: 'info', title: 'Turndown service scheduled', time: '1 hour ago' }
-            ],
-            pos_staff: [
-                { icon: 'fas fa-shopping-cart', color: 'primary', title: 'New order received - Table 5', time: '5 minutes ago' },
-                { icon: 'fas fa-utensils', color: 'success', title: 'Order completed - Table 3', time: '15 minutes ago' },
-                { icon: 'fas fa-credit-card', color: 'info', title: 'Payment processed - Table 7', time: '20 minutes ago' },
-                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Low stock alert - Coffee', time: '30 minutes ago' },
-                { icon: 'fas fa-room-service', color: 'success', title: 'Room service delivered - 201', time: '45 minutes ago' }
-            ],
-            maintenance: [
-                { icon: 'fas fa-tools', color: 'danger', title: 'Urgent maintenance - AC Room 304', time: '5 minutes ago' },
-                { icon: 'fas fa-wrench', color: 'warning', title: 'In progress - Plumbing Room 105', time: '15 minutes ago' },
-                { icon: 'fas fa-check', color: 'success', title: 'Completed - Electrical Room 201', time: '30 minutes ago' },
-                { icon: 'fas fa-calendar', color: 'info', title: 'Scheduled maintenance - Elevator', time: '1 hour ago' },
-                { icon: 'fas fa-clipboard-list', color: 'primary', title: 'New work order created', time: '2 hours ago' }
-            ]
-        };
-
-        const activityFeed = document.querySelector('.activity-feed');
-        if (activityFeed && roleActivities[role]) {
-            activityFeed.innerHTML = '';
-
-            roleActivities[role].forEach(activity => {
-                const activityItem = document.createElement('div');
-                activityItem.className = 'activity-item';
-                activityItem.innerHTML = `
-                    <div class="activity-icon bg-${activity.color}">
-                        <i class="${activity.icon}"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">${activity.title}</div>
-                        <div class="activity-time">${activity.time}</div>
-                    </div>
-                `;
-                activityFeed.appendChild(activityItem);
-            });
-        }
-    }
+    // SIMPLE SIDEBAR STATE MANAGEMENT
+    initializeSidebarState();
 
     // Initialize revenue chart
     const revenueCtx = document.getElementById('revenueChart');
@@ -764,11 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -782,103 +528,1029 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    // Simulate real-time updates
-    setInterval(function () {
-        // Update random metric
-        const metrics = document.querySelectorAll('.stat-value');
-        if (metrics.length > 0) {
-            const randomMetric = metrics[Math.floor(Math.random() * metrics.length)];
-            const currentValue = randomMetric.textContent;
-
-            // Handle different value types
-            if (currentValue.includes('$')) {
-                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
-                const change = Math.floor(Math.random() * 1000) - 500;
-                randomMetric.textContent = '$' + (numericValue + change).toLocaleString();
-            } else if (currentValue.includes('%')) {
-                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
-                const change = Math.floor(Math.random() * 10) - 5;
-                const newValue = Math.max(0, Math.min(100, numericValue + change));
-                randomMetric.textContent = newValue + '%';
-            } else {
-                const numericValue = parseInt(currentValue.replace(/[^0-9]/g, ''));
-                const change = Math.floor(Math.random() * 5) - 2;
-                randomMetric.textContent = Math.max(0, numericValue + change);
-            }
-        }
-
-        // Add new activity based on current role
-        const currentRole = document.getElementById('roleSelector').value;
-        const activities = {
-            super_admin: [
-                { icon: 'fas fa-user-plus', color: 'primary', title: 'New user registered' },
-                { icon: 'fas fa-building', color: 'info', title: 'New property added' },
-                { icon: 'fas fa-chart-line', color: 'success', title: 'Revenue target achieved' },
-                { icon: 'fas fa-shield-alt', color: 'warning', title: 'Security audit completed' },
-                { icon: 'fas fa-database', color: 'danger', title: 'Database backup completed' }
-            ],
-            property_manager: [
-                { icon: 'fas fa-chart-line', color: 'success', title: 'Occupancy rate updated' },
-                { icon: 'fas fa-dollar-sign', color: 'primary', title: 'Revenue milestone reached' },
-                { icon: 'fas fa-users', color: 'info', title: 'Staff performance updated' },
-                { icon: 'fas fa-star', color: 'warning', title: 'Guest satisfaction updated' },
-                { icon: 'fas fa-clipboard-check', color: 'success', title: 'Report generated' }
-            ],
-            receptionist: [
-                { icon: 'fas fa-calendar-check', color: 'primary', title: 'New booking received' },
-                { icon: 'fas fa-sign-in-alt', color: 'success', title: 'Guest checked in' },
-                { icon: 'fas fa-sign-out-alt', color: 'info', title: 'Guest checked out' },
-                { icon: 'fas fa-tools', color: 'warning', title: 'Maintenance issue reported' },
-                { icon: 'fas fa-credit-card', color: 'success', title: 'Payment received' }
-            ],
-            housekeeping: [
-                { icon: 'fas fa-broom', color: 'success', title: 'Room cleaning completed' },
-                { icon: 'fas fa-tasks', color: 'warning', title: 'New task assigned' },
-                { icon: 'fas fa-tools', color: 'danger', title: 'Maintenance issue reported' },
-                { icon: 'fas fa-check', color: 'success', title: 'Inspection completed' },
-                { icon: 'fas fa-clock', color: 'info', title: 'Service scheduled' }
-            ],
-            pos_staff: [
-                { icon: 'fas fa-shopping-cart', color: 'primary', title: 'New order received' },
-                { icon: 'fas fa-utensils', color: 'success', title: 'Order completed' },
-                { icon: 'fas fa-credit-card', color: 'info', title: 'Payment processed' },
-                { icon: 'fas fa-exclamation-triangle', color: 'warning', title: 'Low stock alert' },
-                { icon: 'fas fa-room-service', color: 'success', title: 'Room service delivered' }
-            ],
-            maintenance: [
-                { icon: 'fas fa-tools', color: 'danger', title: 'Urgent maintenance reported' },
-                { icon: 'fas fa-wrench', color: 'warning', title: 'Maintenance in progress' },
-                { icon: 'fas fa-check', color: 'success', title: 'Maintenance completed' },
-                { icon: 'fas fa-calendar', color: 'info', title: 'Maintenance scheduled' },
-                { icon: 'fas fa-clipboard-list', color: 'primary', title: 'Work order created' }
-            ]
-        };
-
-        const roleActivities = activities[currentRole] || activities.super_admin;
-        const randomActivity = roleActivities[Math.floor(Math.random() * roleActivities.length)];
-        const activityFeed = document.querySelector('.activity-feed');
-
-        if (activityFeed) {
-            const newActivity = document.createElement('div');
-            newActivity.className = 'activity-item';
-            newActivity.innerHTML = `
-                <div class="activity-icon bg-${randomActivity.color}">
-                    <i class="${randomActivity.icon}"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">${randomActivity.title}</div>
-                    <div class="activity-time">Just now</div>
-                </div>
-            `;
-
-            // Add to the top
-            activityFeed.insertBefore(newActivity, activityFeed.firstChild);
-
-            // Remove oldest activity if more than 5
-            if (activityFeed.children.length > 5) {
-                activityFeed.removeChild(activityFeed.lastChild);
-            }
-        }
-    }, 10000); // Update every 10 seconds
 });
+
+// SIMPLE SIDEBAR STATE MANAGEMENT
+function initializeSidebarState() {
+    // Load previous state
+    loadSidebarState();
+    
+    // Save state when any navigation happens
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.subsection-link') || e.target.closest('.sub-submenu-item')) {
+            setTimeout(saveSidebarState, 100);
+        }
+    });
+    
+    // Save state when collapse changes (Bootstrap events)
+    document.addEventListener('show.bs.collapse', saveSidebarState);
+    document.addEventListener('hide.bs.collapse', saveSidebarState);
+}
+
+function saveSidebarState() {
+    const state = {
+        // Save which sections are open
+        openSections: Array.from(document.querySelectorAll('.sidebar-section .collapse.show'))
+            .map(collapse => collapse.id),
+        // Save scroll position
+        scrollPosition: document.querySelector('.sidebar-content')?.scrollTop || 0,
+        timestamp: Date.now()
+    };
+    
+    sessionStorage.setItem('sidebarState', JSON.stringify(state));
+}
+
+function loadSidebarState() {
+    try {
+        const saved = sessionStorage.getItem('sidebarState');
+        if (!saved) return;
+        
+        const state = JSON.parse(saved);
+        
+        // Only restore if less than 30 minutes old
+        if (Date.now() - state.timestamp > 30 * 60 * 1000) return;
+        
+        // Close all sections first
+        document.querySelectorAll('.sidebar-section .collapse').forEach(collapse => {
+            const bsCollapse = bootstrap.Collapse.getInstance(collapse);
+            if (bsCollapse) bsCollapse.hide();
+        });
+        
+        // Open saved sections
+        state.openSections.forEach(sectionId => {
+            const collapse = document.getElementById(sectionId);
+            if (collapse) {
+                const bsCollapse = bootstrap.Collapse.getInstance(collapse) || 
+                                  new bootstrap.Collapse(collapse, { toggle: false });
+                bsCollapse.show();
+            }
+        });
+        
+        // Restore scroll position
+        setTimeout(() => {
+            const sidebarContent = document.querySelector('.sidebar-content');
+            if (sidebarContent && state.scrollPosition) {
+                sidebarContent.scrollTop = state.scrollPosition;
+            }
+        }, 200);
+        
+    } catch (error) {
+        console.log('Error loading sidebar state:', error);
+    }
+}
+
+// Handle page navigation
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        setTimeout(loadSidebarState, 100);
+    }
+});
+
+
+
+eta style.css file
+
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --info-color: #0dcaf0;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --sidebar-width: 280px;
+    --sidebar-bg: #1a1d20;
+    --sidebar-hover: #25282c;
+    --sidebar-text: #adb5bd;
+    --sidebar-active: #fff;
+    --sidebar-border: #343a40;
+    --content-bg: #f8f9fa;
+    --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--content-bg);
+    color: var(--dark-color);
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed);
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--sidebar-border);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--sidebar-active);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+/* Ensure sidebar sections are visible */
+.sidebar-section {
+    margin-bottom: 0.5rem;
+    display: block !important; /* Force display */
+    visibility: visible !important; /* Force visibility */
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    border-radius: 0.375rem;
+    margin: 0 0.5rem;
+}
+
+.section-header:hover {
+    background-color: var(--sidebar-hover);
+}
+
+.section-icon {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    color: var(--sidebar-text);
+}
+
+.section-title {
+    flex: 1;
+    font-weight: 500;
+    color: var(--sidebar-text);
+}
+
+.section-arrow {
+    font-size: 0.875rem;
+    color: var(--sidebar-text);
+    transition: transform var(--transition-speed);
+}
+
+.section-header[aria-expanded="true"] .section-arrow {
+    transform: rotate(180deg);
+}
+
+.subsection-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0.375rem;
+    margin: 0 0.5rem;
+    overflow: hidden;
+}
+
+.subsection-link {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem 0.625rem 3rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    font-size: 0.9rem;
+}
+
+.subsection-link:hover {
+    background-color: var(--sidebar-hover);
+    color: var(--sidebar-active);
+}
+
+.subsection-link i {
+    margin-right: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* Sub-submenu styles */
+.sub-submenu {
+    list-style: none;
+    padding-left: 1rem;
+    margin: 0.25rem 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+}
+
+.sub-submenu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    font-size: 0.85rem;
+}
+
+.sub-submenu-item:hover {
+    background-color: var(--sidebar-hover);
+    color: var(--sidebar-active);
+}
+
+.sub-submenu-item i {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--sidebar-border);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background-color: var(--sidebar-hover);
+    border-radius: 0.375rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 0.75rem;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--sidebar-active);
+    font-size: 0.9rem;
+}
+
+.user-role {
+    font-size: 0.8rem;
+    color: var(--sidebar-text);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.625rem;
+    background-color: transparent;
+    border: 1px solid var(--sidebar-border);
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: all var(--transition-speed);
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background-color: var(--danger-color);
+    color: white;
+    border-color: var(--danger-color);
+}
+
+.logout-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: margin-left var(--transition-speed);
+}
+
+.top-nav {
+    background-color: white;
+    box-shadow: var(--card-shadow);
+    padding: 1rem 1.5rem;
+    z-index: 100;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--dark-color);
+}
+
+.top-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Role Switcher Styles - REMOVED */
+/* .role-switcher {
+    margin-right: 1rem;
+}
+
+.role-switcher .form-select {
+    min-width: 180px;
+    font-size: 0.875rem;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    transition: all var(--transition-speed);
+}
+
+.role-switcher .form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+} */
+
+.search-box {
+    position: relative;
+}
+
+.search-input {
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    width: 250px;
+    transition: all var(--transition-speed);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.search-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+}
+
+.notification-dropdown, .user-dropdown {
+    position: relative;
+}
+
+.notification-btn, .user-menu-btn {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    display: flex;
+    align-items: center;
+}
+
+.notification-btn:hover, .user-menu-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--danger-color);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.notification-menu, .user-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: white;
+    border-radius: 0.375rem;
+    box-shadow: var(--card-shadow);
+    min-width: 300px;
+    z-index: 1000;
+    display: none;
+}
+
+.notification-menu.show, .user-menu.show {
+    display: block;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.notification-header h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.mark-all-read {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.notification-icon.bg-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+}
+
+.notification-icon.bg-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success-color);
+}
+
+.notification-icon.bg-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.notification-icon.bg-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    color: var(--info-color);
+}
+
+.notification-icon.bg-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+}
+
+.notification-footer {
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-top: 1px solid #e9ecef;
+}
+
+.view-all-notifications {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.user-avatar.small {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+}
+
+.user-name {
+    margin: 0 0.5rem;
+    font-weight: 500;
+}
+
+.user-menu-arrow {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    color: var(--dark-color);
+    text-decoration: none;
+    transition: background-color var(--transition-speed);
+}
+
+.user-menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.user-menu-item i {
+    margin-right: 0.75rem;
+    width: 16px;
+    text-align: center;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 0.5rem 0;
+}
+
+.content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Welcome Message */
+.welcome-message {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0;
+}
+
+/* Role Indicator - REMOVED */
+/* .role-indicator {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+.role-super-admin { background-color: #dc3545; color: white; }
+.role-property-manager { background-color: #0d6efd; color: white; }
+.role-receptionist { background-color: #198754; color: white; }
+.role-housekeeping { background-color: #ffc107; color: black; }
+.role-pos-staff { background-color: #6f42c1; color: white; }
+.role-maintenance { background-color: #fd7e14; color: white; } */
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.quick-action {
+    display: none;
+}
+
+.quick-action.visible {
+    display: block;
+}
+
+/* Stats Cards */
+.stats-container {
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed);
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card.primary {
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-card.success {
+    border-left: 4px solid var(--success-color);
+}
+
+.stat-card.info {
+    border-left: 4px solid var(--info-color);
+}
+
+.stat-card.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.stat-card.danger {
+    border-left: 4px solid var(--danger-color);
+}
+
+.stat-card-body {
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.stat-card.primary .stat-icon {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+}
+
+.stat-card.success .stat-icon {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success-color);
+}
+
+.stat-card.info .stat-icon {
+    background-color: rgba(13, 202, 240, 0.1);
+    color: var(--info-color);
+}
+
+.stat-card.warning .stat-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.stat-card.danger .stat-icon {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    margin: 0;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Chart Container */
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+/* Activity Feed */
+.activity-feed {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.bg-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+}
+
+.activity-icon.bg-success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success-color);
+}
+
+.activity-icon.bg-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.activity-icon.bg-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    color: var(--info-color);
+}
+
+.activity-icon.bg-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+}
+
+/* Module Cards */
+.module-card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed);
+    height: 100%;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+}
+
+.module-card-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.module-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+.module-icon.primary {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+}
+
+.module-icon.success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success-color);
+}
+
+.module-icon.info {
+    background-color: rgba(13, 202, 240, 0.1);
+    color: var(--info-color);
+}
+
+.module-icon.warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.module-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.module-description {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.module-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.module-stat {
+    text-align: center;
+}
+
+.module-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.module-stat-label {
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+/* Role-based visibility - REMOVED */
+/* [data-role]:not(.visible) {
+    display: none;
+} */
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-input {
+        width: 150px;
+    }
+    
+    /* Role switcher removed */
+    /* .role-switcher .form-select {
+        min-width: 140px;
+    } */
+    
+    .user-name {
+        display: none;
+    }
+    
+    .module-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .quick-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .top-nav {
+        padding: 0.75rem 1rem;
+    }
+    
+    .content-area {
+        padding: 1rem;
+    }
+    
+    .stat-card-body {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stat-icon {
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+    }
+    
+    .notification-menu, .user-menu {
+        min-width: 250px;
+    }
+    
+    /* Role switcher removed */
+    /* .role-switcher {
+        margin-right: 0.5rem;
+    }
+
+    .role-switcher .form-select {
+        min-width: 120px;
+        font-size: 0.8rem;
+    } */
+}

@@ -9,17 +9,7 @@
             </div>
 
             <div class="top-nav-actions">
-                <!-- Role Switcher -->
-                <div class="role-switcher">
-                    <select id="roleSelector" class="form-select form-select-sm">
-                        <option value="super_admin" {{ auth()->user()->hasRole('super_admin') ? 'selected' : '' }}>Super Admin</option>
-                        <option value="property_manager" {{ auth()->user()->hasRole('property_manager') ? 'selected' : '' }}>Property Manager</option>
-                        <option value="receptionist" {{ auth()->user()->hasRole('receptionist') ? 'selected' : '' }}>Receptionist</option>
-                        <option value="housekeeping" {{ auth()->user()->hasRole('housekeeping') ? 'selected' : '' }}>Housekeeping Staff</option>
-                        <option value="pos_staff" {{ auth()->user()->hasRole('pos_staff') ? 'selected' : '' }}>POS Staff</option>
-                        <option value="maintenance" {{ auth()->user()->hasRole('maintenance') ? 'selected' : '' }}>Maintenance Staff</option>
-                    </select>
-                </div>
+                <!-- Role Switcher removed as per requirement -->
 
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="Search...">

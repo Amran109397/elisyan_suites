@@ -80,8 +80,11 @@ body {
     padding: 1rem 0;
 }
 
+/* Ensure sidebar sections are visible */
 .sidebar-section {
     margin-bottom: 0.5rem;
+    display: block !important; /* Force display */
+    visibility: visible !important; /* Force visibility */
 }
 
 .section-header {
@@ -276,8 +279,8 @@ body {
     gap: 1rem;
 }
 
-/* Role Switcher Styles */
-.role-switcher {
+/* Role Switcher Styles - REMOVED */
+/* .role-switcher {
     margin-right: 1rem;
 }
 
@@ -294,7 +297,7 @@ body {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
+} */
 
 .search-box {
     position: relative;
@@ -322,13 +325,11 @@ body {
     color: var(--secondary-color);
 }
 
-.notification-dropdown,
-.user-dropdown {
+.notification-dropdown, .user-dropdown {
     position: relative;
 }
 
-.notification-btn,
-.user-menu-btn {
+.notification-btn, .user-menu-btn {
     position: relative;
     background: none;
     border: none;
@@ -340,8 +341,7 @@ body {
     align-items: center;
 }
 
-.notification-btn:hover,
-.user-menu-btn:hover {
+.notification-btn:hover, .user-menu-btn:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -361,8 +361,7 @@ body {
     font-weight: 700;
 }
 
-.notification-menu,
-.user-menu {
+.notification-menu, .user-menu {
     position: absolute;
     top: 100%;
     right: 0;
@@ -375,8 +374,7 @@ body {
     display: none;
 }
 
-.notification-menu.show,
-.user-menu.show {
+.notification-menu.show, .user-menu.show {
     display: block;
 }
 
@@ -532,8 +530,8 @@ body {
     margin-bottom: 0;
 }
 
-/* Role Indicator */
-.role-indicator {
+/* Role Indicator - REMOVED */
+/* .role-indicator {
     display: inline-block;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
@@ -543,35 +541,12 @@ body {
     text-transform: uppercase;
 }
 
-.role-super-admin {
-    background-color: #dc3545;
-    color: white;
-}
-
-.role-property-manager {
-    background-color: #0d6efd;
-    color: white;
-}
-
-.role-receptionist {
-    background-color: #198754;
-    color: white;
-}
-
-.role-housekeeping {
-    background-color: #ffc107;
-    color: black;
-}
-
-.role-pos-staff {
-    background-color: #6f42c1;
-    color: white;
-}
-
-.role-maintenance {
-    background-color: #fd7e14;
-    color: white;
-}
+.role-super-admin { background-color: #dc3545; color: white; }
+.role-property-manager { background-color: #0d6efd; color: white; }
+.role-receptionist { background-color: #198754; color: white; }
+.role-housekeeping { background-color: #ffc107; color: black; }
+.role-pos-staff { background-color: #6f42c1; color: white; }
+.role-maintenance { background-color: #fd7e14; color: white; } */
 
 /* Quick Actions */
 .quick-actions {
@@ -885,25 +860,25 @@ body {
     margin-right: 1rem;
 }
 
-/* Role-based visibility */
-[data-role]:not(.visible) {
+/* Role-based visibility - REMOVED */
+/* [data-role]:not(.visible) {
     display: none;
-}
+} */
 
 /* Responsive Styles */
 @media (max-width: 992px) {
     .sidebar {
         transform: translateX(-100%);
     }
-
+    
     .sidebar.active {
         transform: translateX(0);
     }
-
+    
     .main-content {
         margin-left: 0;
     }
-
+    
     .mobile-menu-btn {
         display: block;
     }
@@ -913,20 +888,21 @@ body {
     .search-input {
         width: 150px;
     }
-
-    .role-switcher .form-select {
+    
+    /* Role switcher removed */
+    /* .role-switcher .form-select {
         min-width: 140px;
-    }
-
+    } */
+    
     .user-name {
         display: none;
     }
-
+    
     .module-stats {
         flex-direction: column;
         gap: 0.5rem;
     }
-
+    
     .quick-actions {
         justify-content: center;
     }
@@ -936,32 +912,32 @@ body {
     .top-nav {
         padding: 0.75rem 1rem;
     }
-
+    
     .content-area {
         padding: 1rem;
     }
-
+    
     .stat-card-body {
         flex-direction: column;
         text-align: center;
     }
-
+    
     .stat-icon {
         margin-right: 0;
         margin-bottom: 0.75rem;
     }
-
-    .notification-menu,
-    .user-menu {
+    
+    .notification-menu, .user-menu {
         min-width: 250px;
     }
-
-    .role-switcher {
+    
+    /* Role switcher removed */
+    /* .role-switcher {
         margin-right: 0.5rem;
     }
 
     .role-switcher .form-select {
         min-width: 120px;
         font-size: 0.8rem;
-    }
+    } */
 }
