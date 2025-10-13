@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Dashboard initialized');
     
+    // Clear any existing sidebar state completely
+    sessionStorage.removeItem('sidebarState');
+    localStorage.removeItem('sidebarState');
+    
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const sidebar = document.getElementById('sidebar');
@@ -19,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         notificationBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             notificationMenu.classList.toggle('show');
-            userMenu.classList.remove('show');
+            if (userMenu) userMenu.classList.remove('show');
         });
     }
 
@@ -31,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         userMenuBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             userMenu.classList.toggle('show');
-            notificationMenu.classList.remove('show');
+            if (notificationMenu) notificationMenu.classList.remove('show');
         });
     }
 
@@ -41,8 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
         if (userMenu) userMenu.classList.remove('show');
     });
 
-    // SIMPLE SIDEBAR STATE MANAGEMENT
-    initializeSidebarState();
+    // Force close ALL sections on page load
+    setTimeout(() => {
+        const allCollapses = document.querySelectorAll('.sidebar-section .collapse');
+        allCollapses.forEach(collapse => {
+            if (collapse.classList.contains('show')) {
+                const bsCollapse = bootstrap.Collapse.getInstance(collapse);
+                if (bsCollapse) {
+                    bsCollapse.hide();
+                } else {
+                    new bootstrap.Collapse(collapse, { hide: true });
+                }
+            }
+        });
+    }, 150);
 
     // Initialize revenue chart
     const revenueCtx = document.getElementById('revenueChart');
@@ -79,78 +95,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// SIMPLE SIDEBAR STATE MANAGEMENT
-function initializeSidebarState() {
-    // Load previous state
-    loadSidebarState();
-    
-    // Save state when any navigation happens
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.subsection-link') || e.target.closest('.sub-submenu-item')) {
-            setTimeout(saveSidebarState, 100);
-        }
-    });
-    
-    // Save state when collapse changes (Bootstrap events)
-    document.addEventListener('show.bs.collapse', saveSidebarState);
-    document.addEventListener('hide.bs.collapse', saveSidebarState);
+// Completely disable ALL sidebar state persistence
+if (typeof sessionStorage !== 'undefined') {
+    sessionStorage.removeItem('sidebarState');
 }
-
-function saveSidebarState() {
-    const state = {
-        // Save which sections are open
-        openSections: Array.from(document.querySelectorAll('.sidebar-section .collapse.show'))
-            .map(collapse => collapse.id),
-        // Save scroll position
-        scrollPosition: document.querySelector('.sidebar-content')?.scrollTop || 0,
-        timestamp: Date.now()
-    };
-    
-    sessionStorage.setItem('sidebarState', JSON.stringify(state));
+if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('sidebarState');
 }
-
-function loadSidebarState() {
-    try {
-        const saved = sessionStorage.getItem('sidebarState');
-        if (!saved) return;
-        
-        const state = JSON.parse(saved);
-        
-        // Only restore if less than 30 minutes old
-        if (Date.now() - state.timestamp > 30 * 60 * 1000) return;
-        
-        // Close all sections first
-        document.querySelectorAll('.sidebar-section .collapse').forEach(collapse => {
-            const bsCollapse = bootstrap.Collapse.getInstance(collapse);
-            if (bsCollapse) bsCollapse.hide();
-        });
-        
-        // Open saved sections
-        state.openSections.forEach(sectionId => {
-            const collapse = document.getElementById(sectionId);
-            if (collapse) {
-                const bsCollapse = bootstrap.Collapse.getInstance(collapse) || 
-                                  new bootstrap.Collapse(collapse, { toggle: false });
-                bsCollapse.show();
-            }
-        });
-        
-        // Restore scroll position
-        setTimeout(() => {
-            const sidebarContent = document.querySelector('.sidebar-content');
-            if (sidebarContent && state.scrollPosition) {
-                sidebarContent.scrollTop = state.scrollPosition;
-            }
-        }, 200);
-        
-    } catch (error) {
-        console.log('Error loading sidebar state:', error);
-    }
-}
-
-// Handle page navigation
-window.addEventListener('pageshow', function(event) {
-    if (event.persisted) {
-        setTimeout(loadSidebarState, 100);
-    }
-});

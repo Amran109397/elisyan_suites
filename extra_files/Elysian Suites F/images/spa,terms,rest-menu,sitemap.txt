@@ -1,0 +1,932 @@
+eta resturant-menu.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu - Elisyan Suites</title>
+    <meta name="description" content="Explore our exquisite restaurant menu featuring international cuisine and local specialties at Elisyan Suites.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="restaurant-menu.html">Restaurant</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1414235077428-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Restaurant Menu</h1>
+            <p class="lead">Savor exquisite cuisines prepared by our world-renowned chefs</p>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Our Menu</h2>
+                <p class="lead">A culinary journey featuring international and local specialties</p>
+            </div>
+            
+            <!-- Appetizers -->
+            <div class="menu-category mb-5">
+                <h3>Appetizers</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Truffle Arancini</h4>
+                                <p>Crispy risotto balls filled with black truffle and mozzarella, served with parmesan aioli</p>
+                                <div class="menu-item-price">$14</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Seared Scallops</h4>
+                                <p>Pan-seared scallops with cauliflower puree, crispy pancetta, and microgreens</p>
+                                <div class="menu-item-price">$18</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Burrata & Heirloom Tomatoes</h4>
+                                <p>Fresh burrata cheese with heirloom tomatoes, basil oil, and balsamic reduction</p>
+                                <div class="menu-item-price">$16</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Wild Mushroom Bruschetta</h4>
+                                <p>Grilled sourdough topped with wild mushrooms, goat cheese, and truffle honey</p>
+                                <div class="menu-item-price">$12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Courses -->
+            <div class="menu-category mb-5">
+                <h3>Main Courses</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Grilled Ribeye Steak</h4>
+                                <p>12oz prime ribeye with roasted garlic mashed potatoes, seasonal vegetables, and red wine jus</p>
+                                <div class="menu-item-price">$38</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Pan-Seared Salmon</h4>
+                                <p>Atlantic salmon with lemon risotto, asparagus, and beurre blanc sauce</p>
+                                <div class="menu-item-price">$28</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Duck Confit</h4>
+                                <p>Slow-cooked duck leg with cherry gastrique, wild rice, and roasted root vegetables</p>
+                                <div class="menu-item-price">$32</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Mushroom Risotto</h4>
+                                <p>Creamy arborio rice with mixed wild mushrooms, parmesan, and white truffle oil</p>
+                                <div class="menu-item-price">$22</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desserts -->
+            <div class="menu-category mb-5">
+                <h3>Desserts</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Chocolate Soufflé</h4>
+                                <p>Warm chocolate soufflé with vanilla bean ice cream and berry compote</p>
+                                <div class="menu-item-price">$12</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Crème Brûlée</h4>
+                                <p>Classic vanilla bean custard with caramelized sugar and fresh berries</p>
+                                <div class="menu-item-price">$10</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Tiramisu</h4>
+                                <p>Traditional Italian dessert with espresso-soaked ladyfingers and mascarpone cream</p>
+                                <div class="menu-item-price">$9</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Seasonal Fruit Tart</h4>
+                                <p>Buttery pastry shell with vanilla custard and fresh seasonal fruits</p>
+                                <div class="menu-item-price">$8</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Beverages -->
+            <div class="menu-category">
+                <h3>Beverages</h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Wine Selection</h4>
+                                <p>Extensive collection of international and local wines available by the glass or bottle</p>
+                                <div class="menu-item-price">$9 - $150</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Craft Cocktails</h4>
+                                <p>Signature cocktails crafted by our expert mixologists using premium spirits</p>
+                                <div class="menu-item-price">$14 - $18</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Restaurant Info -->
+    <section class="restaurant-info py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h3>Dining Experience</h3>
+                    <p>Experience fine dining at its best in our elegant restaurant. Our award-winning chefs create culinary masterpieces using the freshest local ingredients and international flavors.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Open daily for breakfast, lunch, and dinner</li>
+                        <li><i class="fas fa-check"></i> Reservations recommended</li>
+                        <li><i class="fas fa-check"></i> Private dining available</li>
+                        <li><i class="fas fa-check"></i> Vegetarian and gluten-free options</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <h3>Hours & Location</h3>
+                    <div class="restaurant-hours">
+                        <div class="hours-item">
+                            <span>Breakfast:</span>
+                            <span>6:30 AM - 10:30 AM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Lunch:</span>
+                            <span>12:00 PM - 2:30 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Dinner:</span>
+                            <span>6:00 PM - 10:30 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span>Location:</span>
+                            <span>Ground Floor, Main Building</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-custom mt-3">Make a Reservation</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+
+
+eta sitemap.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitemap - Elisyan Suites</title>
+    <meta name="description" content="Explore the complete sitemap of Elisyan Suites hotel website to find all pages and sections.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sitemap Header -->
+    <section class="sitemap-header py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1>Sitemap</h1>
+                    <p class="lead">Find all pages and sections of our website</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sitemap Content -->
+    <section class="sitemap-content py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-home"></i> Main Pages</h3>
+                        <ul>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                            <li><a href="sitemap.html">Sitemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-bed"></i> Accommodation</h3>
+                        <ul>
+                            <li><a href="rooms.html">Rooms & Suites</a></li>
+                            <li><a href="room-detail.html">Room Details</a></li>
+                            <li><a href="packages.html">Special Packages</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-concierge-bell"></i> Services</h3>
+                        <ul>
+                            <li><a href="services.html">All Services</a></li>
+                            <li><a href="spa.html">Spa & Wellness</a></li>
+                            <li><a href="restaurant-menu.html">Restaurant Menu</a></li>
+                            <li><a href="events.html">Events & Conferences</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-calendar-check"></i> Booking</h3>
+                        <ul>
+                            <li><a href="booking.html">Make a Reservation</a></li>
+                            <li><a href="payment.html">Payment</a></li>
+                            <li><a href="booking-confirmation.html">Booking Confirmation</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-user"></i> User Account</h3>
+                        <ul>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="register.html">Register</a></li>
+                            <li><a href="dashboard.html">User Dashboard</a></li>
+                            <li><a href="loyalty.html">Loyalty Program</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="sitemap-category">
+                        <h3><i class="fas fa-file-alt"></i> Legal</h3>
+                        <ul>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+
+eta spa.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spa & Wellness - Elisyan Suites</title>
+    <meta name="description" content="Rejuvenate your body and mind at Elisyan Suites' luxury spa. Discover our treatments and book your wellness retreat.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="spa.html">Spa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1540555700479-6be2892f66e7?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Spa & Wellness</h1>
+            <p class="lead">Rejuvenate your body and mind in our luxury spa</p>
+        </div>
+    </section>
+
+    <!-- Spa Section -->
+    <section class="spa-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Our Treatments</h2>
+                <p class="lead">Discover our range of rejuvenating spa treatments</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1540555700479-6be2892f66e7?ixlib=rb-4.0.3" alt="Massage Therapy" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Massage Therapy</h3>
+                            <p>Relax and unwind with our therapeutic massages designed to relieve tension and promote well-being.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 60-90 min</span>
+                                <span class="price">$120 - $180</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3" alt="Facial Treatments" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Facial Treatments</h3>
+                            <p>Rejuvenate your skin with our customized facials using premium skincare products.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 60 min</span>
+                                <span class="price">$90 - $150</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1519823569242-4e84a006a9c5?ixlib=rb-4.0.3" alt="Body Treatments" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Body Treatments</h3>
+                            <p>Nourish and revitalize your body with our luxurious body wraps and scrubs.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
+                                <span class="price">$150 - $200</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3" alt="Sauna & Steam" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Sauna & Steam</h3>
+                            <p>Detoxify and relax in our traditional sauna and steam rooms.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 30-60 min</span>
+                                <span class="price">$40 - $60</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1593941707882-a523ba98eccd?ixlib=rb-4.0.3" alt="Couples Massage" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Couples Massage</h3>
+                            <p>Share a relaxing experience with your partner in our couples massage suite.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
+                                <span class="price">$300</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="spa-treatment">
+                        <div class="treatment-image">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3" alt="Hot Stone Therapy" class="img-fluid">
+                        </div>
+                        <div class="treatment-content">
+                            <h3>Hot Stone Therapy</h3>
+                            <p>Experience deep relaxation with our hot stone massage therapy.</p>
+                            <div class="treatment-details">
+                                <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
+                                <span class="price">$180</span>
+                            </div>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spa Facilities -->
+    <section class="spa-facilities py-5 bg-light">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Spa Facilities</h2>
+                <p class="lead">Explore our world-class spa amenities</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="facility-item text-center">
+                        <div class="facility-icon">
+                            <i class="fas fa-hot-tub"></i>
+                        </div>
+                        <h4>Relaxation Lounge</h4>
+                        <p>Unwind before or after your treatment in our serene relaxation lounge with herbal teas and healthy snacks.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="facility-item text-center">
+                        <div class="facility-icon">
+                            <i class="fas fa-shower"></i>
+                        </div>
+                        <h4>Hydrotherapy Pool</h4>
+                        <p>Experience the healing benefits of water in our temperature-controlled hydrotherapy pool.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="facility-item text-center">
+                        <div class="facility-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <h4>Meditation Room</h4>
+                        <p>Find your inner peace in our quiet meditation room designed for mindfulness and relaxation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+eta terms.html file
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Elisyan Suites</title>
+    <meta name="description" content="Read the terms of service for Elisyan Suites hotel including booking policies, cancellation terms, and guest responsibilities.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Terms of Service</h1>
+            <p class="lead">Please read our terms and conditions carefully</p>
+        </div>
+    </section>
+
+    <!-- Terms Section -->
+    <section class="terms-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="terms-content">
+                        <h3>1. Booking and Reservation</h3>
+                        <p>All reservations must be guaranteed by a valid credit card. A deposit may be required for certain reservations or during peak periods. The remaining balance is due upon check-out.</p>
+                        
+                        <h3>2. Check-in and Check-out</h3>
+                        <p>Check-in time is 3:00 PM and check-out time is 12:00 PM. Early check-in and late check-out are subject to availability and may incur additional charges.</p>
+                        
+                        <h3>3. Cancellation Policy</h3>
+                        <p>Cancellations made at least 48 hours prior to check-in will receive a full refund. Cancellations made within 48 hours of check-in will be charged for one night's stay. No-shows will be charged the full amount of the reservation.</p>
+                        
+                        <h3>4. Payment</h3>
+                        <p>We accept all major credit cards, debit cards, and cash. All prices are quoted in the local currency and are subject to applicable taxes and service charges.</p>
+                        
+                        <h3>5. Guest Conduct</h3>
+                        <p>Guests are expected to behave in a respectful manner towards other guests and hotel staff. Any guest who engages in disruptive or illegal behavior may be asked to leave the premises without a refund.</p>
+                        
+                        <h3>6. Property Damage</h3>
+                        <p>Guests are responsible for any damage caused to hotel property during their stay. The cost of repairs or replacements will be charged to the guest's account.</p>
+                        
+                        <h3>7. Smoking Policy</h3>
+                        <p>All guest rooms and public areas are non-smoking. A cleaning fee will be charged for any violations of this policy.</p>
+                        
+                        <h3>8. Pets</h3>
+                        <p>Pets are welcome in designated rooms for an additional fee. Guests must inform the hotel at the time of booking if they plan to bring a pet.</p>
+                        
+                        <h3>9. Liability</h3>
+                        <p>Elisyan Suites is not responsible for any loss, damage, or theft of personal belongings. Guests are encouraged to use the in-room safe for valuables.</p>
+                        
+                        <h3>10. Force Majeure</h3>
+                        <p>Elisyan Suites shall not be liable for any failure or delay in performance under these terms due to circumstances beyond its reasonable control, including but not limited to acts of God, war, terrorism, natural disasters, or government actions.</p>
+                        
+                        <h3>11. Changes to Terms</h3>
+                        <p>Elisyan Suites reserves the right to modify these terms at any time. The updated terms will be posted on our website, and it is the guest's responsibility to review them prior to making a reservation.</p>
+                        
+                        <h3>12. Governing Law</h3>
+                        <p>These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which the hotel is located.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

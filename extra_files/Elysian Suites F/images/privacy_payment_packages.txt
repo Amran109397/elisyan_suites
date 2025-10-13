@@ -1,0 +1,657 @@
+eta packages.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Packages - Elisyan Suites</title>
+    <meta name="description" content="Discover our exclusive packages including honeymoon, family, and seasonal offers at Elisyan Suites.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="packages.html">Packages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Special Packages</h1>
+            <p class="lead">Exclusive offers for your perfect getaway</p>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="packages-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3" alt="Honeymoon Package" class="img-fluid">
+                            <div class="package-badge">Popular</div>
+                        </div>
+                        <div class="package-content">
+                            <h3>Honeymoon Paradise</h3>
+                            <div class="package-price">$1,299 <span>/ 3 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Deluxe suite with city view</li>
+                                <li><i class="fas fa-check"></i> Champagne upon arrival</li>
+                                <li><i class="fas fa-check"></i> Romantic dinner for two</li>
+                                <li><i class="fas fa-check"></i> Couples spa treatment</li>
+                                <li><i class="fas fa-check"></i> Late checkout</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3" alt="Family Fun Package" class="img-fluid">
+                        </div>
+                        <div class="package-content">
+                            <h3>Family Fun Getaway</h3>
+                            <div class="package-price">$899 <span>/ 3 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Family suite</li>
+                                <li><i class="fas fa-check"></i> Kids eat free</li>
+                                <li><i class="fas fa-check"></i> Theme park tickets</li>
+                                <li><i class="fas fa-check"></i> Family movie night</li>
+                                <li><i class="fas fa-check"></i> Welcome amenity</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3" alt="Business Executive Package" class="img-fluid">
+                        </div>
+                        <div class="package-content">
+                            <h3>Business Executive</h3>
+                            <div class="package-price">$799 <span>/ 2 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Executive room</li>
+                                <li><i class="fas fa-check"></i> Airport transfer</li>
+                                <li><i class="fas fa-check"></i> Daily breakfast</li>
+                                <li><i class="fas fa-check"></i> Meeting room access</li>
+                                <li><i class="fas fa-check"></i> Late checkout</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1503376780353-7b66b6321c1b?ixlib=rb-4.0.3" alt="Wellness Retreat Package" class="img-fluid">
+                        </div>
+                        <div class="package-content">
+                            <h3>Wellness Retreat</h3>
+                            <div class="package-price">$1,099 <span>/ 4 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Deluxe room</li>
+                                <li><i class="fas fa-check"></i> Daily spa treatment</li>
+                                <li><i class="fas fa-check"></i> Yoga sessions</li>
+                                <li><i class="fas fa-check"></i> Healthy meals</li>
+                                <li><i class="fas fa-check"></i> Fitness center access</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1540555700479-6be2892f66e7?ixlib=rb-4.0.3" alt="Culinary Experience Package" class="img-fluid">
+                        </div>
+                        <div class="package-content">
+                            <h3>Culinary Experience</h3>
+                            <div class="package-price">$999 <span>/ 3 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Deluxe room</li>
+                                <li><i class="fas fa-check"></i> Cooking class</li>
+                                <li><i class="fas fa-check"></i> Wine tasting</li>
+                                <li><i class="fas fa-check"></i> Chef's table dinner</li>
+                                <li><i class="fas fa-check"></i> Market tour</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3" alt="Weekend Escape Package" class="img-fluid">
+                        </div>
+                        <div class="package-content">
+                            <h3>Weekend Escape</h3>
+                            <div class="package-price">$599 <span>/ 2 nights</span></div>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Superior room</li>
+                                <li><i class="fas fa-check"></i> Daily breakfast</li>
+                                <li><i class="fas fa-check"></i> Welcome drink</li>
+                                <li><i class="fas fa-check"></i> Late checkout</li>
+                                <li><i class="fas fa-check"></i> Complimentary WiFi</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+eta payment.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Elisyan Suites</title>
+    <meta name="description" content="Complete your payment for your Elisyan Suites booking securely online.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Payment Header -->
+    <section class="payment-header py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1>Complete Your Payment</h1>
+                    <p class="lead">Securely pay for your reservation at Elisyan Suites</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="payment-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="payment-form">
+                        <h3>Payment Method</h3>
+                        <div class="payment-methods">
+                            <div class="payment-method active">
+                                <input type="radio" id="credit-card" name="payment-method" checked>
+                                <label for="credit-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    Credit/Debit Card
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="paypal" name="payment-method">
+                                <label for="paypal">
+                                    <i class="fab fa-paypal"></i>
+                                    PayPal
+                                </label>
+                            </div>
+                            <div class="payment-method">
+                                <input type="radio" id="bank-transfer" name="payment-method">
+                                <label for="bank-transfer">
+                                    <i class="fas fa-university"></i>
+                                    Bank Transfer
+                                </label>
+                            </div>
+                        </div>
+
+                        <form id="paymentForm">
+                            <div class="card-details">
+                                <h4>Card Information</h4>
+                                <div class="form-group">
+                                    <label for="card-number">Card Number</label>
+                                    <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="expiry">Expiry Date</label>
+                                            <input type="text" class="form-control" id="expiry" placeholder="MM/YY" maxlength="5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="cvv">CVV</label>
+                                            <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="card-name">Name on Card</label>
+                                    <input type="text" class="form-control" id="card-name" placeholder="John Doe">
+                                </div>
+                            </div>
+
+                            <div class="billing-address">
+                                <h4>Billing Address</h4>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" placeholder="123 Main Street">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="city">City</label>
+                                            <input type="text" class="form-control" id="city" placeholder="New York">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="zip">ZIP Code</label>
+                                            <input type="text" class="form-control" id="zip" placeholder="10001">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="save-card">
+                                <label class="form-check-label" for="save-card">
+                                    Save card for future payments
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn-custom w-100">Pay Now</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="booking-summary">
+                        <h3>Booking Summary</h3>
+                        <div class="summary-item">
+                            <span>Deluxe Room</span>
+                            <span>3 nights</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Dec 15 - Dec 18, 2023</span>
+                            <span>$450.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Taxes & Fees</span>
+                            <span>$67.50</span>
+                        </div>
+                        <div class="summary-item total">
+                            <span>Total</span>
+                            <span>$517.50</span>
+                        </div>
+                    </div>
+
+                    <div class="security-info">
+                        <h4>Security & Privacy</h4>
+                        <ul>
+                            <li><i class="fas fa-lock"></i> 256-bit SSL encryption</li>
+                            <li><i class="fas fa-shield-alt"></i> PCI DSS compliant</li>
+                            <li><i class="fas fa-user-shield"></i> Your data is safe with us</li>
+                        </ul>
+                    </div>
+
+                    <div class="payment-support">
+                        <h4>Need Help?</h4>
+                        <p>Our support team is available 24/7 to assist you with your payment.</p>
+                        <a href="contact.html" class="btn btn-outline-primary w-100">Contact Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+
+
+eta privacy.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Elisyan Suites</title>
+    <meta name="description" content="Read Elisyan Suites' privacy policy to understand how we collect, use, and protect your personal information.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Privacy Policy</h1>
+            <p class="lead">How we collect, use, and protect your personal information</p>
+        </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section class="privacy-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="privacy-content">
+                        <h3>1. Information We Collect</h3>
+                        <p>We collect information you provide directly to us, such as when you make a reservation, create an account, or contact us for support. This may include your name, contact information, payment details, and preferences.</p>
+                        
+                        <h3>2. How We Use Your Information</h3>
+                        <p>We use the information we collect to:</p>
+                        <ul>
+                            <li>Process your reservations and provide services</li>
+                            <li>Communicate with you about your stay</li>
+                            <li>Improve our services and customer experience</li>
+                            <li>Send promotional offers (with your consent)</li>
+                            <li>Comply with legal obligations</li>
+                        </ul>
+                        
+                        <h3>3. Information Sharing</h3>
+                        <p>We do not sell your personal information to third parties. We may share your information with:</p>
+                        <ul>
+                            <li>Service providers who assist us in operating our hotel</li>
+                            <li>Payment processors to complete transactions</li>
+                            <li>Law enforcement when required by law</li>
+                            <li>Third parties with your explicit consent</li>
+                        </ul>
+                        
+                        <h3>4. Data Security</h3>
+                        <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.</p>
+                        
+                        <h3>5. Cookies and Tracking</h3>
+                        <p>Our website uses cookies to enhance your browsing experience and analyze site traffic. You can set your browser to refuse cookies or alert you when cookies are being sent.</p>
+                        
+                        <h3>6. Your Rights</h3>
+                        <p>You have the right to:</p>
+                        <ul>
+                            <li>Access your personal information</li>
+                            <li>Correct inaccurate information</li>
+                            <li>Request deletion of your information</li>
+                            <li>Opt-out of marketing communications</li>
+                            <li>Withdraw consent at any time</li>
+                        </ul>
+                        
+                        <h3>7. Children's Privacy</h3>
+                        <p>Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13 without parental consent.</p>
+                        
+                        <h3>8. International Data Transfers</h3>
+                        <p>Your information may be transferred to and processed in countries other than your country of residence. We ensure appropriate safeguards are in place for such transfers.</p>
+                        
+                        <h3>9. Changes to This Policy</h3>
+                        <p>We may update this privacy policy from time to time. The updated policy will be posted on our website with the revised date.</p>
+                        
+                        <h3>10. Contact Us</h3>
+                        <p>If you have any questions about this privacy policy, please contact us at privacy@elisyansuites.com.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

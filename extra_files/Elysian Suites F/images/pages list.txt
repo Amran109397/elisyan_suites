@@ -1,0 +1,3 @@
+jesob page gulo baniyechi
+
+index,room,about,booking, contact,gallery, login, register,room-detail,services, 404, booking-confirmation, dashboard, events, faq, layalty, packages, payment, privacy, resturant-menu, sitemap, spa, terms.

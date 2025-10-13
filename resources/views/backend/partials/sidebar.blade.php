@@ -14,7 +14,7 @@
                 <span class="section-title">Front Desk Operations</span>
                 <i class="fas fa-chevron-down section-arrow"></i>
             </div>
-            <div class="collapse show" id="frontDeskCollapse">
+            <div class="collapse" id="frontDeskCollapse">
                 <ul class="subsection-list">
                     <li>
                         <a href="{{ route('bookings.index') }}" class="subsection-link" data-bs-toggle="collapse" data-bs-target="#bookingsSubmenu">

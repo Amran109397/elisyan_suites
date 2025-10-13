@@ -1,0 +1,762 @@
+eta events.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events & Conferences - Elisyan Suites</title>
+    <meta name="description" content="Host your perfect event at Elisyan Suites. We offer elegant venues for weddings, conferences, and special occasions.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1469371670802-5168f5cddae3?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Events & Conferences</h1>
+            <p class="lead">Host your perfect event in our elegant venues</p>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Our Event Spaces</h2>
+                <p class="lead">Versatile venues for every occasion</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="event-venue">
+                        <img src="https://images.unsplash.com/photo-1469371670802-5168f5cddae3?ixlib=rb-4.0.3" alt="Grand Ballroom" class="img-fluid rounded">
+                        <div class="event-venue-content">
+                            <h3>Grand Ballroom</h3>
+                            <p>Our most elegant venue perfect for weddings, galas, and large conferences. Features crystal chandeliers and panoramic city views.</p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> Capacity: 500 guests</li>
+                                <li><i class="fas fa-expand-arrows-alt"></i> Size: 10,000 sq ft</li>
+                                <li><i class="fas fa-microphone"></i> State-of-the-art AV system</li>
+                                <li><i class="fas fa-parking"></i> Valet parking available</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Inquire Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="event-venue">
+                        <img src="https://images.unsplash.com/photo-1519167758257-0a5d5f2b2398?ixlib=rb-4.0.3" alt="Conference Center" class="img-fluid rounded">
+                        <div class="event-venue-content">
+                            <h3>Conference Center</h3>
+                            <p>Modern facilities equipped with the latest technology for business meetings, seminars, and corporate events.</p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> Capacity: 200 guests</li>
+                                <li><i class="fas fa-laptop"></i> High-speed WiFi</li>
+                                <li><i class="fas fa-video"></i> Video conferencing</li>
+                                <li><i class="fas fa-coffee"></i> Catering services</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="event-venue">
+                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3" alt="Garden Terrace" class="img-fluid rounded">
+                        <div class="event-venue-content">
+                            <h3>Garden Terrace</h3>
+                            <p>Beautiful outdoor space surrounded by lush gardens, perfect for intimate weddings, cocktail parties, and summer events.</p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> Capacity: 150 guests</li>
+                                <li><i class="fas fa-tree"></i> Garden setting</li>
+                                <li><i class="fas fa-sun"></i> Weather-proof canopy</li>
+                                <li><i class="fas fa-music"></i> Sound system</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Inquire Now</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="event-venue">
+                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3" alt="Boardroom" class="img-fluid rounded">
+                        <div class="event-venue-content">
+                            <h3>Executive Boardroom</h3>
+                            <p>Sophisticated space designed for high-level business meetings and executive retreats.</p>
+                            <ul>
+                                <li><i class="fas fa-users"></i> Capacity: 20 guests</li>
+                                <li><i class="fas fa-chair"></i> Executive seating</li>
+                                <li><i class="fas fa-tv"></i> 85" display screen</li>
+                                <li><i class="fas fa-shield-alt"></i> Private and secure</li>
+                            </ul>
+                            <a href="#" class="btn-custom">Reserve</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Planning Services -->
+    <section class="event-planning py-5 bg-light">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Event Planning Services</h2>
+                <p class="lead">Let our experts handle every detail</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="planning-service text-center">
+                        <div class="planning-icon">
+                            <i class="fas fa-ring"></i>
+                        </div>
+                        <h4>Wedding Planning</h4>
+                        <p>From intimate ceremonies to grand receptions, we'll make your special day unforgettable.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="planning-service text-center">
+                        <div class="planning-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4>Corporate Events</h4>
+                        <p>Professional planning for conferences, seminars, team building, and corporate retreats.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="planning-service text-center">
+                        <div class="planning-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <h4>Social Celebrations</h4>
+                        <p>Birthday parties, anniversaries, graduations, and other special milestones.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+eta faq.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Elisyan Suites</title>
+    <meta name="description" content="Find answers to frequently asked questions about Elisyan Suites hotel services, bookings, and policies.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="faq.html">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Frequently Asked Questions</h1>
+            <p class="lead">Find answers to common questions about our hotel and services</p>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    What are the check-in and check-out times?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Check-in time is 3:00 PM and check-out time is 12:00 PM. Early check-in and late check-out may be available upon request and subject to availability.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Do you offer free WiFi?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we offer complimentary high-speed WiFi throughout the hotel, including in all guest rooms and public areas.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Is parking available at the hotel?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we offer both self-parking and valet parking services. Self-parking is complimentary for hotel guests, while valet parking is available for an additional fee.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    What is your cancellation policy?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    You can cancel your reservation up to 48 hours before check-in without any penalty. Cancellations made within 48 hours of check-in will be charged for one night's stay.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                    Do you allow pets?
+                                </button>
+                            </h2>
+                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we are a pet-friendly hotel and welcome well-behaved pets. There is a non-refundable pet fee of $50 per stay. Please inform us at the time of booking if you plan to bring a pet.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                    What amenities are included in the room rate?
+                                </button>
+                            </h2>
+                            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Our room rates include daily housekeeping, complimentary WiFi, access to the fitness center and swimming pool, and daily breakfast for most room categories.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                                    Do you have a loyalty program?
+                                </button>
+                            </h2>
+                            <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we have a loyalty program called "Elisayan Rewards". Members earn points for every stay, which can be redeemed for free nights, room upgrades, and other exclusive benefits.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                                    Are there dining options at the hotel?
+                                </button>
+                            </h2>
+                            <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we have multiple dining options including a fine-dining restaurant, casual café, bar, and 24-hour room service. Our restaurants serve a variety of international and local cuisines.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="contact-cta py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h3>Still have questions?</h3>
+                    <p class="lead">Our friendly staff is here to help you with any additional questions you may have.</p>
+                    <a href="contact.html" class="btn-custom">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+
+
+eta loyalty.html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loyalty Program - Elisyan Suites</title>
+    <meta name="description" content="Join Elisyan Suites' loyalty program and earn points for exclusive rewards and benefits.">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="../assets/css/style.css" as="style">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-hotel"></i> Elisyan Suites
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rooms.html">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="loyalty.html">Loyalty</a></li>
+                    <li class="nav-item"><a class="nav-link" href="booking.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn-custom text-white px-3" href="login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+        <div class="container">
+            <h1 class="display-3 fw-bold">Loyalty Program</h1>
+            <p class="lead">Join Elisyan Rewards and enjoy exclusive benefits</p>
+        </div>
+    </section>
+
+    <!-- Loyalty Section -->
+    <section class="loyalty-section py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Elisyan Rewards</h2>
+                <p class="lead">Earn points with every stay and unlock exclusive benefits</p>
+            </div>
+            
+            <!-- Tiers -->
+            <div class="loyalty-tiers mb-5">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="tier-card silver">
+                            <div class="tier-header">
+                                <h3>Silver</h3>
+                                <div class="tier-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                            </div>
+                            <div class="tier-body">
+                                <p>Start your journey with us</p>
+                                <ul>
+                                    <li>Earn 5 points per $1 spent</li>
+                                    <li>10% discount on dining</li>
+                                    <li>Late checkout (2 PM)</li>
+                                    <li>Birthday surprise</li>
+                                </ul>
+                                <div class="tier-requirement">
+                                    <span>0 - 2,499 points</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="tier-card gold">
+                            <div class="tier-header">
+                                <h3>Gold</h3>
+                                <div class="tier-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                            </div>
+                            <div class="tier-body">
+                                <p>Enjoy enhanced benefits</p>
+                                <ul>
+                                    <li>Earn 7 points per $1 spent</li>
+                                    <li>15% discount on dining</li>
+                                    <li>Late checkout (4 PM)</li>
+                                    <li>Room upgrade (subject to availability)</li>
+                                    <li>Complimentary breakfast</li>
+                                </ul>
+                                <div class="tier-requirement">
+                                    <span>2,500 - 4,999 points</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="tier-card platinum">
+                            <div class="tier-header">
+                                <h3>Platinum</h3>
+                                <div class="tier-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                            </div>
+                            <div class="tier-body">
+                                <p>Our most exclusive tier</p>
+                                <ul>
+                                    <li>Earn 10 points per $1 spent</li>
+                                    <li>20% discount on dining</li>
+                                    <li>Late checkout (6 PM)</li>
+                                    <li>Guaranteed room upgrade</li>
+                                    <li>Executive lounge access</li>
+                                    <li>Personal concierge</li>
+                                </ul>
+                                <div class="tier-requirement">
+                                    <span>5,000+ points</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Benefits -->
+            <div class="loyalty-benefits mb-5">
+                <h3 class="text-center mb-4">How It Works</h3>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="benefit-item text-center">
+                            <div class="benefit-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h4>Join</h4>
+                            <p>Sign up for free and start earning points immediately</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-4">
+                        <div class="benefit-item text-center">
+                            <div class="benefit-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <h4>Earn</h4>
+                            <p>Accumulate points with every stay and purchase</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-4">
+                        <div class="benefit-item text-center">
+                            <div class="benefit-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <h4>Redeem</h4>
+                            <p>Use your points for free nights, upgrades, and more</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-4">
+                        <div class="benefit-item text-center">
+                            <div class="benefit-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h4>Enjoy</h4>
+                            <p>Experience exclusive benefits and privileges</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Redemption Options -->
+            <div class="redemption-options mb-5">
+                <h3 class="text-center mb-4">Redeem Your Points</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="redemption-card">
+                            <div class="redemption-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <h4>Free Nights</h4>
+                            <p>Redeem points for complimentary stays at any Elisyan Suites property</p>
+                            <div class="points-required">Starting at 5,000 points</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="redemption-card">
+                            <div class="redemption-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <h4>Room Upgrades</h4>
+                            <p>Enhance your stay with complimentary room upgrades</p>
+                            <div class="points-required">Starting at 2,000 points</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="redemption-card">
+                            <div class="redemption-icon">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <h4>Spa & Dining</h4>
+                            <p>Use points for spa treatments and dining experiences</p>
+                            <div class="points-required">Starting at 1,000 points</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA -->
+            <div class="text-center">
+                <h3>Ready to Join?</h3>
+                <p class="lead mb-4">Sign up now and start earning points with your next stay</p>
+                <a href="register.html" class="btn-custom btn-lg">Join Elisyan Rewards</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Elisyan Suites</h5>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Room Service</a></li>
+                        <li><a href="spa.html">Spa & Wellness</a></li>
+                        <li><a href="restaurant-menu.html">Restaurant</a></li>
+                        <li><a href="#">Concierge</a></li>
+                        <li><a href="events.html">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Luxury Avenue, City Center</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@elisyansuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2023 Elisyan Suites. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
