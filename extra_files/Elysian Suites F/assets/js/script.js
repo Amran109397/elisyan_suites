@@ -690,9 +690,52 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update activity feed every 30 seconds
     setInterval(updateActivityFeed, 30000);
 
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    // Room detail page booking form
+    const roomDetailBookingForm = document.getElementById('bookingForm');
+    if (roomDetailBookingForm) {
+        roomDetailBookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const checkIn = document.getElementById('check_in').value;
+            const checkOut = document.getElementById('check_out').value;
+            const guests = document.getElementById('guests').value;
+            
+            if (!checkIn || !checkOut || !guests) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Booking...';
+            submitBtn.disabled = true;
+            
+            // Simulate booking
+            setTimeout(() => {
+                alert('Room booked successfully! Redirecting to payment...');
+                window.location.href = 'payment.html';
+            }, 1500);
+        });
+    }
+
+    // Similar rooms navigation
+    const similarRoomLinks = document.querySelectorAll('.similar-rooms .room-card a');
+    similarRoomLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const roomName = this.closest('.room-card').querySelector('h4').textContent;
+            alert(`Viewing details for ${roomName}`);
+            // In a real application, this would navigate to the specific room detail page
+        });
+    });
+
+    // Initialize tooltips for room amenities
+    const amenityIcons = document.querySelectorAll('.amenities-list i');
+    amenityIcons.forEach(icon => {
+        new bootstrap.Tooltip(icon, {
+            title: icon.parentElement.textContent.trim(),
+            placement: 'top'
+        });
     });
 });
