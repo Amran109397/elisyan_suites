@@ -17,6 +17,243 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--bg-dark));
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .booking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .booking-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .booking-info h4 {
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .booking-info p {
+            margin-bottom: 3px;
+            font-size: 0.9rem;
+        }
+        
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .booking-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-confirmed {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: rgba(241, 196, 15, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-cancelled {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .loyalty-card {
+            background: linear-gradient(135deg, var(--spa-color), var(--primary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .loyalty-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .loyalty-header h4 {
+            margin: 0;
+        }
+        
+        .points {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .loyalty-body {
+            margin-bottom: 20px;
+        }
+        
+        .loyalty-body p {
+            margin-bottom: 10px;
+        }
+        
+        .progress {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background-color: white;
+            border-radius: 5px;
+        }
+        
+        .loyalty-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .action-item:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        .action-item i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .activity-list {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content p {
+            margin-bottom: 0;
+        }
+        
+        .activity-content small {
+            color: #6c757d;
+        }
+        
+        .activity-time {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
     <!-- Page Loader -->
@@ -40,7 +277,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown">
-                            Rooms
+                            Rooms <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="rooms.html">All Rooms</a></li>
@@ -50,7 +287,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
-                            Services
+                            Services <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="services.html">All Services</a></li>
@@ -73,10 +310,10 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> John Doe
+                            <i class="fas fa-user"></i> John Doe <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="dashboard.html">Dashboard</a></li>
+                            <li><a class="dropdown-item active" href="dashboard.html">Dashboard</a></li>
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Logout</a></li>
@@ -88,7 +325,7 @@
     </nav>
 
     <!-- Dashboard Header -->
-    <section class="dashboard-header py-5 bg-light">
+    <section class="dashboard-header">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
@@ -200,7 +437,7 @@
                                 <p class="mt-2">Earn 500 points to reach Platinum tier</p>
                             </div>
                             <div class="loyalty-footer">
-                                <a href="#" class="btn-custom btn-sm">Redeem Points</a>
+                                <a href="loyalty.html" class="btn-custom btn-sm">Redeem Points</a>
                                 <a href="#" class="btn btn-sm btn-outline-primary">View History</a>
                             </div>
                         </div>
@@ -232,31 +469,42 @@
                     <!-- Recent Activity -->
                     <div class="dashboard-section mb-4">
                         <h3>Recent Activity</h3>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-calendar-check"></i>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-bed"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="mb-0"><strong>New booking confirmed</strong></p>
+                                    <small class="text-muted">Deluxe Room - Dec 15, 2023</small>
+                                </div>
+                                <div class="activity-time">
+                                    <small>2 hours ago</small>
+                                </div>
                             </div>
-                            <div class="activity-content">
-                                <p>Booking confirmed for Executive Suite</p>
-                                <small>2 days ago</small>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="mb-0"><strong>Earned 150 loyalty points</strong></p>
+                                    <small class="text-muted">For completing stay</small>
+                                </div>
+                                <div class="activity-time">
+                                    <small>1 day ago</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p>Earned 200 loyalty points</p>
-                                <small>5 days ago</small>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-user-edit"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p>Profile updated</p>
-                                <small>1 week ago</small>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="mb-0"><strong>Birthday surprise added</strong></p>
+                                    <small class="text-muted">Special request for upcoming stay</small>
+                                </div>
+                                <div class="activity-time">
+                                    <small>3 days ago</small>
+                                </div>
                             </div>
                         </div>
                     </div>

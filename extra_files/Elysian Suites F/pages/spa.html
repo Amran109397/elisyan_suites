@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
+
 </head>
 <body>
     <!-- Page Loader -->
@@ -40,7 +41,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown">
-                            Rooms
+                            Rooms <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="rooms.html">All Rooms</a></li>
@@ -50,7 +51,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
-                            Services
+                            Services <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="services.html">All Services</a></li>
@@ -73,7 +74,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> Account
+                            <i class="fas fa-user"></i> Account <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="login.html">Login</a></li>
@@ -89,7 +90,7 @@
     </nav>
 
     <!-- Page Header -->
-    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1540555700479-6be2892f66e7?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+    <section class="page-header">
         <div class="container">
             <h1 class="display-3 fw-bold">Spa & Wellness</h1>
             <p class="lead">Rejuvenate your body and mind in our luxury spa</p>
@@ -97,7 +98,7 @@
     </section>
 
     <!-- Spa Section -->
-    <section class="spa-section py-5">
+    <section class="spa-section">
         <div class="container">
             <div class="section-title text-center mb-5">
                 <h2>Our Treatments</h2>
@@ -117,7 +118,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 60-90 min</span>
                                 <span class="price">$120 - $180</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -134,7 +135,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 60 min</span>
                                 <span class="price">$90 - $150</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -151,7 +152,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
                                 <span class="price">$150 - $200</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -168,7 +169,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 30-60 min</span>
                                 <span class="price">$40 - $60</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -185,7 +186,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
                                 <span class="price">$300</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -202,7 +203,7 @@
                                 <span class="duration"><i class="fas fa-clock"></i> 90 min</span>
                                 <span class="price">$180</span>
                             </div>
-                            <a href="#" class="btn-custom">Book Now</a>
+                            <a href="spa-booking.html" class="btn-custom">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -211,7 +212,7 @@
     </section>
 
     <!-- Spa Facilities -->
-    <section class="spa-facilities py-5 bg-light">
+    <section class="spa-facilities">
         <div class="container">
             <div class="section-title text-center mb-5">
                 <h2>Spa Facilities</h2>
@@ -219,36 +220,75 @@
             </div>
             
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="facility-item text-center">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
                         <div class="facility-icon">
-                            <i class="fas fa-hot-tub"></i>
+                            <i class="fas fa-swimming-pool"></i>
                         </div>
-                        <h4>Relaxation Lounge</h4>
-                        <p>Unwind before or after your treatment in our serene relaxation lounge with herbal teas and healthy snacks.</p>
+                        <h4>Relaxation Pool</h4>
+                        <p>Our heated relaxation pool provides the perfect environment to unwind before or after your treatment.</p>
                     </div>
                 </div>
                 
-                <div class="col-md-4 mb-4">
-                    <div class="facility-item text-center">
-                        <div class="facility-icon">
-                            <i class="fas fa-shower"></i>
-                        </div>
-                        <h4>Hydrotherapy Pool</h4>
-                        <p>Experience the healing benefits of water in our temperature-controlled hydrotherapy pool.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <div class="facility-item text-center">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
                         <div class="facility-icon">
                             <i class="fas fa-spa"></i>
                         </div>
-                        <h4>Meditation Room</h4>
-                        <p>Find your inner peace in our quiet meditation room designed for mindfulness and relaxation.</p>
+                        <h4>Aromatherapy Room</h4>
+                        <p>Experience the healing power of essential oils in our dedicated aromatherapy space.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
+                        <div class="facility-icon">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                        <h4>Snow Room</h4>
+                        <p>Cool down after a sauna or steam session in our unique snow room with temperatures below freezing.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
+                        <div class="facility-icon">
+                            <i class="fas fa-hot-tub"></i>
+                        </div>
+                        <h4>Hydrotherapy Tub</h4>
+                        <p>Enjoy the therapeutic benefits of water massage in our state-of-the-art hydrotherapy tubs.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
+                        <div class="facility-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4>Herbal Lounge</h4>
+                        <p>Relax with herbal teas and healthy snacks in our tranquil lounge area after your treatment.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="facility-card">
+                        <div class="facility-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h4>Fitness Center</h4>
+                        <p>Maintain your fitness routine with our fully equipped gym and personal training services.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Rejuvenate?</h2>
+            <p>Book your spa treatment today and experience the ultimate relaxation</p>
+            <a href="spa-booking.html" class="btn-custom btn-lg">Book Now</a>
         </div>
     </section>
 

@@ -40,7 +40,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown">
-                            Rooms
+                            Rooms <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="rooms.html">All Rooms</a></li>
@@ -50,7 +50,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
-                            Services
+                            Services <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="services.html">All Services</a></li>
@@ -73,7 +73,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> Account
+                            <i class="fas fa-user"></i> Account <i class="fas fa-chevron-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="login.html">Login</a></li>
@@ -134,82 +134,32 @@
                                 <p>Reservations: reservations@elisyansuites.com<br>Info: info@elisyansuites.com<br>Support: support@elisyansuites.com</p>
                             </div>
                         </div>
-
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div>
-                                <h5>Business Hours</h5>
-                                <p>Front Desk: 24/7<br>Restaurant: 6:00 AM - 11:00 PM<br>Spa: 9:00 AM - 10:00 PM</p>
-                            </div>
-                        </div>
-
-                        <div class="social-links mt-4">
-                            <h5>Follow Us</h5>
-                            <div class="social-icons">
-                                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
-                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                <a href="#"><i class="fab fa-youtube"></i></a>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-7 mb-4">
                     <div class="contact-form">
-                        <h3 class="mb-4">Send us a Message</h3>
+                        <h3 class="mb-4">Send Us a Message</h3>
                         <form id="contactForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="first_name" class="form-label">First Name *</label>
-                                    <input type="text" class="form-control" id="first_name" required>
+                                    <label for="name">Your Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="John Doe" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="last_name" class="form-label">Last Name *</label>
-                                    <input type="text" class="form-control" id="last_name" required>
+                                    <label for="email">Email Address</label>
+                                    <input type="email" class="form-control" id="email" placeholder="john@example.com" required>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Email *</label>
-                                    <input type="email" class="form-control" id="email" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" id="phone">
-                                </div>
-                            </div>
-
                             <div class="mb-3">
-                                <label for="subject" class="form-label">Subject *</label>
-                                <select class="form-select" id="subject" required>
-                                    <option value="">Select Subject</option>
-                                    <option value="reservation">Reservation Inquiry</option>
-                                    <option value="general">General Information</option>
-                                    <option value="feedback">Feedback</option>
-                                    <option value="complaint">Complaint</option>
-                                    <option value="partnership">Partnership Opportunity</option>
-                                    <option value="other">Other</option>
-                                </select>
+                                <label for="subject">Subject</label>
+                                <input type="text" class="form-control" id="subject" placeholder="How can we help you?" required>
                             </div>
-
                             <div class="mb-3">
-                                <label for="message" class="form-label">Message *</label>
-                                <textarea class="form-control" id="message" rows="5" required placeholder="Please tell us how we can help you..."></textarea>
+                                <label for="message">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Your message here..." required></textarea>
                             </div>
-
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="newsletter">
-                                <label class="form-check-label" for="newsletter">
-                                    Subscribe to our newsletter for exclusive offers
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn-custom w-100">Send Message</button>
+                            <button type="submit" class="btn-custom">Send Message</button>
                         </form>
                     </div>
                 </div>
@@ -217,18 +167,23 @@
         </div>
     </section>
 
-    <!-- Map Section -->
-    <section class="map-section py-5 bg-light">
+    <!-- Find Us Section -->
+    <section class="find-us-section py-5 bg-light">
         <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Find Us</h2>
+                <p class="lead">Visit our luxury hotel in the heart of the city</p>
+            </div>
             <div class="row">
-                <div class="col-12">
-                    <h3 class="text-center mb-4">Find Us</h3>
-                    <div class="map-container" style="height: 400px; background: url('https://images.unsplash.com/photo-1558618666-fb3c187c2838?ixlib=rb-4.0.3') center/cover; border-radius: 15px; position: relative;">
-                        <div class="map-overlay d-flex align-items-center justify-content-center h-100">
-                            <div class="text-center text-white">
-                                <i class="fas fa-map-marker-alt fa-3x mb-3"></i>
-                                <h4>123 Luxury Avenue, City Center</h4>
-                                <p>New York, NY 10001</p>
+                <div class="col-lg-8 mx-auto">
+                    <div class="map-container">
+                        <div class="map-placeholder" style="height: 400px; background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3') center/cover; position: relative; border-radius: 10px;">
+                            <div class="map-overlay d-flex align-items-center justify-content-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-map-marker-alt fa-3x mb-3"></i>
+                                    <h4>Elisyan Suites</h4>
+                                    <p>123 Luxury Avenue, City Center, NY 10001</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -243,7 +198,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4">
                     <h5>Elisyan Suites</h5>
-                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service.</p>
+                    <p>Experience luxury redefined at Elisyan Suites. We offer world-class accommodations, exceptional dining, and personalized service to make your stay unforgettable.</p>
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>

@@ -1,0 +1,664 @@
+eta rooms er index.blade.php page
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Rooms</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('rooms.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Room
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Room Number</th>
+                                <th>Property</th>
+                                <th>Room Type</th>
+                                <th>Floor</th>
+                                <th>Status</th>
+                                <th>Smoking</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($rooms as $room)
+                            <tr>
+                                <td>{{ $room->id }}</td>
+                                <td>{{ $room->room_number }}</td>
+                                <td>{{ $room->property->name }}</td>
+                                <td>{{ $room->roomType->name }}</td>
+                                <td>{{ $room->floor->name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $room->status == 'available' ? 'success' : ($room->status == 'occupied' ? 'primary' : 'warning') }}">
+                                        {{ ucfirst($room->status) }}
+                                    </span>
+                                </td>
+                                <td>{{ $room->is_smoking ? 'Yes' : 'No' }}</td>
+                                <td>
+                                    <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+eta rooms er create.blade.php page
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Create Room</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('rooms.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('rooms.store') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="property_id">Property <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('property_id') is-invalid @enderror" id="property_id" name="property_id" required>
+                                        <option value="">Select Property</option>
+                                        @foreach($properties as $property)
+                                            <option value="{{ $property->id }}" {{ old('property_id') == $property->id ? 'selected' : '' }}>
+                                                {{ $property->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('property_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
+                                        <option value="">Select Room Type</option>
+                                        @foreach($roomTypes as $roomType)
+                                            <option value="{{ $roomType->id }}" {{ old('room_type_id') == $roomType->id ? 'selected' : '' }}>
+                                                {{ $roomType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('room_type_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="floor_id">Floor <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id" required>
+                                        <option value="">Select Floor</option>
+                                        @foreach($floors as $floor)
+                                            <option value="{{ $floor->id }}" {{ old('floor_id') == $floor->id ? 'selected' : '' }}>
+                                                {{ $floor->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('floor_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_number">Room Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('room_number') is-invalid @enderror" id="room_number" name="room_number" value="{{ old('room_number') }}" required>
+                                    @error('room_number')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <option value="available" {{ old('status', 'available') == 'available' ? 'selected' : '' }}>Available</option>
+                                        <option value="occupied" {{ old('status') == 'occupied' ? 'selected' : '' }}>Occupied</option>
+                                        <option value="maintenance" {{ old('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                        <option value="cleaning" {{ old('status') == 'cleaning' ? 'selected' : '' }}>Cleaning</option>
+                                        <option value="out_of_service" {{ old('status') == 'out_of_service' ? 'selected' : '' }}>Out of Service</option>
+                                        <option value="blocked" {{ old('status') == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                                        <option value="renovation" {{ old('status') == 'renovation' ? 'selected' : '' }}>Renovation</option>
+                                    </select>
+                                    @error('status')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input @error('is_smoking') is-invalid @enderror" type="checkbox" id="is_smoking" name="is_smoking" value="1" {{ old('is_smoking') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="is_smoking">
+                                            Smoking Room
+                                        </label>
+                                        @error('is_smoking')
+                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Create Room</button>
+                            <a href="{{ route('rooms.index') }}" class="btn btn-default">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+eta rooms er edit.blade.php page
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Room</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('rooms.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('rooms.update', $room->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="property_id">Property <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('property_id') is-invalid @enderror" id="property_id" name="property_id" required>
+                                        <option value="">Select Property</option>
+                                        @foreach($properties as $property)
+                                            <option value="{{ $property->id }}" {{ old('property_id', $room->property_id) == $property->id ? 'selected' : '' }}>
+                                                {{ $property->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('property_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_type_id">Room Type <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('room_type_id') is-invalid @enderror" id="room_type_id" name="room_type_id" required>
+                                        <option value="">Select Room Type</option>
+                                        @foreach($roomTypes as $roomType)
+                                            <option value="{{ $roomType->id }}" {{ old('room_type_id', $room->room_type_id) == $roomType->id ? 'selected' : '' }}>
+                                                {{ $roomType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('room_type_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="floor_id">Floor <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('floor_id') is-invalid @enderror" id="floor_id" name="floor_id" required>
+                                        <option value="">Select Floor</option>
+                                        @foreach($floors as $floor)
+                                            <option value="{{ $floor->id }}" {{ old('floor_id', $room->floor_id) == $floor->id ? 'selected' : '' }}>
+                                                {{ $floor->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('floor_id')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="room_number">Room Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('room_number') is-invalid @enderror" id="room_number" name="room_number" value="{{ old('room_number', $room->room_number) }}" required>
+                                    @error('room_number')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <option value="available" {{ old('status', $room->status) == 'available' ? 'selected' : '' }}>Available</option>
+                                        <option value="occupied" {{ old('status', $room->status) == 'occupied' ? 'selected' : '' }}>Occupied</option>
+                                        <option value="maintenance" {{ old('status', $room->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                        <option value="cleaning" {{ old('status', $room->status) == 'cleaning' ? 'selected' : '' }}>Cleaning</option>
+                                        <option value="out_of_service" {{ old('status', $room->status) == 'out_of_service' ? 'selected' : '' }}>Out of Service</option>
+                                        <option value="blocked" {{ old('status', $room->status) == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                                        <option value="renovation" {{ old('status', $room->status) == 'renovation' ? 'selected' : '' }}>Renovation</option>
+                                    </select>
+                                    @error('status')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input @error('is_smoking') is-invalid @enderror" type="checkbox" id="is_smoking" name="is_smoking" value="1" {{ old('is_smoking', $room->is_smoking) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="is_smoking">
+                                            Smoking Room
+                                        </label>
+                                        @error('is_smoking')
+                                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update Room</button>
+                            <a href="{{ route('rooms.index') }}" class="btn btn-default">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+eta rooms er show.blade.php page
+
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Room Details</h3>
+                    <div class="card-tools">
+                        <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{{ route('rooms.index') }}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Room Number:</strong> {{ $room->room_number }}</p>
+                            <p><strong>Property:</strong> {{ $room->property->name }}</p>
+                            <p><strong>Room Type:</strong> {{ $room->roomType->name }}</p>
+                            <p><strong>Floor:</strong> {{ $room->floor->name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-{{ $room->status == 'available' ? 'success' : ($room->status == 'occupied' ? 'primary' : 'warning') }}">
+                                    {{ ucfirst($room->status) }}
+                                </span>
+                            </p>
+                            <p><strong>Smoking:</strong> {{ $room->is_smoking ? 'Yes' : 'No' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Current Booking</h5>
+                </div>
+                <div class="card-body">
+                    @if($room->currentBooking)
+                        <p><strong>Guest:</strong> {{ $room->currentBooking->guest->full_name }}</p>
+                        <p><strong>Check-in:</strong> {{ $room->currentBooking->check_in_date }}</p>
+                        <p><strong>Check-out:</strong> {{ $room->currentBooking->check_out_date }}</p>
+                    @else
+                        <p>No current booking.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Status Update</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('rooms.update-status', $room->id) }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="available" {{ $room->status == 'available' ? 'selected' : '' }}>Available</option>
+                                <option value="occupied" {{ $room->status == 'occupied' ? 'selected' : '' }}>Occupied</option>
+                                <option value="maintenance" {{ $room->status == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                <option value="cleaning" {{ $room->status == 'cleaning' ? 'selected' : '' }}>Cleaning</option>
+                                <option value="out_of_service" {{ $room->status == 'out_of_service' ? 'selected' : '' }}>Out of Service</option>
+                                <option value="blocked" {{ $room->status == 'blocked' ? 'selected' : '' }}>Blocked</option>
+                                <option value="renovation" {{ $room->status == 'renovation' ? 'selected' : '' }}>Renovation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+eta rooms er roomcontroller file
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Room;
+use App\Models\Property;
+use App\Models\RoomType;
+use App\Models\Floor;
+use Illuminate\Http\Request;
+
+class RoomController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:super_admin,property_manager,receptionist');
+    }
+
+    public function index()
+    {
+        $rooms = Room::with('property', 'roomType', 'floor')->get();
+        return view('backend.rooms.index', compact('rooms'));
+    }
+
+    public function create()
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'floor_id' => 'required|exists:floors,id',
+            'room_number' => 'required|string|max:20',
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'is_smoking' => 'boolean',
+        ]);
+
+        Room::create($validated);
+
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room created successfully.');
+    }
+
+    public function show(Room $room)
+    {
+        $room->load('property', 'roomType', 'floor', 'currentBooking');
+        return view('backend.rooms.show', compact('room'));
+    }
+
+    public function edit(Room $room)
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
+    }
+
+    public function update(Request $request, Room $room)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'floor_id' => 'required|exists:floors,id',
+            'room_number' => 'required|string|max:20',
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'is_smoking' => 'boolean',
+        ]);
+
+        $room->update($validated);
+
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room updated successfully.');
+    }
+
+    public function destroy(Room $room)
+    {
+        $room->delete();
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room deleted successfully.');
+    }
+
+    public function updateStatus(Request $request, Room $room)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'notes' => 'nullable|string',
+        ]);
+
+        $room->status = $validated['status'];
+        $room->save();
+
+        // Log status change
+        \App\Models\RoomStatusLog::create([
+            'room_id' => $room->id,
+            'status' => $validated['status'],
+            'changed_by' => auth()->id(),
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Room status updated successfully.');
+    }
+}
+
+
+eta rooms er model file
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Room extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'property_id',
+        'room_type_id',
+        'floor_id',
+        'room_number',
+        'status',
+        'is_smoking',
+    ];
+
+    protected $casts = [
+        'is_smoking' => 'boolean',
+    ];
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
+
+    public function roomType()
+    {
+        return $this->belongsTo(RoomType::class);
+    }
+
+    public function floor()
+    {
+        return $this->belongsTo(Floor::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function currentBooking()
+    {
+        return $this->hasOne(Booking::class)
+            ->where('status', 'checked_in')
+            ->whereDate('check_in_date', '<=', now())
+            ->whereDate('check_out_date', '>=', now());
+    }
+
+    public function housekeepingTasks()
+    {
+        return $this->hasMany(HousekeepingTask::class);
+    }
+
+    public function maintenanceIssues()
+    {
+        return $this->hasMany(MaintenanceIssue::class);
+    }
+
+    public function statusLogs()
+    {
+        return $this->hasMany(RoomStatusLog::class);
+    }
+
+    // Scope for available rooms
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available');
+    }
+
+    // Scope for rooms available between dates
+    // app/Models/Room.php
+public function scopeAvailableBetween($query, $startDate, $endDate)
+{
+    return $query->where('status', 'available')
+        ->whereNotIn('id', function ($q) use ($startDate, $endDate) {
+            $q->select('room_id')
+                ->from('bookings')
+                ->where('status', '!=', 'cancelled')
+                ->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('check_in_date', [$startDate, $endDate])
+                        ->orWhereBetween('check_out_date', [$startDate, $endDate])
+                        ->orWhere(function ($q) use ($startDate, $endDate) {
+                            $q->where('check_in_date', '<=', $startDate)
+                                ->where('check_out_date', '>=', $endDate);
+                        });
+                });
+        });
+}
+}
+
+
+eta rooms er migration file
+
+
+
+// database/migrations/2023_10_01_000005_create_rooms_table.php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
+            $table->integer('property_id');
+            $table->integer('room_type_id');
+            $table->integer('floor_id');
+            $table->string('room_number');
+            $table->enum('status', ['available', 'occupied', 'maintenance', 'cleaning', 'out_of_service', 'blocked', 'renovation']);
+            $table->boolean('is_smoking')->default(false);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('rooms');
+    }
+};

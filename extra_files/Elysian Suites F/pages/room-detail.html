@@ -39,7 +39,7 @@
                         <a class="nav-link" href="../index.html">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="roomsDropdown" role="button" data-bs-toggle="dropdown">
                             Rooms
                         </a>
                         <ul class="dropdown-menu">
@@ -89,35 +89,46 @@
     </nav>
 
     <!-- Page Header -->
-    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
+    <section class="page-header" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; height: 400px; display: flex; align-items: center; color: white; text-align: center;">
         <div class="container">
             <h1 class="display-3 fw-bold">Deluxe Room</h1>
-            <p class="lead">Luxury accommodation with stunning city views</p>
+            <p class="lead">Luxury accommodation with modern amenities</p>
         </div>
     </section>
 
     <!-- Room Detail Section -->
     <section class="room-detail-section py-5">
         <div class="container">
+            <div class="room-navigation">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a href="rooms.html" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Rooms
+                    </a>
+                    <div class="room-actions">
+                        <a href="booking.html" class="btn-custom">
+                            <i class="fas fa-calendar-check me-2"></i> Book This Room
+                        </a>
+                        <a href="packages.html" class="btn btn-outline-primary ms-2">
+                            <i class="fas fa-gift me-2"></i> View Packages
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
-                <div class="col-lg-8 mb-4">
+                <div class="col-lg-8">
                     <!-- Room Gallery -->
                     <div class="room-gallery mb-4">
                         <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="0" class="active"></button>
-                                <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="2"></button>
-                            </div>
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3" class="d-block w-100" alt="Deluxe Room">
+                                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="d-block w-100" alt="Deluxe Room">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3" class="d-block w-100" alt="Deluxe Room Bathroom">
+                                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="d-block w-100" alt="Deluxe Room Bathroom">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3" class="d-block w-100" alt="Deluxe Room View">
+                                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="d-block w-100" alt="Deluxe Room View">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
@@ -132,32 +143,53 @@
                     <!-- Room Description -->
                     <div class="room-description mb-4">
                         <h3>Room Description</h3>
-                        <p>Our Deluxe Room offers a perfect blend of comfort and elegance. This spacious 35m² room features a king-size bed with premium linens, a work desk, and a comfortable seating area. The room boasts stunning city views through floor-to-ceiling windows and comes equipped with modern amenities including a smart TV, high-speed WiFi, and a Nespresso coffee machine.</p>
-                        <p>The en-suite bathroom features a walk-in shower, premium toiletries, and plush bathrobes. Guests also enjoy access to our executive lounge with complimentary breakfast and evening cocktails.</p>
+                        <p>Our Deluxe Room offers a perfect blend of comfort and elegance. Spacious and beautifully appointed, this room features modern amenities and stunning city views. Perfect for business travelers and couples seeking a luxurious retreat.</p>
+                        <p>The room is thoughtfully designed with your comfort in mind, featuring a plush king-size bed, a spacious work area, and a relaxing seating area. The en-suite bathroom is equipped with premium toiletries and a rainfall shower.</p>
                     </div>
 
-                    <!-- Room Amenities -->
-                    <div class="room-amenities mb-4">
-                        <h3>Room Amenities</h3>
+                    <!-- Room Features -->
+                    <div class="room-features mb-4">
+                        <h3>Room Features</h3>
                         <div class="row">
                             <div class="col-md-6">
-                                <ul class="amenities-list">
-                                    <li><i class="fas fa-wifi"></i> High-speed WiFi</li>
-                                    <li><i class="fas fa-tv"></i> 55-inch Smart TV</li>
-                                    <li><i class="fas fa-coffee"></i> Nespresso Coffee Machine</li>
-                                    <li><i class="fas fa-snowflake"></i> Individual Climate Control</li>
-                                    <li><i class="fas fa-safe"></i> Electronic Safe</li>
-                                    <li><i class="fas fa-iron"></i> Iron & Ironing Board</li>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check text-success"></i> King-size bed with premium linens</li>
+                                    <li><i class="fas fa-check text-success"></i> City view</li>
+                                    <li><i class="fas fa-check text-success"></i> Air conditioning</li>
+                                    <li><i class="fas fa-check text-success"></i> High-speed WiFi</li>
+                                    <li><i class="fas fa-check text-success"></i> Smart TV with streaming services</li>
+                                    <li><i class="fas fa-check text-success"></i> Work desk with ergonomic chair</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
-                                <ul class="amenities-list">
-                                    <li><i class="fas fa-bath"></i> Luxury Bathroom Amenities</li>
-                                    <li><i class="fas fa-tshirt"></i> Plush Bathrobes & Slippers</li>
-                                    <li><i class="fas fa-phone-alt"></i> Direct Dial Telephone</li>
-                                    <li><i class="fas fa-briefcase"></i> Work Desk with Lamp</li>
-                                    <li><i class="fas fa-couch"></i> Seating Area</li>
-                                    <li><i class="fas fa-door-open"></i> 24/7 Room Service</li>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check text-success"></i> Mini refrigerator</li>
+                                    <li><i class="fas fa-check text-success"></i> Coffee and tea maker</li>
+                                    <li><i class="fas fa-check text-success"></i> In-room safe</li>
+                                    <li><i class="fas fa-check text-success"></i> Hairdryer</li>
+                                    <li><i class="fas fa-check text-success"></i> Iron and ironing board</li>
+                                    <li><i class="fas fa-check text-success"></i> 24/7 room service</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bathroom Features -->
+                    <div class="bathroom-features mb-4">
+                        <h3>Bathroom Features</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check text-success"></i> Rainfall shower</li>
+                                    <li><i class="fas fa-check text-success"></i> Premium toiletries</li>
+                                    <li><i class="fas fa-check text-success"></i> Bathrobes and slippers</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check text-success"></i> Hairdryer</li>
+                                    <li><i class="fas fa-check text-success"></i> Magnifying makeup mirror</li>
+                                    <li><i class="fas fa-check text-success"></i> Heated towel rack</li>
                                 </ul>
                             </div>
                         </div>
@@ -165,98 +197,86 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <!-- Booking Card -->
-                    <div class="booking-card">
-                        <div class="price-header">
-                            <h3>$150<span>/night</span></h3>
-                            <p class="text-muted">Excluding taxes and fees</p>
-                        </div>
-                        <form id="bookingForm">
-                            <div class="mb-3">
-                                <label for="check_in" class="form-label">Check-in</label>
-                                <input type="date" class="form-control" id="check_in" required>
+                    <!-- Room Info Card -->
+                    <div class="room-info-card mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Room Information</h4>
+                                <div class="room-info-item">
+                                    <span class="info-label">Size:</span>
+                                    <span class="info-value">35 m²</span>
+                                </div>
+                                <div class="room-info-item">
+                                    <span class="info-label">Bed Type:</span>
+                                    <span class="info-value">King Bed</span>
+                                </div>
+                                <div class="room-info-item">
+                                    <span class="info-label">Occupancy:</span>
+                                    <span class="info-value">2 Adults</span>
+                                </div>
+                                <div class="room-info-item">
+                                    <span class="info-label">View:</span>
+                                    <span class="info-value">City View</span>
+                                </div>
+                                <hr>
+                                <div class="room-price">
+                                    <span class="price-amount">$150</span>
+                                    <span class="price-unit">per night</span>
+                                </div>
+                                <a href="booking.html" class="btn-custom w-100 mt-3">Book Now</a>
                             </div>
-                            <div class="mb-3">
-                                <label for="check_out" class="form-label">Check-out</label>
-                                <input type="date" class="form-control" id="check_out" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="guests" class="form-label">Guests</label>
-                                <select class="form-select" id="guests">
-                                    <option value="1">1 Guest</option>
-                                    <option value="2" selected>2 Guests</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn-custom w-100">Book Now</button>
-                        </form>
-                        <div class="booking-info mt-3">
-                            <p><i class="fas fa-check-circle text-success"></i> Free cancellation up to 48 hours before check-in</p>
-                            <p><i class="fas fa-check-circle text-success"></i> No prepayment needed</p>
                         </div>
                     </div>
 
-                    <!-- Room Info -->
-                    <div class="room-info-card">
-                        <h4>Room Information</h4>
-                        <ul class="info-list">
-                            <li><strong>Size:</strong> 35 m²</li>
-                            <li><strong>Bed:</strong> 1 King Bed</li>
-                            <li><strong>Occupancy:</strong> 2 Adults</li>
-                            <li><strong>View:</strong> City View</li>
-                        </ul>
+                    <!-- Amenities Card -->
+                    <div class="amenities-card mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Included Amenities</h4>
+                                <div class="amenity-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>Free WiFi</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-concierge-bell"></i>
+                                    <span>Concierge Service</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-dumbbell"></i>
+                                    <span>Fitness Center Access</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-swimming-pool"></i>
+                                    <span>Pool Access</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-parking"></i>
+                                    <span>Free Parking</span>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Breakfast Included</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Similar Rooms Section -->
-    <section class="similar-rooms py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Similar Rooms</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="room-card">
-                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3" alt="Executive Suite">
-                        <div class="room-card-body">
-                            <h4>Executive Suite</h4>
-                            <div class="room-features">
-                                <span class="room-feature"><i class="fas fa-bed"></i> King Bed</span>
-                                <span class="room-feature"><i class="fas fa-users"></i> 3 Guests</span>
-                                <span class="room-feature"><i class="fas fa-expand-arrows-alt"></i> 55 m²</span>
+                    <!-- Similar Rooms -->
+                    <div class="similar-rooms">
+                        <h4>Similar Rooms</h4>
+                        <div class="similar-room-item">
+                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Executive Suite">
+                            <div class="similar-room-info">
+                                <h6>Executive Suite</h6>
+                                <p class="price">$250/night</p>
                             </div>
-                            <div class="price">$250<span>/night</span></div>
-                            <a href="room-detail.html" class="btn-custom">View Details</a>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="room-card">
-                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3" alt="Family Suite">
-                        <div class="room-card-body">
-                            <h4>Family Suite</h4>
-                            <div class="room-features">
-                                <span class="room-feature"><i class="fas fa-bed"></i> 2 Queen Beds</span>
-                                <span class="room-feature"><i class="fas fa-users"></i> 4 Guests</span>
-                                <span class="room-feature"><i class="fas fa-expand-arrows-alt"></i> 65 m²</span>
+                        <div class="similar-room-item">
+                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Presidential Suite">
+                            <div class="similar-room-info">
+                                <h6>Presidential Suite</h6>
+                                <p class="price">$500/night</p>
                             </div>
-                            <div class="price">$300<span>/night</span></div>
-                            <a href="room-detail.html" class="btn-custom">View Details</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="room-card">
-                        <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3" alt="Honeymoon Suite">
-                        <div class="room-card-body">
-                            <h4>Honeymoon Suite</h4>
-                            <div class="room-features">
-                                <span class="room-feature"><i class="fas fa-bed"></i> King Bed</span>
-                                <span class="room-feature"><i class="fas fa-users"></i> 2 Guests</span>
-                                <span class="room-feature"><i class="fas fa-expand-arrows-alt"></i> 45 m²</span>
-                            </div>
-                            <div class="price">$350<span>/night</span></div>
-                            <a href="room-detail.html" class="btn-custom">View Details</a>
                         </div>
                     </div>
                 </div>

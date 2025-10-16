@@ -7,103 +7,235 @@ use App\Models\Property;
 use App\Models\RoomType;
 use App\Models\Floor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:super_admin,property_manager,receptionist');
     }
 
     public function index()
     {
-        $rooms = Room::with('property', 'roomType', 'floor')->get();
-        return view('backend.rooms.index', compact('rooms'));
+        try {
+            $rooms = Room::with(['property', 'roomType', 'floor', 'currentBooking'])
+                        ->latest()
+                        ->get();
+            
+            return view('backend.rooms.index', compact('rooms'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error loading rooms: ' . $e->getMessage());
+        }
     }
 
     public function create()
     {
-        $properties = Property::where('is_active', true)->get();
-        $roomTypes = RoomType::where('is_active', true)->get();
-        $floors = Floor::all();
-        return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
+        try {
+            $properties = Property::where('is_active', true)->get();
+            $roomTypes = RoomType::where('is_active', true)->get();
+            $floors = Floor::all();
+            
+            return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
+        } catch (\Exception $e) {
+            return redirect()->route('rooms.index')
+                ->with('error', 'Error loading create form: ' . $e->getMessage());
+        }
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'property_id' => 'required|exists:properties,id',
             'room_type_id' => 'required|exists:room_types,id',
             'floor_id' => 'required|exists:floors,id',
-            'room_number' => 'required|string|max:20',
+            'room_number' => 'required|string|max:50|unique:rooms,room_number',
             'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
-            'is_smoking' => 'boolean',
+            'is_smoking' => 'sometimes|boolean',
         ]);
 
-        Room::create($validated);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('rooms.index')
-            ->with('success', 'Room created successfully.');
+            $room = Room::create([
+                'property_id' => $request->property_id,
+                'room_type_id' => $request->room_type_id,
+                'floor_id' => $request->floor_id,
+                'room_number' => $request->room_number,
+                'status' => $request->status,
+                'is_smoking' => $request->boolean('is_smoking'),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('rooms.index')
+                ->with('success', 'Room created successfully!');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating room: ' . $e->getMessage());
+        }
     }
 
-    public function show(Room $room)
+    public function show($id)
     {
-        $room->load('property', 'roomType', 'floor', 'currentBooking');
-        return view('backend.rooms.show', compact('room'));
+        try {
+            $room = Room::with(['property', 'roomType', 'floor', 'currentBooking.guest'])
+                        ->findOrFail($id);
+            
+            return view('backend.rooms.show', compact('room'));
+        } catch (\Exception $e) {
+            return redirect()->route('rooms.index')
+                ->with('error', 'Room not found: ' . $e->getMessage());
+        }
     }
 
-    public function edit(Room $room)
+    public function edit($id)
     {
-        $properties = Property::where('is_active', true)->get();
-        $roomTypes = RoomType::where('is_active', true)->get();
-        $floors = Floor::all();
-        return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
+        try {
+            $room = Room::findOrFail($id);
+            $properties = Property::where('is_active', true)->get();
+            $roomTypes = RoomType::where('is_active', true)->get();
+            $floors = Floor::all();
+            
+            return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
+        } catch (\Exception $e) {
+            return redirect()->route('rooms.index')
+                ->with('error', 'Room not found: ' . $e->getMessage());
+        }
     }
 
-    public function update(Request $request, Room $room)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'property_id' => 'required|exists:properties,id',
             'room_type_id' => 'required|exists:room_types,id',
             'floor_id' => 'required|exists:floors,id',
-            'room_number' => 'required|string|max:20',
+            'room_number' => 'required|string|max:50|unique:rooms,room_number,' . $id,
             'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
-            'is_smoking' => 'boolean',
+            'is_smoking' => 'sometimes|boolean',
         ]);
 
-        $room->update($validated);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('rooms.index')
-            ->with('success', 'Room updated successfully.');
+            $room = Room::findOrFail($id);
+            $room->update([
+                'property_id' => $request->property_id,
+                'room_type_id' => $request->room_type_id,
+                'floor_id' => $request->floor_id,
+                'room_number' => $request->room_number,
+                'status' => $request->status,
+                'is_smoking' => $request->boolean('is_smoking'),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('rooms.index')
+                ->with('success', 'Room updated successfully!');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating room: ' . $e->getMessage());
+        }
     }
 
-    public function destroy(Room $room)
+    public function destroy($id)
     {
-        $room->delete();
-        return redirect()->route('rooms.index')
-            ->with('success', 'Room deleted successfully.');
+        try {
+            DB::beginTransaction();
+
+            $room = Room::findOrFail($id);
+            
+            // Check if room has bookings
+            if ($room->bookings()->exists()) {
+                return redirect()->back()
+                    ->with('error', 'Cannot delete room. It has associated bookings.');
+            }
+
+            $room->delete();
+
+            DB::commit();
+
+            return redirect()->route('rooms.index')
+                ->with('success', 'Room deleted successfully!');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error deleting room: ' . $e->getMessage());
+        }
     }
 
-    public function updateStatus(Request $request, Room $room)
+    public function updateStatus(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
-            'notes' => 'nullable|string',
+            'notes' => 'nullable|string|max:500',
         ]);
 
-        $room->status = $validated['status'];
-        $room->save();
+        try {
+            DB::beginTransaction();
 
-        // Log status change
-        \App\Models\RoomStatusLog::create([
-            'room_id' => $room->id,
-            'status' => $validated['status'],
-            'changed_by' => auth()->id(),
-            'notes' => $validated['notes'] ?? null,
-        ]);
+            $room = Room::findOrFail($id);
+            $oldStatus = $room->status;
+            $room->update(['status' => $request->status]);
 
-        return redirect()->back()
-            ->with('success', 'Room status updated successfully.');
+            // Log status change
+            if (class_exists('App\Models\RoomStatusLog')) {
+                \App\Models\RoomStatusLog::create([
+                    'room_id' => $room->id,
+                    'old_status' => $oldStatus,
+                    'new_status' => $request->status,
+                    'changed_by' => auth()->id(),
+                    'notes' => $request->notes,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->back()
+                ->with('success', 'Room status updated successfully!');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error updating room status: ' . $e->getMessage());
+        }
+    }
+
+    // Quick status update methods
+    public function markAvailable($id)
+    {
+        return $this->quickStatusUpdate($id, 'available');
+    }
+
+    public function markOccupied($id)
+    {
+        return $this->quickStatusUpdate($id, 'occupied');
+    }
+
+    public function markMaintenance($id)
+    {
+        return $this->quickStatusUpdate($id, 'maintenance');
+    }
+
+    private function quickStatusUpdate($id, $status)
+    {
+        try {
+            $room = Room::findOrFail($id);
+            $room->update(['status' => $status]);
+
+            return redirect()->back()
+                ->with('success', "Room marked as " . ucfirst($status) . " successfully!");
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error updating room status: ' . $e->getMessage());
+        }
     }
 }

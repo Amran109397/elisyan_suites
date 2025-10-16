@@ -1,0 +1,431 @@
+eta homecontroller
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class HomeController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        return view('home');
+    }
+}
+
+
+eta roomcontroller
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Room;
+use App\Models\Property;
+use App\Models\RoomType;
+use App\Models\Floor;
+use Illuminate\Http\Request;
+
+class RoomController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:super_admin,property_manager,receptionist');
+    }
+
+    public function index()
+    {
+        $rooms = Room::with('property', 'roomType', 'floor')->get();
+        return view('backend.rooms.index', compact('rooms'));
+    }
+
+    public function create()
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.create', compact('properties', 'roomTypes', 'floors'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'floor_id' => 'required|exists:floors,id',
+            'room_number' => 'required|string|max:20',
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'is_smoking' => 'boolean',
+        ]);
+
+        Room::create($validated);
+
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room created successfully.');
+    }
+
+    public function show(Room $room)
+    {
+        $room->load('property', 'roomType', 'floor', 'currentBooking');
+        return view('backend.rooms.show', compact('room'));
+    }
+
+    public function edit(Room $room)
+    {
+        $properties = Property::where('is_active', true)->get();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $floors = Floor::all();
+        return view('backend.rooms.edit', compact('room', 'properties', 'roomTypes', 'floors'));
+    }
+
+    public function update(Request $request, Room $room)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'floor_id' => 'required|exists:floors,id',
+            'room_number' => 'required|string|max:20',
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'is_smoking' => 'boolean',
+        ]);
+
+        $room->update($validated);
+
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room updated successfully.');
+    }
+
+    public function destroy(Room $room)
+    {
+        $room->delete();
+        return redirect()->route('rooms.index')
+            ->with('success', 'Room deleted successfully.');
+    }
+
+    public function updateStatus(Request $request, Room $room)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:available,occupied,maintenance,cleaning,out_of_service,blocked,renovation',
+            'notes' => 'nullable|string',
+        ]);
+
+        $room->status = $validated['status'];
+        $room->save();
+
+        // Log status change
+        \App\Models\RoomStatusLog::create([
+            'room_id' => $room->id,
+            'status' => $validated['status'],
+            'changed_by' => auth()->id(),
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Room status updated successfully.');
+    }
+}
+
+
+eta <?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Booking;
+use App\Models\Property;
+use App\Models\Guest;
+use App\Models\Room;
+use App\Models\RoomType;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+class BookingController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:super_admin,property_manager,receptionist');
+    }
+
+    public function index()
+    {
+        $bookings = Booking::with('property', 'guest', 'room', 'roomType')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+        
+        return view('backend.bookings.index', compact('bookings'));
+    }
+
+    public function create()
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        return view('backend.bookings.create', compact('properties', 'guests', 'roomTypes'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date|after_or_equal:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
+
+        // Generate booking reference
+        $validated['booking_reference'] = 'BKG' . date('Ym') . strtoupper(substr(uniqid(), -4));
+
+        Booking::create($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking created successfully.');
+    }
+
+    public function show($id)
+    {
+        $booking = Booking::with(['property', 'guest', 'room', 'roomType', 'payments'])->find($id);
+        
+        if (!$booking) {
+            abort(404, 'Booking not found');
+        }
+        
+        return view('backend.bookings.show', compact('booking'));
+    }
+
+    public function edit(Booking $booking)
+    {
+        $properties = Property::where('is_active', true)->get();
+        $guests = Guest::all();
+        $roomTypes = RoomType::where('is_active', true)->get();
+        $rooms = Room::where('property_id', $booking->property_id)
+                    ->where('room_type_id', $booking->room_type_id)
+                    ->where('status', 'available')
+                    ->get();
+        return view('backend.bookings.edit', compact('booking', 'properties', 'guests', 'roomTypes', 'rooms'));
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'nullable|exists:rooms,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'required|integer|min:0',
+            'infants' => 'required|integer|min:0',
+            'special_requests' => 'nullable|string',
+            'status' => 'required|in:pending,confirmed,checked_in,checked_out,cancelled,no_show,modified',
+            'booking_source' => 'required|in:website,walk_in,phone,ota,travel_agent,corporate',
+            'total_price' => 'required|numeric|min:0',
+        ]);
+
+        // Calculate total nights
+        $checkIn = new \DateTime($validated['check_in_date']);
+        $checkOut = new \DateTime($validated['check_out_date']);
+        $interval = $checkIn->diff($checkOut);
+        $validated['total_nights'] = $interval->days;
+
+        $booking->update($validated);
+
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking updated successfully.');
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $booking->delete();
+        return redirect()->route('bookings.index')
+            ->with('success', 'Booking deleted successfully.');
+    }
+
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'room_type_id' => 'required|exists:room_types,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+        ]);
+
+        $propertyId = $request->property_id;
+        $roomTypeId = $request->room_type_id;
+        $checkInDate = $request->check_in_date;
+        $checkOutDate = $request->check_out_date;
+
+        $availableRooms = Room::where('property_id', $propertyId)
+            ->where('room_type_id', $roomTypeId)
+            ->where('status', 'available')
+            ->whereNotIn('id', function ($query) use ($checkInDate, $checkOutDate) {
+                $query->select('room_id')
+                    ->from('bookings')
+                    ->where('status', '!=', 'cancelled')
+                    ->where(function ($q) use ($checkInDate, $checkOutDate) {
+                        $q->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
+                            ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
+                            ->orWhere(function ($q) use ($checkInDate, $checkOutDate) {
+                                $q->where('check_in_date', '<=', $checkInDate)
+                                    ->where('check_out_date', '>=', $checkOutDate);
+                            });
+                    })
+                    ->whereNotNull('room_id');
+            })
+            ->get();
+
+        return response()->json([
+            'available' => $availableRooms->count(),
+            'rooms' => $availableRooms
+        ]);
+    }
+
+    public function confirm(Booking $booking)
+    {
+        $booking->update(['status' => 'confirmed']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking confirmed successfully.');
+    }
+
+    public function cancel(Booking $booking)
+    {
+        $booking->update(['status' => 'cancelled']);
+        
+        return redirect()->route('bookings.show', $booking->id)
+            ->with('success', 'Booking cancelled successfully.');
+    }
+
+    public function calendar()
+    {
+        $totalBookings = Booking::count();
+        $pendingBookings = Booking::where('status', 'pending')->count();
+        $confirmedBookings = Booking::where('status', 'confirmed')->count();
+        $checkedInBookings = Booking::where('status', 'checked_in')->count();
+        $checkedOutBookings = Booking::where('status', 'checked_out')->count();
+        $cancelledBookings = Booking::where('status', 'cancelled')->count();
+
+        return view('backend.bookings.calendar', compact(
+            'totalBookings',
+            'pendingBookings',
+            'confirmedBookings',
+            'checkedInBookings',
+            'checkedOutBookings',
+            'cancelledBookings'
+        ));
+    }
+
+    public function calendarData(Request $request)
+    {
+        try {
+            $searchTerm = $request->get('search');
+            
+            $bookings = Booking::with(['guest', 'room', 'property'])
+                ->when($searchTerm, function($query) use ($searchTerm) {
+                    return $query->where(function($q) use ($searchTerm) {
+                        $q->whereHas('guest', function($guestQuery) use ($searchTerm) {
+                            $guestQuery->where('first_name', 'like', '%' . $searchTerm . '%')
+                                      ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('room', function($roomQuery) use ($searchTerm) {
+                            $roomQuery->where('room_number', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('property', function($propertyQuery) use ($searchTerm) {
+                            $propertyQuery->where('name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhere('booking_reference', 'like', '%' . $searchTerm . '%');
+                    });
+                })
+                ->get();
+
+            $formattedBookings = [];
+            
+            foreach ($bookings as $booking) {
+                $guestName = $booking->guest ? $booking->guest->full_name : 'Unknown Guest';
+                $roomNumber = $booking->room ? $booking->room->room_number : 'Not Assigned';
+                $propertyName = $booking->property ? $booking->property->name : 'Unknown Property';
+                
+                $color = $this->getBookingColor($booking->status);
+                
+                $bookingUrl = route('bookings.show', $booking->id);
+                
+                $formattedBookings[] = [
+                    'id' => $booking->id,
+                    'title' => $guestName . ' - ' . $roomNumber,
+                    'start' => $booking->check_in_date->format('Y-m-d'),
+                    'end' => Carbon::parse($booking->check_out_date)->addDay()->format('Y-m-d'),
+                    'color' => $color,
+                    'url' => $bookingUrl,
+                    'extendedProps' => [
+                        'guest' => $guestName,
+                        'room' => $roomNumber,
+                        'property' => $propertyName,
+                        'status' => $booking->status,
+                        'nights' => $booking->total_nights,
+                        'total_price' => $booking->total_price,
+                    ]
+                ];
+            }
+
+            return response()->json($formattedBookings);
+
+        } catch (\Exception $e) {
+            \Log::error('Calendar data error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load calendar data'], 500);
+        }
+    }
+
+    private function getBookingColor($status)
+    {
+        switch ($status) {
+            case 'confirmed':
+                return '#28a745';
+            case 'checked_in':
+                return '#17a2b8';
+            case 'checked_out':
+                return '#6c757d';
+            case 'cancelled':
+                return '#dc3545';
+            case 'no_show':
+                return '#343a40';
+            case 'modified':
+                return '#6610f2';
+            case 'pending':
+            default:
+                return '#ffc107';
+        }
+    }
+}

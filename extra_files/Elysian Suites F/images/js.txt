@@ -1,5 +1,3 @@
-eta script.js file
-
 // script.js
 document.addEventListener('DOMContentLoaded', function () {
     // Page loader
@@ -341,6 +339,254 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     });
 
+    // Spa Booking Functionality
+    const spaBookingForm = document.getElementById('spaBookingForm');
+    
+    if (spaBookingForm) {
+        // Treatment selection
+        const selectTreatmentButtons = document.querySelectorAll('.select-treatment');
+        
+        selectTreatmentButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all treatment cards
+                document.querySelectorAll('.treatment-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Add active class to selected treatment card
+                this.closest('.treatment-card').classList.add('active');
+                
+                // Update booking summary
+                const treatment = this.getAttribute('data-treatment');
+                const treatmentPrice = this.closest('.treatment-card').querySelector('.price').textContent;
+                
+                document.getElementById('selected-treatment').innerHTML = `
+                    <h6>${treatment}</h6>
+                    <p>${treatmentPrice}</p>
+                `;
+                
+                document.getElementById('selected-treatment').style.display = 'block';
+                document.getElementById('total-price').textContent = treatmentPrice;
+                document.getElementById('next-step').disabled = false;
+                
+                // Move to next step
+                const currentStep = this.closest('.booking-step');
+                const nextStep = currentStep.nextElementSibling;
+                
+                currentStep.style.display = 'none';
+                nextStep.style.display = 'block';
+                
+                // Update booking steps
+                const steps = document.querySelectorAll('.booking-steps li');
+                steps[1].classList.add('active');
+            });
+        });
+        
+        // Time slot selection
+        const timeSlots = document.querySelectorAll('.time-slot');
+        
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', function() {
+                // Remove selected class from all time slots
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                
+                // Add selected class to clicked time slot
+                this.classList.add('selected');
+                
+                // Update booking summary
+                const selectedDate = document.getElementById('booking-date').value;
+                const selectedTime = this.textContent;
+                
+                document.getElementById('selected-datetime').style.display = 'block';
+                document.getElementById('datetime-display').textContent = `${selectedDate} at ${selectedTime}`;
+            });
+        });
+        
+        // Therapist selection
+        const therapistCards = document.querySelectorAll('.therapist-card');
+        
+        therapistCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all therapist cards
+                therapistCards.forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked therapist card
+                this.classList.add('selected');
+                
+                // Update booking summary
+                const therapistName = this.querySelector('h6').textContent;
+                
+                document.getElementById('selected-therapist').style.display = 'block';
+                document.getElementById('therapist-display').textContent = therapistName;
+            });
+        });
+        
+        // Skip therapist selection
+        const skipTherapistBtn = document.getElementById('skip-therapist');
+        
+        if (skipTherapistBtn) {
+            skipTherapistBtn.addEventListener('click', function() {
+                // Move to next step
+                const currentStep = this.closest('.booking-step');
+                const nextStep = currentStep.nextElementSibling;
+                
+                currentStep.style.display = 'none';
+                nextStep.style.display = 'block';
+                
+                // Update booking steps
+                const steps = document.querySelectorAll('.booking-steps li');
+                steps[3].classList.add('active');
+            });
+        }
+        
+        // Next step button
+        const nextStepBtn = document.getElementById('next-step');
+        
+        if (nextStepBtn) {
+            nextStepBtn.addEventListener('click', function() {
+                // Find current step
+                const currentStep = document.querySelector('.booking-step:not([style*="display: none"])');
+                const nextStep = currentStep.nextElementSibling;
+                
+                if (nextStep) {
+                    currentStep.style.display = 'none';
+                    nextStep.style.display = 'block';
+                    
+                    // Update booking steps
+                    const steps = document.querySelectorAll('.booking-steps li');
+                    const currentStepIndex = Array.from(steps).findIndex(step => step.classList.contains('active'));
+                    
+                    if (currentStepIndex < steps.length - 1) {
+                        steps[currentStepIndex + 1].classList.add('active');
+                    }
+                }
+            });
+        }
+        
+        // Confirm booking
+        const confirmBookingBtn = document.getElementById('confirm-booking');
+        
+        if (confirmBookingBtn) {
+            confirmBookingBtn.addEventListener('click', function() {
+                const guestName = document.getElementById('guest-name').value;
+                const guestEmail = document.getElementById('guest-email').value;
+                const guestPhone = document.getElementById('guest-phone').value;
+                
+                if (!guestName || !guestEmail || !guestPhone) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                this.disabled = true;
+                
+                // Simulate booking confirmation
+                setTimeout(() => {
+                    alert('Spa booking confirmed! You will receive a confirmation email shortly.');
+                    window.location.href = 'booking-confirmation.html';
+                }, 1500);
+            });
+        }
+    }
+    
+    // Restaurant Booking Functionality
+    const restaurantBookingForm = document.getElementById('restaurantBookingForm');
+    
+    if (restaurantBookingForm) {
+        restaurantBookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const customerName = document.getElementById('customer-name').value;
+            const customerEmail = document.getElementById('customer-email').value;
+            const customerPhone = document.getElementById('customer-phone').value;
+            const bookingDate = document.getElementById('booking-date').value;
+            const bookingTime = document.getElementById('booking-time').value;
+            const guests = document.getElementById('guests').value;
+            
+            if (!customerName || !customerEmail || !customerPhone || !bookingDate || !bookingTime || !guests) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            // Simulate booking confirmation
+            setTimeout(() => {
+                alert('Restaurant booking confirmed! You will receive a confirmation email shortly.');
+                window.location.href = 'booking-confirmation.html';
+            }, 1500);
+        });
+    }
+    
+    // Event Booking Functionality
+    const eventBookingForm = document.getElementById('eventBookingForm');
+    
+    if (eventBookingForm) {
+        // Venue selection
+        const venueCards = document.querySelectorAll('.venue-option');
+        
+        venueCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all venue cards
+                venueCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked venue card
+                this.classList.add('active');
+                
+                // Update booking summary
+                const venueName = this.getAttribute('data-venue');
+                const venuePrice = this.getAttribute('data-price');
+                
+                // Update form fields
+                document.getElementById('venue_name').value = venueName;
+                document.getElementById('venue_price').value = venuePrice;
+                
+                // Update summary
+                document.getElementById('event-summary').innerHTML = `
+                    <p><strong>Venue:</strong> ${venueName}</p>
+                    <p><strong>Price:</strong> $${venuePrice}</p>
+                `;
+                document.getElementById('total-price').textContent = `$${venuePrice}`;
+            });
+        });
+        
+        eventBookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const venueName = document.getElementById('venue_name').value;
+            const eventDate = document.getElementById('event_date').value;
+            const guestCount = document.getElementById('guest_count').value;
+            const eventType = document.getElementById('event_type').value;
+            const customerName = document.getElementById('customer_name').value;
+            const customerEmail = document.getElementById('customer_email').value;
+            const customerPhone = document.getElementById('customer_phone').value;
+            
+            if (!venueName || !eventDate || !guestCount || !eventType || !customerName || !customerEmail || !customerPhone) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            // Simulate booking confirmation
+            setTimeout(() => {
+                alert('Event booking confirmed! Our event coordinator will contact you shortly.');
+                window.location.href = 'booking-confirmation.html';
+            }, 1500);
+        });
+    }
+
     // Initialize datepickers if available
     if (typeof flatpickr !== 'undefined') {
         flatpickr(".datepicker", {
@@ -352,18 +598,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add animation on scroll
     const animateOnScroll = function () {
         const elements = document.querySelectorAll('.feature-card, .room-card, .testimonial-card');
-
+        
         elements.forEach(element => {
             const elementPosition = element.getBoundingClientRect().top;
             const screenPosition = window.innerHeight / 1.3;
-
+            
             if (elementPosition < screenPosition) {
                 element.style.opacity = '1';
                 element.style.transform = 'translateY(0)';
             }
         });
     };
-
+    
     // Set initial state and add scroll listener
     const animatedElements = document.querySelectorAll('.feature-card, .room-card, .testimonial-card');
     animatedElements.forEach(element => {
@@ -371,10 +617,10 @@ document.addEventListener('DOMContentLoaded', function () {
         element.style.transform = 'translateY(30px)';
         element.style.transition = 'all 0.6s ease';
     });
-
+    
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Run once on load
-
+    
     // Performance optimizations
     // Lazy load images
     const lazyImages = document.querySelectorAll('img[data-src]');
@@ -437,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add error handling
         img.addEventListener('error', function() {
             // Set a placeholder image if the original fails to load
-            this.src = 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3';
+            this.src = 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
             this.alt = 'Image not available';
         });
         
@@ -452,250 +698,10 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         tempImg.onerror = function() {
             // Handle error
-            img.src = 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3';
+            img.src = 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
             img.alt = 'Image not available';
             img.classList.add('loaded');
         };
         tempImg.src = img.dataset.src || img.src;
     });
-
-    // Prefetch pages for faster navigation
-    function prefetchPages() {
-        const pages = ['index.html', 'rooms.html', 'services.html', 'about.html', 'gallery.html', 'booking.html', 'contact.html', 'login.html', 'register.html'];
-        
-        pages.forEach(page => {
-            const link = document.createElement('link');
-            link.rel = 'prefetch';
-            link.href = page;
-            document.head.appendChild(link);
-        });
-    }
-    
-    // Only prefetch on good connections
-    if ('connection' in navigator) {
-        if (navigator.connection.effectiveType === '4g' && !navigator.connection.saveData) {
-            prefetchPages();
-        }
-    }
-
-    // Payment form validation
-    const paymentForm = document.getElementById('paymentForm');
-
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const cardNumber = document.getElementById('card-number').value;
-            const expiry = document.getElementById('expiry').value;
-            const cvv = document.getElementById('cvv').value;
-            const cardName = document.getElementById('card-name').value;
-            
-            if (!cardNumber || !expiry || !cvv || !cardName) {
-                alert('Please fill in all card details');
-                return;
-            }
-            
-            // Show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            submitBtn.disabled = true;
-            
-            // Simulate payment processing
-            setTimeout(() => {
-                alert('Payment successful! Redirecting to confirmation...');
-                window.location.href = 'booking-confirmation.html';
-            }, 2000);
-        });
-    }
-
-    // Card number formatting
-    const cardNumberInput = document.getElementById('card-number');
-    if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', function() {
-            let value = this.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
-            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-            this.value = formattedValue;
-        });
-    }
-
-    // Expiry date formatting
-    const expiryInput = document.getElementById('expiry');
-    if (expiryInput) {
-        expiryInput.addEventListener('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            this.value = value;
-        });
-    }
-
-    // FAQ accordion functionality
-    const faqItems = document.querySelectorAll('.accordion-item');
-    faqItems.forEach(item => {
-        const button = item.querySelector('.accordion-button');
-        button.addEventListener('click', function() {
-            const collapse = item.querySelector('.accordion-collapse');
-            const isExpanded = this.classList.contains('collapsed');
-            
-            if (isExpanded) {
-                collapse.classList.remove('show');
-                this.classList.remove('collapsed');
-            } else {
-                collapse.classList.add('show');
-                this.classList.add('collapsed');
-            }
-        });
-    });
-
-    // Loyalty program tier selection
-    const tierCards = document.querySelectorAll('.tier-card');
-    tierCards.forEach(card => {
-        card.addEventListener('click', function() {
-            tierCards.forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-        });
-    });
-
-    // Restaurant menu filtering
-    const menuCategories = document.querySelectorAll('.menu-category');
-    if (menuCategories.length > 0) {
-        const filterButtons = document.querySelectorAll('.menu-filter button');
-        const menuItems = document.querySelectorAll('.menu-item');
-        
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                
-                // Remove active class from all buttons
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Filter menu items
-                menuItems.forEach(item => {
-                    if (category === 'all' || item.getAttribute('data-category') === category) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        });
-    }
-
-    // Spa treatment booking
-    const bookTreatmentButtons = document.querySelectorAll('.spa-treatment .btn-custom');
-    bookTreatmentButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const treatmentName = this.closest('.spa-treatment').querySelector('h3').textContent;
-            alert(`Booking ${treatmentName}. Redirecting to booking form...`);
-            window.location.href = 'booking.html';
-        });
-    });
-
-    // Package booking
-    const bookPackageButtons = document.querySelectorAll('.package-card .btn-custom');
-    bookPackageButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const packageName = this.closest('.package-card').querySelector('h3').textContent;
-            alert(`Booking ${packageName}. Redirecting to booking form...`);
-            window.location.href = 'booking.html';
-        });
-    });
-
-    // Event inquiry
-    const eventInquiryButtons = document.querySelectorAll('.event-venue .btn-custom');
-    eventInquiryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const venueName = this.closest('.event-venue').querySelector('h3').textContent;
-            alert(`Inquiring about ${venueName}. Redirecting to contact form...`);
-            window.location.href = 'contact.html';
-        });
-    });
-
-    // Loyalty program join
-    const joinLoyaltyButton = document.querySelector('.loyalty-section .btn-custom');
-    if (joinLoyaltyButton) {
-        joinLoyaltyButton.addEventListener('click', function() {
-            alert('Redirecting to registration form...');
-            window.location.href = 'register.html';
-        });
-    }
-
-    // Restaurant reservation
-    const restaurantReservationButton = document.querySelector('.restaurant-info .btn-custom');
-    if (restaurantReservationButton) {
-        restaurantReservationButton.addEventListener('click', function() {
-            alert('Redirecting to booking form...');
-            window.location.href = 'booking.html';
-        });
-    }
-
-    // Sitemap search functionality
-    const sitemapSearch = document.querySelector('.search-box input');
-    if (sitemapSearch) {
-        sitemapSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const sitemapLinks = document.querySelectorAll('.sitemap-category a');
-            
-            sitemapLinks.forEach(link => {
-                const linkText = link.textContent.toLowerCase();
-                if (linkText.includes(searchTerm)) {
-                    link.style.display = 'block';
-                } else {
-                    link.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    // 404 page search functionality
-    const errorSearch = document.querySelector('.error-404 .search-box input');
-    if (errorSearch) {
-        errorSearch.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const searchTerm = this.value;
-                alert(`Searching for: ${searchTerm}`);
-                // In a real application, this would perform an actual search
-            }
-        });
-    }
-
-    // Dashboard activity feed updates
-    function updateActivityFeed() {
-        const activities = [
-            { icon: 'fa-calendar-check', text: 'New booking confirmed', time: 'Just now' },
-            { icon: 'fa-star', text: 'Earned 50 loyalty points', time: '2 hours ago' },
-            { icon: 'fa-user-edit', text: 'Profile updated', time: '1 day ago' }
-        ];
-        
-        const activityFeed = document.querySelector('.dashboard-section .activity-item').parentElement;
-        if (activityFeed) {
-            activities.forEach(activity => {
-                const activityItem = document.createElement('div');
-                activityItem.className = 'activity-item';
-                activityItem.innerHTML = `
-                    <div class="activity-icon">
-                        <i class="fas ${activity.icon}"></i>
-                    </div>
-                    <div class="activity-content">
-                        <p>${activity.text}</p>
-                        <small>${activity.time}</small>
-                    </div>
-                `;
-                activityFeed.insertBefore(activityItem, activityFeed.firstChild);
-            });
-        }
-    }
-
-    // Update activity feed every 30 seconds
-    setInterval(updateActivityFeed, 30000);
-
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
 });
-

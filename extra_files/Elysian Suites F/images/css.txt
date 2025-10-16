@@ -1,6 +1,3 @@
-
-eta style.css file
-
 /* style.css */
 :root {
     --primary-color: #2c3e50;
@@ -14,6 +11,9 @@ eta style.css file
     --info-color: #3498db;
     --warning-color: #f39c12;
     --danger-color: #e74c3c;
+    --spa-color: #9b59b6;
+    --restaurant-color: #e67e22;
+    --event-color: #16a085;
 }
 
 * {
@@ -86,6 +86,31 @@ a:hover {
     color: white;
 }
 
+/* Service-specific buttons */
+.btn-spa {
+    background-color: var(--spa-color);
+}
+
+.btn-spa:hover {
+    background-color: #8e44ad;
+}
+
+.btn-restaurant {
+    background-color: var(--restaurant-color);
+}
+
+.btn-restaurant:hover {
+    background-color: #d35400;
+}
+
+.btn-event {
+    background-color: var(--event-color);
+}
+
+.btn-event:hover {
+    background-color: #138d75;
+}
+
 /* Navigation */
 .navbar {
     background-color: rgba(255, 255, 255, 0.95);
@@ -136,7 +161,7 @@ a:hover {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3') center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -234,7 +259,14 @@ a:hover {
     transition: all 0.3s ease;
     height: 100%;
     background-color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
 }
+
+.room-card:nth-child(1) { animation-delay: 0.1s; }
+.room-card:nth-child(2) { animation-delay: 0.2s; }
+.room-card:nth-child(3) { animation-delay: 0.3s; }
 
 .room-card:hover {
     transform: translateY(-10px);
@@ -295,7 +327,7 @@ a:hover {
 
 /* Booking Section */
 .booking-section {
-    background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3') center/cover;
+    background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
     padding: 100px 0;
     color: white;
 }
@@ -312,6 +344,48 @@ a:hover {
     color: white;
     margin-bottom: 30px;
     text-align: center;
+}
+
+/* Booking Type Selection */
+.booking-type-selection {
+    margin-bottom: 40px;
+}
+
+.booking-type-card {
+    display: block;
+    background: white;
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    color: var(--text-dark);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    text-decoration: none;
+}
+
+.booking-type-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    color: var(--text-dark);
+}
+
+.booking-type-card i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+}
+
+.booking-type-card.spa i {
+    color: var(--spa-color);
+}
+
+.booking-type-card.restaurant i {
+    color: var(--restaurant-color);
+}
+
+.booking-type-card.event i {
+    color: var(--event-color);
 }
 
 /* Form Styles */
@@ -336,11 +410,6 @@ a:hover {
 
 .form-control::placeholder {
     color: #6c757d !important;
-}
-
-.form-select option {
-    background-color: white;
-    color: var(--text-dark);
 }
 
 .form-group label {
@@ -620,7 +689,7 @@ a:hover {
 
 .auth-image {
     flex: 1;
-    background: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3') center/cover;
+    background: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover;
     position: relative;
 }
 
@@ -664,6 +733,692 @@ a:hover {
 .auth-links a {
     color: var(--secondary-color);
     font-weight: 500;
+}
+
+/* Spa Booking Page Styles */
+.spa-booking-section {
+    padding: 100px 0;
+}
+
+.booking-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.booking-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: 0;
+}
+
+.booking-steps li {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    padding: 0 15px;
+    text-align: center;
+    flex: 1;
+}
+
+.booking-steps li::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.booking-steps li.active::before {
+    background-color: var(--spa-color);
+}
+
+.booking-steps li.active {
+    color: var(--spa-color);
+    font-weight: 600;
+}
+
+.booking-step {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.treatment-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    background-color: white;
+}
+
+.treatment-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.treatment-card.active {
+    border: 2px solid var(--spa-color);
+}
+
+.treatment-card img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.treatment-card-body {
+    padding: 20px;
+}
+
+.treatment-card-body h5 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.treatment-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.duration, .price {
+    display: flex;
+    align-items: center;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.duration i, .price i {
+    color: var(--spa-color);
+    margin-right: 5px;
+}
+
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.time-slot {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 30px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-slot:hover, .time-slot.selected {
+    background-color: var(--spa-color);
+    color: white;
+    border-color: var(--spa-color);
+}
+
+.therapist-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.therapist-card:hover, .therapist-card.selected {
+    background-color: rgba(155, 89, 182, 0.1);
+    border: 1px solid var(--spa-color);
+}
+
+.booking-summary {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 100px;
+}
+
+/* Restaurant Booking Page Styles */
+.restaurant-booking-section {
+    padding: 100px 0;
+}
+
+.package-option {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.package-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.package-option label {
+    display: block;
+    cursor: pointer;
+    padding-left: 30px;
+}
+
+.package-option input:checked + label {
+    color: var(--restaurant-color);
+}
+
+.package-option input:checked + label::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    color: var(--restaurant-color);
+}
+
+.package-option h5 {
+    margin-bottom: 5px;
+}
+
+.package-option p {
+    margin-bottom: 0;
+    color: #6c757d;
+}
+
+.restaurant-info {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.cancellation-policy {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Booking Page Styles */
+.event-booking-section {
+    padding: 100px 0;
+}
+
+.venue-option {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.venue-option:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.venue-option.active {
+    border: 2px solid var(--event-color);
+}
+
+.venue-option img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.venue-content {
+    padding: 25px;
+}
+
+.venue-content h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.venue-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.venue-content ul li {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.venue-content ul li i {
+    color: var(--event-color);
+    margin-right: 10px;
+}
+
+.venue-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--event-color);
+    margin-bottom: 15px;
+}
+
+/* Room Detail Page Styles */
+.room-detail-section {
+    padding: 100px 0;
+}
+
+.room-navigation {
+    margin-bottom: 30px;
+}
+
+.room-gallery {
+    margin-bottom: 40px;
+}
+
+.room-description, .room-features, .bathroom-features {
+    margin-bottom: 40px;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.feature-list li i {
+    color: var(--success-color);
+    margin-right: 10px;
+}
+
+.room-info-card, .amenities-card {
+    margin-bottom: 30px;
+}
+
+.room-info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.room-info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.info-value {
+    color: var(--text-dark);
+}
+
+.room-price {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.price-unit {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 400;
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.amenity-item i {
+    color: var(--secondary-color);
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+.similar-rooms {
+    margin-top: 30px;
+}
+
+.similar-room-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.similar-room-item:hover {
+    background-color: #f8f9fa;
+}
+
+.similar-room-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.similar-room-info h6 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.similar-room-info .price {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Packages Page Styles */
+.packages-section {
+    padding: 100px 0;
+}
+
+.package-navigation {
+    background-color: var(--bg-light);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.package-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    background-color: white;
+}
+
+.package-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.package-image {
+    position: relative;
+}
+
+.package-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.package-content {
+    padding: 25px;
+}
+
+.package-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+.package-price span {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 400;
+}
+
+.package-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+.package-features li {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.package-features li i {
+    color: var(--success-color);
+    margin-right: 10px;
+}
+
+.package-benefits {
+    padding: 100px 0;
+    background-color: var(--bg-light);
+}
+
+.benefit-item {
+    text-align: center;
+    padding: 30px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.benefit-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+/* Booking Confirmation Page Styles */
+.confirmation-header {
+    background-color: var(--success-color);
+}
+
+.booking-confirmation-card {
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.booking-confirmation-card .card-header {
+    background-color: var(--bg-light);
+    padding: 25px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.booking-id {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin: 0;
+}
+
+.booking-summary {
+    background-color: var(--bg-light);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.summary-item.total {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    padding-top: 10px;
+    border-top: 1px solid #dee2e6;
+    margin-top: 10px;
+}
+
+.next-steps {
+    background-color: var(--bg-light);
+    padding: 100px 0;
+}
+
+.step-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.step-icon {
+    font-size: 3rem;
+    color: var(--success-color);
+    margin-bottom: 20px;
+}
+
+/* Spa Section Styles */
+.spa-section {
+    padding: 100px 0;
+}
+
+.spa-treatment {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    background-color: white;
+}
+
+.spa-treatment:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.treatment-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.treatment-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.spa-treatment:hover .treatment-image img {
+    transform: scale(1.1);
+}
+
+.treatment-content {
+    padding: 25px;
+}
+
+.treatment-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.treatment-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.duration, .price {
+    display: flex;
+    align-items: center;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.duration i, .price i {
+    color: var(--spa-color);
+    margin-right: 8px;
+}
+
+.spa-facilities {
+    padding: 100px 0;
+    background-color: var(--bg-light);
+}
+
+.facility-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.facility-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.facility-icon {
+    font-size: 3rem;
+    color: var(--spa-color);
+    margin-bottom: 20px;
+}
+
+.cta-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--spa-color), var(--primary-color));
+    color: white;
+    text-align: center;
+}
+
+.cta-section h2 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
 }
 
 /* Performance Optimizations */
@@ -746,6 +1501,8 @@ img {
     .section-title h2 { font-size: 2rem; }
     .auth-card { flex-direction: column; max-width: 400px; }
     .auth-image { height: 200px; }
+    .booking-steps { flex-wrap: wrap; }
+    .booking-steps li { margin-bottom: 20px; }
 }
 
 @media (max-width: 576px) {
@@ -753,852 +1510,26 @@ img {
     .hero-content p { font-size: 1rem; }
     .section-title h2 { font-size: 1.8rem; }
     .navbar-brand { font-size: 1.5rem; }
-    .feature-card, .room-card-body, .testimonial-card, .contact-info, .contact-form, .auth-form {
+    .feature-card, .room-card, .testimonial-card, .contact-info, .contact-form, .auth-form {
         padding: 25px 20px;
     }
-}
-
-/* New Styles for Additional Pages */
-
-/* Services Page Styles */
-.services-section {
-    padding: 100px 0;
-}
-
-.service-card {
-    background: white;
-    border-radius: 15px;
-    padding: 40px 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
-    text-align: center;
-}
-
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.service-icon {
-    font-size: 3.5rem;
-    color: var(--secondary-color);
-    margin-bottom: 25px;
-}
-
-.service-card h4 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-}
-
-.service-card ul {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 30px;
-}
-
-.service-card ul li {
-    margin-bottom: 10px;
-    color: var(--text-dark);
-}
-
-.service-card ul li i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-/* Events Page Styles */
-.event-venue {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.event-venue img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-}
-
-.event-venue-content {
-    padding: 30px;
-}
-
-.event-venue-content h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.event-venue-content ul {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-}
-
-.event-venue-content ul li {
-    margin-bottom: 10px;
-    color: var(--text-dark);
-}
-
-.event-venue-content ul li i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-.planning-service {
-    text-align: center;
-    padding: 30px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    height: 100%;
-}
-
-.planning-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--bg-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: var(--secondary-color);
-    font-size: 2rem;
-}
-
-/* Packages Page Styles */
-.package-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.package-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.package-image {
-    position: relative;
-}
-
-.package-image img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.package-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--secondary-color);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.package-content {
-    padding: 30px;
-}
-
-.package-content h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.package-price {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-    margin-bottom: 20px;
-}
-
-.package-price span {
-    font-size: 1rem;
-    color: var(--text-dark);
-    font-weight: 400;
-}
-
-.package-features {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 30px;
-}
-
-.package-features li {
-    margin-bottom: 10px;
-    color: var(--text-dark);
-}
-
-.package-features li i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-/* FAQ Page Styles */
-.accordion-button:not(.collapsed) {
-    background-color: var(--secondary-color);
-    color: white;
-}
-
-.accordion-button:focus {
-    box-shadow: none;
-}
-
-.accordion-body {
-    color: var(--text-dark);
-}
-
-/* Dashboard Styles */
-.dashboard-header {
-    background: var(--bg-light);
-    padding: 50px 0;
-}
-
-.user-stats {
-    display: flex;
-    justify-content: flex-end;
-    gap: 30px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-}
-
-.stat-label {
-    color: var(--text-dark);
-}
-
-.booking-item {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.booking-info h4 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.booking-info p {
-    margin-bottom: 5px;
-    color: var(--text-dark);
-}
-
-.booking-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.booking-status {
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.status-confirmed {
-    background: #d4edda;
-    color: #155724;
-}
-
-.status-pending {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.status-cancelled {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.loyalty-card {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.loyalty-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.points {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-}
-
-.quick-actions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.action-item {
-    background: var(--bg-light);
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.action-item:hover {
-    background: var(--secondary-color);
-    color: white;
-}
-
-.action-item i {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    display: block;
-}
-
-.activity-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.activity-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--bg-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 20px;
-    color: var(--secondary-color);
-}
-
-.activity-content p {
-    margin-bottom: 0;
-}
-
-.activity-content small {
-    color: #6c757d;
-}
-
-/* Payment Page Styles */
-.payment-header {
-    background: var(--bg-light);
-    padding: 50px 0;
-}
-
-.payment-methods {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.payment-method {
-    flex: 1;
-    position: relative;
-}
-
-.payment-method input {
-    position: absolute;
-    opacity: 0;
-}
-
-.payment-method label {
-    display: block;
-    padding: 20px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.payment-method input:checked + label {
-    border-color: var(--secondary-color);
-    background: rgba(231, 76, 60, 0.1);
-}
-
-.payment-method label i {
-    font-size: 2rem;
-    margin-bottom: 10px;
-    display: block;
-    color: var(--secondary-color);
-}
-
-.card-details, .billing-address {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.booking-summary {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.summary-item.total {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--secondary-color);
-    border-top: 1px solid #e0e0e0;
-    padding-top: 15px;
-}
-
-.security-info, .payment-support {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.security-info ul, .payment-support ul {
-    list-style: none;
-    padding: 0;
-}
-
-.security-info ul li, .payment-support ul li {
-    margin-bottom: 15px;
-    color: var(--text-dark);
-}
-
-.security-info ul li i, .payment-support ul li i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-/* Booking Confirmation Styles */
-.confirmation-header {
-    text-align: center;
-    padding: 50px 0;
-}
-
-.booking-confirmation-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    background: var(--primary-color);
-    color: white;
-    padding: 30px;
-    text-align: center;
-}
-
-.booking-id {
-    font-size: 1.2rem;
-    margin-top: 10px;
-}
-
-.card-body {
-    padding: 30px;
-}
-
-.booking-summary {
-    background: var(--bg-light);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
-}
-
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.summary-item.total {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--secondary-color);
-    border-top: 1px solid #dee2e6;
-    padding-top: 10px;
-    margin-top: 10px;
-}
-
-.booking-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.next-steps {
-    margin-top: 50px;
-}
-
-.step-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 30px;
-}
-
-.step-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--secondary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 20px;
-    flex-shrink: 0;
-}
-
-.step-content h5 {
-    color: var(--primary-color);
-    margin-bottom: 5px;
-}
-
-/* 404 Page Styles */
-.error-404 {
-    padding: 100px 0;
-    text-align: center;
-}
-
-.error-code {
-    font-size: 10rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-    line-height: 1;
-    margin-bottom: 20px;
-}
-
-.error-actions {
-    margin-top: 30px;
-}
-
-.search-box {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* Sitemap Styles */
-.sitemap-header {
-    background: var(--bg-light);
-    padding: 50px 0;
-}
-
-.sitemap-category {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.sitemap-category h3 {
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.sitemap-category h3 i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-.sitemap-category ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sitemap-category ul li {
-    margin-bottom: 10px;
-}
-
-.sitemap-category ul li a {
-    color: var(--text-dark);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.sitemap-category ul li a:hover {
-    color: var(--secondary-color);
-}
-
-/* Spa Page Styles */
-.spa-treatment {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.spa-treatment:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.treatment-image img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-}
-
-.treatment-content {
-    padding: 30px;
-}
-
-.treatment-content h3 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.treatment-details {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.duration, .price {
-    display: flex;
-    align-items: center;
-    color: var(--text-dark);
-}
-
-.duration i, .price i {
-    color: var(--secondary-color);
-    margin-right: 5px;
-}
-
-.facility-item {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.facility-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--bg-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: var(--secondary-color);
-    font-size: 2rem;
-}
-
-/* Restaurant Menu Styles */
-.menu-category {
-    margin-bottom: 50px;
-}
-
-.menu-category h3 {
-    color: var(--primary-color);
-    margin-bottom: 30px;
-    text-align: center;
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
-
-.menu-category h3::after {
-    content: '';
-    position: absolute;
-    width: 60px;
-    height: 3px;
-    background: var(--secondary-color);
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.menu-item {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-.menu-item-content h4 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.menu-item-price {
-    font-weight: 700;
-    color: var(--secondary-color);
-    font-size: 1.2rem;
-    margin-top: 10px;
-}
-
-.restaurant-hours {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.hours-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.hours-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-/* Loyalty Page Styles */
-.loyalty-tiers {
-    margin-bottom: 50px;
-}
-
-.tier-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
-}
-
-.tier-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.tier-header {
-    padding: 30px;
-    text-align: center;
-    color: white;
-}
-
-.tier-card.silver .tier-header {
-    background: linear-gradient(135deg, #c0c0c0, #808080);
-}
-
-.tier-card.gold .tier-header {
-    background: linear-gradient(135deg, #ffd700, #ffb347);
-}
-
-.tier-card.platinum .tier-header {
-    background: linear-gradient(135deg, #e5e4e2, #b9f2ff);
-}
-
-.tier-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
-}
-
-.tier-body {
-    padding: 30px;
-}
-
-.tier-body ul {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-}
-
-.tier-body ul li {
-    margin-bottom: 10px;
-    color: var(--text-dark);
-}
-
-.tier-body ul li i {
-    color: var(--secondary-color);
-    margin-right: 10px;
-}
-
-.tier-requirement {
-    text-align: center;
-    font-weight: 600;
-    color: var(--primary-color);
-    padding: 15px;
-    background: var(--bg-light);
-    border-radius: 10px;
-}
-
-.benefit-item {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.benefit-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--bg-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: var(--secondary-color);
-    font-size: 2rem;
-}
-
-.redemption-card {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    height: 100%;
-}
-
-.redemption-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--bg-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    color: var(--secondary-color);
-    font-size: 2rem;
-}
-
-.points-required {
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-top: 15px;
+    .booking-summary {
+        position: static;
+        margin-top: 30px;
+    }
+    .room-navigation {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .room-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .package-navigation {
+        padding: 15px 0;
+    }
+    .package-navigation .d-flex {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

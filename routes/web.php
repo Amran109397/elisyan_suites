@@ -49,6 +49,63 @@ use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\RoomImageController;
 use App\Http\Controllers\InvoiceController;
 
+// Frontend Controllers
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\RoomController as FrontendRoomController;
+use App\Http\Controllers\Frontend\PackageController as FrontendPackageController;
+use App\Http\Controllers\Frontend\BookingController as FrontendBookingController;
+use App\Http\Controllers\Frontend\PaymentController as FrontendPaymentController;
+use App\Http\Controllers\Frontend\InvoiceController as FrontendInvoiceController;
+
+/*
+|--------------------------------------------------------------------------
+| Frontend Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application's
+| frontend. These routes are loaded by the RouteServiceProvider and
+| all of them will be assigned to the "web" middleware group.
+|
+*/
+
+// Frontend Routes
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return app()->call(\App\Http\Controllers\Frontend\HomeController::class . '@index');
+})->name('frontend.home');
+
+// Room Routes
+Route::get('/rooms', [FrontendRoomController::class, 'index'])->name('frontend.rooms.index');
+Route::get('/rooms/{id}', [FrontendRoomController::class, 'show'])->name('frontend.rooms.show');
+
+// Package Routes
+Route::get('/packages', [FrontendPackageController::class, 'index'])->name('frontend.packages.index');
+
+// Booking Routes
+Route::get('/booking', [FrontendBookingController::class, 'create'])->name('frontend.booking.create');
+Route::post('/booking', [FrontendBookingController::class, 'store'])->name('frontend.booking.store');
+Route::get('/booking/confirmation/{id}', [FrontendBookingController::class, 'confirmation'])->name('frontend.booking.confirmation');
+
+// Payment Routes
+Route::get('/payment/{bookingId}', [FrontendPaymentController::class, 'create'])->name('frontend.payment.create');
+Route::post('/payment/{bookingId}', [FrontendPaymentController::class, 'store'])->name('frontend.payment.store');
+
+// Invoice Routes
+Route::get('/invoice/{bookingId}', [FrontendInvoiceController::class, 'show'])->name('frontend.invoice.show');
+
+/*
+|--------------------------------------------------------------------------
+| Backend Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application's
+| backend. These routes are loaded by the RouteServiceProvider and
+| all of them will be assigned to the "web" middleware group.
+|
+*/
+
 // Basic Authentication Routes (without email verification)
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -89,9 +146,22 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
 });
 
 // Room routes
-Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
-    Route::resource('rooms', RoomController::class);
-    Route::post('rooms/{room}/update-status', [RoomController::class, 'updateStatus'])->name('rooms.update-status');
+// Simple Rooms Routes - Add this anywhere in your web.php
+Route::middleware(['auth'])->group(function () {
+    // Rooms Routes
+    Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/rooms', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+    Route::get('/rooms/{id}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
+    
+    // Room Status Routes
+    Route::post('/rooms/{id}/update-status', [App\Http\Controllers\RoomController::class, 'updateStatus'])->name('rooms.update-status');
+    Route::post('/rooms/{id}/mark-available', [App\Http\Controllers\RoomController::class, 'markAvailable'])->name('rooms.mark-available');
+    Route::post('/rooms/{id}/mark-occupied', [App\Http\Controllers\RoomController::class, 'markOccupied'])->name('rooms.mark-occupied');
+    Route::post('/rooms/{id}/mark-maintenance', [App\Http\Controllers\RoomController::class, 'markMaintenance'])->name('rooms.mark-maintenance');
 });
 
 // Guest routes
@@ -274,6 +344,7 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
     Route::get('invoices/{invoice}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoices.duplicate');
     Route::post('invoices/{invoice}/void', [InvoiceController::class, 'void'])->name('invoices.void');
 });
+
 // POS & Restaurant Operations routes
 Route::middleware(['auth', 'role:super_admin,property_manager,pos_staff'])->group(function () {
     Route::get('pos-outlets', function () {
@@ -438,11 +509,6 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('personal-access-tokens', function () {
         return 'Personal Access Tokens Page';
     })->name('personal-access-tokens.index');
-});
-
-// Redirect root to dashboard
-Route::get('/', function () {
-    return redirect()->route('dashboard');
 });
 
 // Test route
