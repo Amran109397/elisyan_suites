@@ -94,7 +94,6 @@ Route::post('/payment/{bookingId}', [FrontendPaymentController::class, 'store'])
 
 // Invoice Routes
 Route::get('/invoice/{bookingId}', [FrontendInvoiceController::class, 'show'])->name('frontend.invoice.show');
-
 /*
 |--------------------------------------------------------------------------
 | Backend Routes
@@ -146,22 +145,9 @@ Route::middleware(['auth', 'role:super_admin,property_manager'])->group(function
 });
 
 // Room routes
-// Simple Rooms Routes - Add this anywhere in your web.php
-Route::middleware(['auth'])->group(function () {
-    // Rooms Routes
-    Route::get('/rooms', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
-    Route::get('/rooms/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
-    Route::post('/rooms', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
-    Route::get('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
-    Route::get('/rooms/{id}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
-    Route::put('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
-    Route::delete('/rooms/{id}', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
-    
-    // Room Status Routes
-    Route::post('/rooms/{id}/update-status', [App\Http\Controllers\RoomController::class, 'updateStatus'])->name('rooms.update-status');
-    Route::post('/rooms/{id}/mark-available', [App\Http\Controllers\RoomController::class, 'markAvailable'])->name('rooms.mark-available');
-    Route::post('/rooms/{id}/mark-occupied', [App\Http\Controllers\RoomController::class, 'markOccupied'])->name('rooms.mark-occupied');
-    Route::post('/rooms/{id}/mark-maintenance', [App\Http\Controllers\RoomController::class, 'markMaintenance'])->name('rooms.mark-maintenance');
+Route::middleware(['auth', 'role:super_admin,property_manager,receptionist'])->group(function () {
+    Route::resource('rooms', RoomController::class);
+    Route::post('rooms/{room}/update-status', [RoomController::class, 'updateStatus'])->name('rooms.update-status');
 });
 
 // Guest routes
