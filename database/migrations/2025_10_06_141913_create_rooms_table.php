@@ -1,4 +1,3 @@
-// database/migrations/2023_10_01_000005_create_rooms_table.php
 <?php
 
 use Illuminate\Database\Migrations\Migration;

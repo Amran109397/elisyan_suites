@@ -12,7 +12,7 @@ class Room extends Model
 
     protected $fillable = [
         'property_id',
-        'room_type_id', 
+        'room_type_id',
         'floor_id',
         'room_number',
         'status',
@@ -23,7 +23,6 @@ class Room extends Model
         'is_smoking' => 'boolean',
     ];
 
-    // Relationships
     public function property()
     {
         return $this->belongsTo(Property::class);
@@ -52,50 +51,44 @@ class Room extends Model
             ->whereDate('check_out_date', '>=', now());
     }
 
-    public function roomImages()
+    public function housekeepingTasks()
     {
-        return $this->hasMany(RoomImage::class);
+        return $this->hasMany(HousekeepingTask::class);
     }
 
-    // Scopes
+    public function maintenanceIssues()
+    {
+        return $this->hasMany(MaintenanceIssue::class);
+    }
+
+    public function statusLogs()
+    {
+        return $this->hasMany(RoomStatusLog::class);
+    }
+
+    // Scope for available rooms
     public function scopeAvailable($query)
     {
         return $query->where('status', 'available');
     }
 
-    public function scopeOccupied($query)
-    {
-        return $query->where('status', 'occupied');
-    }
-
-    public function scopeMaintenance($query)
-    {
-        return $query->where('status', 'maintenance');
-    }
-
-    // Helper methods
-    public function isAvailable()
-    {
-        return $this->status === 'available';
-    }
-
-    public function isOccupied()
-    {
-        return $this->status === 'occupied';
-    }
-
-    public function getStatusBadgeClass()
-    {
-        $classes = [
-            'available' => 'badge bg-success',
-            'occupied' => 'badge bg-primary', 
-            'maintenance' => 'badge bg-warning',
-            'cleaning' => 'badge bg-info',
-            'out_of_service' => 'badge bg-danger',
-            'blocked' => 'badge bg-dark',
-            'renovation' => 'badge bg-secondary',
-        ];
-
-        return $classes[$this->status] ?? 'badge bg-secondary';
-    }
+    // Scope for rooms available between dates
+    // app/Models/Room.php
+public function scopeAvailableBetween($query, $startDate, $endDate)
+{
+    return $query->where('status', 'available')
+        ->whereNotIn('id', function ($q) use ($startDate, $endDate) {
+            $q->select('room_id')
+                ->from('bookings')
+                ->where('status', '!=', 'cancelled')
+                ->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('check_in_date', [$startDate, $endDate])
+                        ->orWhereBetween('check_out_date', [$startDate, $endDate])
+                        ->orWhere(function ($q) use ($startDate, $endDate) {
+                            $q->where('check_in_date', '<=', $startDate)
+                                ->where('check_out_date', '>=', $endDate);
+                        });
+                });
+        });
+}
 }
